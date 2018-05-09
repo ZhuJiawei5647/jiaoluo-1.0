@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>欢迎</title>
+    <link rel="stylesheet" href="../css/weui.min.css"/>
+    <link rel="stylesheet" href="../css/example.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/complete.css">
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <style type="text/css">
+    body,html{
+		margin: 0px;
+		padding: 0px;
+        width: 100%;
+		font-size: 0.9rem
+    }
+    input,button{
+        background: none;
+        outline: none;
+        border: none;
+        padding: 0;
+        font-size: 1rem;
+        font-family: "微软雅黑","Microsoft Yahei"
+    }
+    ul{
+    	padding:0;
+    	margin:0;
+    }
+    li{
+    	list-style:none
+    }
+    .user-area{
+        padding: 20px 20px 5px 0;
+        font-size: 1.2rem;
+        border-bottom: 1px solid #ddd;
+    }
+    .area-item{
+        background: url(../images/xiangyou1.png) right center no-repeat;
+        background-size: 25px 25px;
+    }
+    .item-icon{
+        width:18px;
+        height: 18px;
+        margin: 0 10px;
+        margin-bottom: -2px;
+    }
+    </style>
+</head>
+<body >
+    <div style="" >
+        <div class="user-area" style="">
+            <div style="display:flex">
+                <div>
+                    <img class="item-icon" src="../images/check.png">
+                </div>
+                <div style="flex:1" id ="username">
+                    未登入
+                </div>
+            </div>
+            <div class="" id="timer">
+            </div>
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="con-crea"><img class="item-icon" src="../images/zuobiao.png">创建的角落</div>
+            </div>
+            <div class="area-item">
+                <div class="art-pub"><img class="item-icon" src="../images/icon_24.png">发布的故事</div>
+            </div>
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="con-pass"><img class="item-icon" src="../images/cfoot.png">踩过的角落</div>
+            </div>
+            <div class="area-item">
+                <div class="con-coll"><img class="item-icon" src="../images/clike.png">收藏的角落</div>
+            </div>
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="art-befavor"><img class="item-icon" src="../images/happy_1.png">喜欢的故事</div>
+            </div>
+            <div class="area-item">
+                <div class="art-read"><img class="item-icon" src="../images/shizhong.png">看过的故事</div>
+            </div>
+            <div class="area-item">
+                <div class="art-com"><img class="item-icon" src="../images/xinxi.png">评论过的故事</div>
+            </div>
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="user-set"><img class="item-icon" src="../images/icon_26.png">设置</div>
+            </div>
+        </div>
+    </div>
+    <section class="footer">
+        <ul>
+            <li id="shouye">
+                <img src="../images/cindex.png"><br>
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/zuobiao.png"><br>
+                附近
+            </li>
+            <li id="article">
+                <img src="../images/csend.png"><br>
+                发布
+            </li>
+            <li id="mine" class="active">
+                <img src="../images/yonghu.png"><br>
+                我的
+            </li>
+        </ul>
+    </section>
+
+</body>
+<script type="text/javascript" src="../js/xny.js"></script>
+<script type="text/javascript">
+        var xny = new XNY();
+        $.get('/user/getuserinfo', function(data) {
+        	
+            if(data.status!=201){
+            	var timer = new Date().toLocaleString();
+            	$('#username').html("<label>欢迎来到角落，"+data.data.username+"</label>")
+            	
+            
+            }else{
+            	$(location).attr('href', 'login');
+        }
+    });
+</script>
+</html>

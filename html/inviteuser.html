@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>我邀请的好友</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getDate()+'">')
+</script>
+<style type="text/css">
+body, html{
+	margin: 0px;
+	padding:0px;
+	height: 100%;
+    width: 100%;
+    font-size: 0.9rem;
+    font-family: Verdana,"华文细黑";
+}
+li{
+    list-style: none;
+}
+.flex-row{
+    display: flex;
+}
+.hide{
+    display: none;
+}
+.gz-header{
+    padding-top: 8px;
+}
+.gz-header h1{
+    padding: 2px 10px;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #f3f3f3;
+}
+.author-list{
+}
+.author-list li{
+    padding: 4px 20px;
+    border-bottom: 1px solid #f3f3f3;
+}
+.img-box img{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    vertical-align: middle;
+}
+.username{
+    padding-left: 10px;
+    line-height: 28px;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<!-- <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+</head>
+<body>
+    <div class="toindex">
+        <h1></h1>
+    </div>
+    <header class='gz-header'>
+        <h1 class="invitecode">邀请码</h1>
+    </header>
+    <ul class="author-list"></ul>
+    <div class="more">加载更多</div>
+</body>
+</html>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+!(function($) {
+    var xny = new XNY(true)
+    var size = data.getSize.guanzhuSize
+    var page = 1
+    var str = data.loadmore[1]
+    $('.more').on('click',function(){
+    	getAuthor()
+    })
+    function getAuthor () {
+    	if($('.more').text() == str) return
+        console.log('getauthor')
+         $.get('/record/invitecode/get?page='+ page +'&size='+ size, function(data) {
+        	 var authors = data.data.inviteuser
+        	 $('.invitecode').text("我的邀请码："+data.data.invitecode)
+        	 if(authors.length < size) $('.more').text(str)
+        	 page++
+             createList(authors)
+        });
+      /*   createList([{"username": "杨冰","userimageurl": "http://wx.qlogo.cn/mmopen/4NqpzGruXyrmADU6uYHelHgC7MbPJwibLJjGBfkcdfTPABuZEj9dAS4BI3PiariaJcO0NKxv8QU9v5V1fWia8FPaYw036IH5m4G2/0"},{"username": "杨冰","userimageurl": "http://wx.qlogo.cn/mmopen/4NqpzGruXyrmADU6uYHelHgC7MbPJwibLJjGBfkcdfTPABuZEj9dAS4BI3PiariaJcO0NKxv8QU9v5V1fWia8FPaYw036IH5m4G2/0"},{"username": "杨冰","userimageurl": "http://wx.qlogo.cn/mmopen/4NqpzGruXyrmADU6uYHelHgC7MbPJwibLJjGBfkcdfTPABuZEj9dAS4BI3PiariaJcO0NKxv8QU9v5V1fWia8FPaYw036IH5m4G2/0"}])
+ */  }
+
+    function createList (authors) {
+        console.log(123456)
+        console.log(authors.length)
+        for (var i = 0; i < authors.length; i++) {
+            console.log(i)
+            var author = authors[i]
+            var li = $('<li>').addClass('flex-row').html(
+                '<div class="img-box">'+
+                    '<img class="userimg" src="">'+
+                '</div>'+
+                '<div class="username"></div>'
+            )
+            li.find('.userimg').attr('src', util.userHeadImage(author.userheadimageurl))
+            li.find('.username').text(author.username)
+            li.appendTo($('.author-list'))
+            !(function () {
+                li.on('click', function(event) {
+                    event.preventDefault();
+                    $(location).attr('href', 'author?authorid='+author.userid);
+                });
+            })()
+        };
+    }
+    getAuthor();
+})(jQuery)
+</script>

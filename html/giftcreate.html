@@ -1,0 +1,278 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<link rel="stylesheet" href="../css/jquery.Jcrop.min.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/exif.js"></script>
+	<script type="text/javascript" src="../js/xny_form.js"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+	</script>
+	<title>创建礼物</title>
+	<style type="text/css">
+	body{
+		height: 100vh;
+		background-color: #f2f2f2;
+	}
+	/*  */
+	form{
+		height: 100%;
+	}
+	textarea{
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		width: 100%;
+		height: 180px;
+		padding: 5px 10px;
+		font-size: 16px;
+		line-height: 24px;
+	}
+
+	.img-box{
+		padding: 5px 10px;
+	}
+	.img-box img{
+		display: inline-block;
+		width: 120px;
+		min-height: 80px;
+		background: url(../images/camera.png) center center no-repeat;
+		background-size: 70px;
+	}
+
+	.btn-container{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		line-height: 40px;
+		height: 40px;
+	}
+
+	.btn-container .xny-btn-box{
+		height: 100%;
+		line-height: 40px;
+	}
+
+	.btn-container .xny-btn-box button{
+		border-radius: 0;
+	}
+
+	/*imgcut*/
+	.xny-page.imgcut .xny-header{
+	}
+	.imgcut .img{
+		width: 100%;
+	}
+	.imgcut .img img{
+		width: 100%;
+	}
+
+	</style>
+</head>
+<body>
+	<form class="" onsubmit="return false;">
+		<div class="xny-body" style="height: 100%; padding-bottom: 40px">
+			<div class="xny-form-item">
+				<div class="xny-label"><div class="xny-item-img"><img src="../images/biaoti.png"></div><label>标题</label></div>
+				<div class="xny-input-block"><input class="" name="gifttitle" type="text" placeholder="奖品名称"></div>
+			</div>
+			<div class="img-box" style="border-bottom: 1px solid #ddd">
+				<input type="text" id="imageurl" name="giftimg" style="display: none;">
+				<input type="file" onChange="previewImage(this)" style="display: none;" id="previewImg">
+				<img id="imghead" src="" alt="" onclick="$('#previewImg').click();">
+			</div>
+			<div class="textarea-box" style="border-bottom: 1px solid #ddd">
+				<textarea id="content" name="giftdec" placeholder="礼物信息"></textarea>
+			</div>
+			<div class="xny-form-item">
+				<div class="xny-label"><div class="xny-item-img"><img src="../images/biaoti.png"></div><label>数量</label></div>
+				<div class="xny-input-block"><input class="" name="giftnum" oninput="value=value.replace(/[^\d]/g,'')" type="text" placeholder="0"></div>
+			</div>
+			<div class="btn-container">
+				<div class="xny-btn-box">
+					<button class="xny-button publish" style="background-color: #323f4f">发布</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<footer class="xny-footer"></footer>
+</body>
+<script type="text/x-jquery-tmpl" id="imagepage">
+	<div class="xny-page imgcut">
+		<header class="xny-header"><div class="xny-button cancel">取消</div><div class="xny-button confirm">确定</div><h1>截图</h1></header>
+		<div class="xny-body">
+			<div class="img"><img src=""></div>
+		</div>
+	</div>
+</script>
+<script>
+	var cornerid = util.GetQueryString('cornerid')
+	$(function () {
+		var form = new Form();
+		form.submit('.publish', {cornerid: cornerid} , function (data) {
+			var obj = data;
+			
+			POST('/gift/add/forcorner', obj, function (data) {
+				alert(data.msg)
+				if (data.status == 200 && data.msg=="发布成功") {
+				}
+			})
+		})
+	}())
+
+	function POST(url, obj, fun) {
+		$.post(url, obj, function(data, textStatus, xhr) {
+			if (data.status == 201) {
+				$(location).attr('href', 'login?redirect=index');
+			}
+			fun(data)
+			console.log(data)
+		});
+	}
+
+	function previewImage(file) {
+		var reader = new FileReader();
+		reader.readAsDataURL(file.files[0])
+
+		reader.onload = function(evt) {
+			var img = new Image();
+
+			img.onload = function() {
+				imgchange(this, function (img) {
+					var headimg = document.getElementById('imghead')
+						,base64 = getBase64(img);
+					imghead.src = base64
+					// console.log(base64)
+					upload(base64,function (data) {
+						//alert("上传成功" + data);
+						console.log("上传成功")
+						var obj = JSON.parse(data)
+						console.log(obj.url)
+						$('#imageurl').val(obj.url)
+						$('.progress-box').addClass('hide')
+					})
+				})
+			};
+
+			img.src = evt.target.result
+		}
+	}
+
+	function getBase64(img) {
+		var cvs = document.createElement('canvas')
+			,ctx = cvs.getContext("2d")
+			,width = img.width
+			,height = img.height
+
+		cvs.width = width;
+		cvs.height = height;
+		ctx.drawImage(img, 0, 0, width, height)
+
+		return ctx.canvas.toDataURL();
+	}
+
+	function upload(base64, fun) {
+		$.ajax({
+			type: "POST",
+			url: "/pic/upload0",
+			data: {
+				file: base64
+			},
+			success: function(data) {
+				fun(data)
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				$('.progress-box').addClass('hide')
+				alert("上传失败，请检查网络后重试");
+			}
+		});
+	}
+
+	function imgchange(img,fun) {
+		if (navigator.userAgent.match(/iphone/i)) {}
+	    var canvas = document.createElement("canvas");
+	    var rotateshow;
+	    EXIF.getData(img, function(){
+	        EXIF.getAllTags(img);
+	        var Orientation = EXIF.getTag(img,'Orientation');
+	        console.log(Orientation)
+	        switch (Orientation){
+	            case 6:
+	                rotateshow = rotateImg(img,'left',canvas);
+	                break;
+	            case 8:
+	                rotateshow = rotateImg(img,'right',canvas);
+	                break;
+	            case 3:
+	                rotateImg(img,'right',canvas);
+	                rotateshow = rotateImg(img,'right',canvas);
+	                break;
+	            default:
+	                rotateshow = img.src;
+	        }
+	        var img2 = new Image();
+	        img2.onload = function () {
+	        	fun(img)
+	        }
+	        img2.src = rotateshow; 
+	    });
+	}
+
+	function rotateImg(img, direction, canvas) {
+	    var min_step = 0;
+	    var max_step = 3;
+	    //var img = document.getElementById(pid);
+	    if (img == null)return;
+	    //img的高度和宽度不能在img元素隐藏后获取，否则会出错
+	    var height = img.height;
+	    var width = img.width;
+	    //var step = img.getAttribute('step');
+	    var step = 2;
+	    if (step == null) {
+	        step = min_step;
+	    }
+	    if (direction == 'right') {
+	        step++;
+	        //旋转到原位置，即超过最大值
+	        step > max_step && (step = min_step);
+	    } else {
+	        step--;
+	        step < min_step && (step = max_step);
+	    }
+	    var degree = step * 90 * Math.PI / 180;
+	    var ctx = canvas.getContext('2d');
+	    switch (step) {
+	        case 0:
+	            canvas.width = width;
+	            canvas.height = height;
+	            ctx.drawImage(img, 0, 0);
+	            break;
+	        case 1:
+	            canvas.width = height;
+	            canvas.height = width;
+	            ctx.rotate(degree);
+	            ctx.drawImage(img, 0, -height);
+	            break;
+	        case 2:
+	            canvas.width = width;
+	            canvas.height = height;
+	            ctx.rotate(degree);
+	            ctx.drawImage(img, -width, -height);
+	            break;
+	        case 3:
+	            canvas.width = height;
+	            canvas.height = width;
+	            ctx.rotate(degree);
+	            ctx.drawImage(img, -width, 0);
+	            break;
+	    }
+	    return canvas.toDataURL();
+	}
+</script>
+</html>

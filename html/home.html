@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>home</title>
+	<style type="text/css">
+	html,body{
+		padding: 0;
+		margin: 0;
+	}
+	.paper{
+		position: relative;
+	}
+	.paper img{
+		width: 100%;
+	}
+	.paper .hand-img{
+		position: absolute;
+		top: 67%;
+		left: 45%;
+		width: 10%;
+	}
+	.paper .hand-img img{
+		width:100%;
+	}
+	.paper .img-box{
+		position: absolute;
+		top: 75%;
+		left: 35%;
+		width: 30%;
+		background-color: #fff;
+	}
+	.img-box img{
+		width: 100%;
+	}
+	.footer{
+		padding:20px;
+	}
+	.footer img{
+		width:15px;
+		height:15px;
+	}
+	.footer p{
+		padding:0;
+		margin:0;
+		text-align:center;
+		font-size:0.8rem;
+		color:#aaa;
+		line-height:1rem;
+	}
+	</style>
+
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+</head>
+<body>
+	<div class="paper">
+		<img src="http://120.26.47.238/www/image/2017/server/Corner_cover0712.jpg" alt="">
+		<div class="hand-img">
+			<img alt="" src="../images/click_home1.png">
+		</div>
+		<div class="img-box">
+			<img src="http://120.26.47.238/www/image/2017/server/erweima_0712.jpg" alt="">
+		</div>
+	</div>
+	<footer class="footer">
+		<p>@2016-2017 杭州慧活科技有限公司</p>
+		<p>Copyright @2017 好工作 All Rights Reserved</p>
+		<br>
+		<p>浙ICP备16007084号-1</p>
+		<p><img alt="" src="../images/backup.png">浙公网安备 33010602006784号</p>
+	</footer>
+</body>
+<script type="text/javascript">
+	$('.paper').on('click',function(){
+		$('.hand-img img').attr('src','../images/click_home.png')
+		setTimeout(function(){
+			$('.hand-img img').attr('src','../images/click_home1.png')
+		},200)
+		setTimeout(function(){
+			$(location).attr('href','/page/index')
+		}, 500)
+	})
+</script>
+</html>

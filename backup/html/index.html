@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans" xmlns:wb="http://open.weibo.com/wb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<!-- <meta property="wb:webmaster" content="8d2996602d8aaa24"/> -->
+<title>角落记事</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<link rel="stylesheet" type="text/css" href="../css/complete.css">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script src="../js/wb.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+body, html {
+	padding:0px;
+	margin: 0px;
+	height: 100%;
+    background-color: #efeff4;
+    font-size: 0.9rem;
+}
+li{
+    list-style: none;
+}
+.header{
+    width: 100%
+}
+.hiSlider-item img{
+    width: 100%
+}
+.flex-left{
+    flex:1;
+}
+.article-list{
+    width: 100%;
+}
+.hide{
+    display: none;
+}
+#more{
+    padding: 0;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 60px;
+    padding: 10px 0
+}
+</style>
+</head>
+<body>
+    <header class="header">
+        <ul class="hiSlider">
+            <!-- <li class="hiSlider-item">
+                <img src="http://120.26.47.238/www/image/2017/server/banner_04.jpg">
+            </li> -->
+            <li class="hiSlider-item">
+                <img src="http://120.26.47.238/www/image/2017/server/banner_01.jpg">
+            </li>
+            <li class="hiSlider-item">
+                <img src="http://120.26.47.238/www/image/2017/server/banner_02.jpg">
+            </li>
+        </ul>
+    </header>
+     <div>分享到<wb:share-button appkey="2114784714" addition="simple" type="button"></wb:share-button></div>
+   <section>
+        <ul class="article-list"></ul>
+        <div id="more">加载更多</div>
+    </section>
+    <section class="footer">
+        <ul>
+            <li class="active">
+                <img src="../images/cindex.png"><br>
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/zuobiao.png"><br>
+                附近
+            </li>
+            <li id="article">
+                <img src="../images/csend.png"><br>
+                发布
+            </li>
+            <li id="mine">
+                <img src="../images/yonghu.png"><br>
+                我的
+            </li>
+        </ul>
+    </section>
+</body>
+</html>
+<script type="text/javascript" src="../js/xny.js"></script>
+<script type="text/javascript">
+!(function($) {
+    var xny = new XNY();
+    var page = 1;
+    init('/article/alllist?page=' + page + '&size=50');
+    $('.hiSlider').hiSlider({
+        isFlexible: true,
+        isSupportTouch: true,
+        isShowPage: false,
+        isShowTitle: false,
+        isAuto: true,
+        isShowControls: false
+    });
+    $('#more').on('click', function(event) {
+        event.preventDefault();
+        page++
+        init('/article/alllist?page=' + page + '&size=50');
+    });
+
+    function init(url) {
+        xny.getData(url, function(arr) {
+            console.log(1)
+            var ele = xny.createLi().css('margin', '10px 0');
+            for (var i = 0; i < arr.length; i++) {
+                (function() {
+                    var li = ele.clone().css({
+                        margin: '10px 0',
+                        borderBottom: '1px solid #ddd',
+                        paddingBottom: '10px'
+                    });
+                    $('.article-list').append(li)
+                    xny.updateText(li,arr[i])
+                    xny.setEvent(li,arr[i])
+                })()
+
+            };
+        })
+    }
+})(jQuery)
+</script>

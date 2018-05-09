@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>欢迎</title>
+    <link rel="stylesheet" href="../css/weui.min.css"/>
+    <link rel="stylesheet" href="../css/example.css"/>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <style type="text/css">
+    body,html{
+		margin: 0px;
+		padding: 0px;
+		font-size: 0.9rem
+    }
+    ul{
+    	padding:0;
+    	margin:0;
+    }
+    li{
+    	list-style:none
+    }
+    .footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border:1px solid #ddd;
+    background-color: #4d3849;
+    color: white;
+    font-size: 1rem;
+    line-height: 3rem;
+}
+.footer ul{
+    height: 100%
+}
+.footer li{
+    height: 100%;
+    text-align: center;
+    border-right: 1px solid #ddd
+}
+.flex-row{
+	display:flex;
+}
+.flex-row li{
+    flex-grow:1;
+}
+.tab img{
+    width: 20px;
+    height: 20px;
+    vertical-align: text-bottom;
+}
+    </style>
+</head>
+<body >
+    <div style="margin: auto ;padding-top: 100px" >
+    <div class="weui-cell weui-cell_vcode" style="padding-bottom: 20px">
+        <div class="weui-cell__hd" id ="username">
+           
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_vcode" style="padding-bottom: 20px;padding-top: 20px">
+        <div class="weui-cell__hd" id="timer">
+           
+        </div>
+
+    </div>
+    </div>
+    <section class="footer">
+        <ul class="tab flex-row">
+            <li id="shouye">
+                <img src="../images/cindex.png">
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/zuobiao.png">
+                附近
+            </li>
+            <li id="article">
+                <img src="../images/csend.png">
+                发布
+            </li>
+            <li id="mine">
+                <img src="../images/xihuan.png">
+                我的
+            </li>
+        </ul>
+    </section>
+
+</body>
+<script type="text/javascript" src="../js/xny.js"></script>
+<script type="text/javascript">
+        $.get('/user/getuserinfo', function(data) {
+        	
+            if(data.status!=201){
+            	var timer = new Date().toLocaleString();
+            	$('#username').html("<label  class='page__bd_spacing'>欢迎来到角落，"+data.data.username+"</label>")
+            	 $('#timer').html("<label class='page__bd_spacing'> 登录时间："+timer+" </label>")
+            
+            }else{
+            	$(location).attr('href', 'login');
+        }
+    });
+
+
+
+</script>
+</html>

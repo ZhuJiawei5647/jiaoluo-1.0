@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title></title>
+	<link rel="stylesheet" href="../css/jquery.Jcrop.min.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/xny_form.js"></script>
+	<script type="text/javascript" src="../js/exif.js"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+	</script>
+	<style type="text/css">
+		form{
+			width: 100%;
+			height: 100vh;
+			background: url(../images/cai2_beijing.png) 0 0 no-repeat;
+			background-size: 100% 100%;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.xin{
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			width: 80px;
+			height: 60px;
+			background: url(../images/cai_wode.png) 0 0 no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.textarea-box{
+			margin: 40px 60px 0;
+		}
+
+		.textarea-box label{
+			font-size: 15px;
+			text-indent: 20px;
+			line-height: 36px;
+		}
+
+		.textarea-box textarea{
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 100%;
+			height: 100px;
+			padding: 5px 10px;
+			font-size: 16px;
+			line-height: 24px;
+			background-color: #fff;
+		}
+
+		.img-box{
+			position: relative;
+			margin: 40px 60px;
+			min-height: 100px;
+			background: url(../images/camera.png) 5px 90% no-repeat;
+			background-size: 60px 50px;
+			background-color: #fff;
+		}
+
+		.img-box .upload{
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: 100%;
+			height: 30px;
+			color: #fff;
+			background: url(../images/cai2_liwubeijing.png) 0 0 no-repeat;
+			background-size: 100% 100%;
+			transform: translate(-50%, -50%);
+		}
+
+		.img-box img{
+			display: inline-block;
+			width: 100%;
+		}
+
+		.article-box{
+			margin: 20px 40px;
+			text-align: center;
+		}
+
+		.article-box span{
+			display: inline-block;
+			padding: 0 10px;
+			font-size: 18px;
+			line-height: 20px;
+		}
+
+		.btn-container{
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+		}
+		.btn-container .xny-btn-box{
+			line-height: 40px;
+			width: 100%;
+			height: 40px;
+		}
+		.btn-container .xny-btn-box .xny-button{
+			border-radius: 0;
+			color: #333;
+			background: url(../images/cai2_fabu.png) 0 0 no-repeat;
+			background-size: 100% 100%;
+		}
+
+		/*imgcut*/
+		.xny-page.imgcut .xny-header{
+		}
+		.imgcut .img{
+			width: 100%;
+		}
+		.imgcut .img img{
+			width: 100%;
+		}
+
+	</style>
+</head>
+<body>
+	<form class="" onsubmit="return false;">
+		<i class="xin"></i>
+		<div class="textarea-box">
+			<label class="">说点你的故事吧</label>
+			<textarea id="content" name="secretdec" placeholder="秘密"></textarea>
+		</div>
+		<div class="img-box">
+			<button class="upload" onclick="console.log($('#previewImg')),$('#previewImg').click();">上传图片</button>
+			<input type="text" id="imageurl" name="secretimg" style="display: none;">
+			<input type="file" class="imagefile" style="display: none;" id="previewImg">
+			<img id="imghead" src="" alt="">
+		</div>
+		<div class="article-box">
+			
+		</div>
+		<div class="btn-container">
+			<div class="xny-btn-box">
+				<button class="xny-button publish">发布</button>
+			</div>
+		</div>
+	</form>
+</body>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+	var xny =new XNY(),
+		form = new Form(),
+		cornerid = util.GetQueryString('cornerid')
+	$.get('', function (data) {
+		arr.forEach(function (name) {
+			$('.article-box').append($('<span>').text(name[0] + '*'))
+		})
+	})
+	$('.imagefile').on('change', function (event) {
+		util.previewJcropImage(xny, this, 1.5, function (data, base64) {
+			console.log("上传成功")
+			var obj = JSON.parse(data)
+			$('#imghead').attr('src', base64)
+			$('#imageurl').val(obj.url)
+		})
+	})
+	form.submit('.publish', function (data) {
+		data.cornerid = cornerid
+		$.post('/secret/add/secret',data,function (data) {
+			xny.alert({content:data.msg})
+			if(data.status == 200)
+			window.history.go(-1);
+		})
+	})
+</script>
+</html>

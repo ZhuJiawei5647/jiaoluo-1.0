@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+</script>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<style type="text/css">
+/* header */
+.header{
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(top, #FFbbdd, #FF88aa);
+    background: -moz-linear-gradient(top, #FFbbdd, #FF88aa);
+    background: -webkit-linear-gradient(top, #FFbbdd, #FF88aa);  
+}
+.header .xny-user-img img{
+    background-color: white;
+}
+.header .xny-art{
+    height: auto;
+    border: none;
+}
+.header .xny-art-title{
+    color: #2650ae;
+}
+.header .xny-cor-content{
+    line-height: 24px;
+}
+.header .xny-cor-content img{
+    height: 18px;
+}
+.header .xny-cor-content .xny-cor-name{
+    line-height: 24px;
+}
+.header .guanzhu-box{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+.header .favor-box{
+    position: absolute;
+    top: 35px;
+    right: 20px;
+}
+
+
+.flex-row{
+    display: flex;
+}
+.hide{
+    display: none;
+}
+.swiper{
+    width: 100%;
+    overflow: hidden;
+}
+.hiSlider-wrap,.hiSlider,.hiSlider-item{
+    height: 100%
+}
+.map{
+    width: 100%;
+    height: 200px;
+}
+#allmap {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+}
+.article-list{
+    width: 100%;
+}
+.article-list li{
+    border-bottom: 1px solid #ddd;
+}
+.addart{
+	position:fixed;
+	right:20px;
+	bottom:40px;
+}
+.addart img{
+	width:70px;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+</head>
+<body>
+    <div class="toindex">
+        <h1></h1>
+    </div>
+    <header class="header">
+        <div class="xny-item">
+            <div class="xny-user-img">
+                <img src="../images/userhead.png">
+            </div>
+            <div class="xny-item-body">
+                <div class="xny-art">
+                    <span class="xny-art-title"></span>
+                </div>
+                <div class="xny-cor-content">
+                    <img src="../images/dizhi.png"><span class="xny-cor-name"></span><span class="xny-cor-address"></span>
+                </div>
+            </div>
+            <div class="guanzhu-box"></div>
+            <div class="favor-box"></div>
+        </div>
+    </header>
+    <section id="page1" class="block" style="width:100%">
+        <div class="map">
+            <div id="allmap"></div>
+        </div>
+    </section>
+    <section>
+        <ul class="article-list">
+        </ul>
+        <div class="more-box">加载更多</div>
+    </section>
+    <div class="addart">
+    	<img src="../images/new_art.png">
+    </div>
+</body>
+</html>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+var xny = new XNY()
+    ,cornerid = util.GetQueryString('cornerid')
+    ,size = data.getSize.cornermapSize
+    ,map = new BMap.Map("allmap")
+    
+!(function($) {
+
+    getConner()
+    getArticles()
+
+    function getConner(){
+        var conners = [];
+    	var str = data.loadmore[1]
+        $.get('/corner/inter/cornerinfo?cornerid='+cornerid+'&page=1&size=20', function(data) {
+            if(data.status == 201){
+            	$(location).attr('href', 'login');
+            	return;
+            }
+
+            var corner = data.data;
+
+            $(document).attr('title', corner.name);
+            var $header = $('.header')
+            $header.find('.xny-user-img img').attr('src', util.userHeadImage(corner.author.userheadimageurl))
+            $header.find('.xny-art-title').text( corner.author.username)
+            $header.find('.xny-cor-name').text(corner.name)
+            $header.find('.xny-cor-address').text(corner.placename)
+            $('.guanzhu-box').append(xny.createGuanzhu(corner))
+            $('.favor-box').append(xny.createFavor(corner))
+
+            createMarker(corner.placelongitude,corner.placelatitude)
+
+            $('.addart').on('click', function(event) {
+                event.preventDefault();
+                //console.log(currentConner)
+                $(location).attr('href', 'publish?connerid=' + corner.cornerid + '&connername=' + corner.name + '&connerplacename=' + corner.placename);
+            });
+        });
+
+    } 
+
+    function createMarker(lng, lat){
+        map.clearOverlays();
+        var point = new BMap.Point(lng, lat)
+        map.centerAndZoom(point, 15)
+        var marker = new BMap.Marker(point)
+        map.addOverlay(marker)
+    }
+
+    function getArticles(){
+        var more = xny.createMore('.more-box',{
+                url: '/corner/inter/article'
+                ,page: 1
+                ,size: size
+                ,where: {cornerid: cornerid}
+                ,list: 'data'
+                ,done: function (data) {
+                    if(data.status==201){
+                        $(location).attr('href', '/page/login')
+                    }
+                    var arr = data.data 
+                    for(var i = 0; i < arr.length; i++){
+                        $('.article-list').append($('<li>').append(xny.createItem(arr[i], true)))
+                    }
+                }
+            })
+    }
+})(jQuery)
+</script>

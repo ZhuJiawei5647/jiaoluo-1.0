@@ -1,0 +1,675 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>发布</title>
+<link rel="stylesheet" href="../css/jquery.Jcrop.min.css">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+</head>
+<style type="text/css">
+body,html,ul,h1,p{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	min-height: 100%;
+	font-size: 1rem
+}
+input,button{
+	background: none;
+	outline: none;
+	border: none;
+	padding: 0;
+	font-size: 1rem;
+	font-family: "微软雅黑","Microsoft Yahei"
+}
+li{
+	list-style: none;
+}
+.header h1{
+	font-size: 1.2rem;
+	font-weight: normal;
+	line-height: 2rem;
+	text-indent: 0.5rem;
+	border-bottom: 1px solid #ddd
+}
+.container{
+	padding-bottom: 100px
+}
+.container-box{
+	padding: 5px 0;
+	border-bottom: 1px solid #ddd;
+	padding-left: 40px;
+}
+.container-box label{
+	color: #666
+}
+.address{
+	margin-bottom: 10px
+}
+.content textarea{
+	width: 90%;
+	height: 300px;
+	resize:none;
+}
+.image label{
+	vertical-align: top;
+}
+.image img{
+	width:105px;
+	height: 70px;
+}
+.fixed{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+	text-align: center;
+	line-height: 3rem;
+}
+.flex-grow div{
+	display: inline-block;
+	width: 120px;
+	text-align: center;
+	font-size: 1.1rem;
+	line-height: 2rem;
+	border-radius: 5px;
+}
+#publish{
+	padding:5px 10px;
+	color:white;
+	background-color: #32cd32;
+}
+#save{
+	padding:5px 10px;
+	color:white;
+	background-color: #FF3B30;
+}
+.message{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-height: 100%;
+	background-color: #eee;
+}
+.hide{
+	display: none;
+}
+.message-head{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+	width: 100%;
+	padding: 0 10px;
+	z-index: 1000;
+}
+.message-head>div{
+	line-height: 30px;
+}
+.message-list li{
+	padding: 10px 40px;
+}
+.message-list li.active{
+	background-color: #ddd
+}
+.message-head>div{
+	flex-grow:1;
+	line-height: 50px;
+}
+#cancel,#confirm{
+	width: 60%;
+	text-align: center;
+	line-height: 2.4;
+	background-color: #32cd32;
+	border-radius: 5px;
+	color: white;
+}
+.progress-box{
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+.progress-box.hide{
+	display:none
+}
+.bg{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity:0.5;
+}
+.fill{
+	flex:1;
+}
+.load-bar {
+	width: 90%;
+	height: 8px;
+	margin: 0 auto;
+	border-radius: 30px;
+	background-color: #D9D9D9;
+	position: relative;
+}
+.load-bar-inner {
+	height: 99%;
+	width: 0%;
+	border-radius: inherit;
+	background-color: #0096F5;
+}
+</style>
+<body>
+	<div class="form">
+		<header class="header">
+			<h1>角落故事</h1>
+		</header>
+		<section class="container" id="1">
+			<div class="container-box">
+				<div class="address">
+					<label>地址</label>
+					<label id="address" >选择所在位置</label>
+				</div>
+				<div class="connername">
+					<label>角落</label>
+					<input id="connername" type="text" placeholder="角落（默认）">
+				</div>
+			</div>
+			<div class="container-box">
+				<div class="title">
+					<label>标题</label>
+					<input id="title" type="text" placeholder="#一句话为浙大120周年庆生#（默认）">
+				</div>
+			</div>
+			<div class="container-box">
+				<div class="content">
+					<div style="margin-bottom:10px"><label >内容</label></div>
+					<textarea id="content" placeholder="内容"></textarea>
+				</div>
+			</div>
+			<div class="container-box">
+				<div class="image">
+					<div id="preview" style="display:flex">
+						<div>
+							<label>图片</label>
+						</div>
+						<div style="position:relative">
+							<img id="imghead" src="../images/add.png" alt="" onClick="$('#previewImg').click();">
+							<div class="progress-box hide">
+								<div class="bg"></div>
+								<div class="fill"></div>
+								<div class="load-bar">   
+									<div class="load-bar-inner" data-loading="0"></div> 
+								</div>
+								<div class="fill"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<input type="file" onChange="previewImage(this)" style="display: none;" id="previewImg">
+			</div>
+		</section>
+		<div class="fixed flex-row" style="background-color:white">
+			<div class="flex-grow">
+				<div id="publish">发布</div>
+			</div>
+			<div class="flex-grow">
+				<div id="save">存到草稿箱</div>
+			</div>
+		</div>
+	</div>
+	<div class="message hide">
+		<div style="position:fixed;top:0;left:0;width:100%">
+			<div class="message-head flex-row" style="position:absolute;top:0;left:0">
+				<div style="text-align:left">
+					<button id="cancel">取消</button>
+				</div>
+				<div style="text-align:right">
+					<button id="confirm">确定</button>
+				</div>
+			</div>
+			<div id="allmap" style="height:290px;width:100%"></div>
+		</div>
+		<ul class="message-list" style="margin-top:330px"></ul>
+	</div>
+</body>
+<script type="text/javascript">
+var article = {
+	connername: '角落',
+	title: '#一句话为浙大120周年庆生#'
+}
+var lineWidth = $('.load-bar').width()
+!(function($) {
+	var id = util.GetQueryString('id')
+	var connerid = util.GetQueryString('connerid')
+	if (id) {
+		getProtect(function(data) {
+			article.title = data.title;
+			article.content = data.content;
+			article.placecity = data.conner.city;
+			article.connername = data.conner.name;
+			article.placename = data.conner.placename;
+			article.placeaddress = data.conner.placeaddress;
+			article.placelongitude = data.conner.placelongitude;
+			article.placelatitude = data.conner.placelatitude;
+		})
+	}
+	if(connerid){
+		article.connerid = connerid
+		$('#connername').val(decodeURI(util.GetQueryString('connername'))).attr('disabled', 'disabled');
+		$('#address').text(decodeURI(util.GetQueryString('connerplacename')))
+	} else {
+		$('#address').on('click', function(event) {
+			event.preventDefault();
+			var self = $(this)
+
+			$('.form').addClass('hide')
+			$('.message').removeClass('hide')
+			getAddress(function(data) {
+				console.log(data)
+				self.text(data.title);
+				article.placecity = data.city;
+				article.placename = data.title
+				article.placeaddress = data.address;
+				article.placelongitude = data.point.lng;
+				article.placelatitude = data.point.lat;
+				console.log(article)
+			})
+		});
+	}
+	$('#connername').on('blur', function(event) {
+		event.preventDefault();
+		article.placeconnername = $(this).val()
+		console.log(article)
+	});
+	$('#title').on('blur', function(event) {
+		event.preventDefault();
+		article.title = $(this).val()
+		console.log(article)
+	});
+	$('#content').on('click', function(event){
+		event.preventDefault();
+	})
+	$('#content').on('blur', function(event) {
+		event.preventDefault();
+		article.content = $(this).val().replace(/\r/ig,"").replace(/\n/ig,"$*$")
+	});
+	$('#publish').on('click', function(event) {
+		event.preventDefault();
+		POST('/article/inter/distribute', article)
+	});
+	$('#save').on('click', function(event) {
+		event.preventDefault();
+		POST('/article/inter/save', article)
+	});
+})(jQuery)
+
+function getAddress(fun) {
+	$('.message-list').children('li').remove()
+	var map = new BMap.Map("allmap")
+	var poi = null
+	getCenter(function(point) {
+		console.log(1)
+		map.centerAndZoom(new BMap.Point(point.lng, point.lat), 16);
+		getMessage(point, map, function(data) {
+			poi = data
+		})
+		map.addEventListener('moveend', function(e) {
+			console.log(2)
+			$('.message-list').children('li').remove()
+			this.clearOverlays();
+			getMessage(this.getCenter(), this, function(data) {
+				poi = data
+			})
+		})
+	})
+	$('#cancel').on('click', function(event) {
+		event.preventDefault();
+		$('.form').removeClass('hide')
+		$('.message').addClass('hide')
+	});
+	$('#confirm').on('click', function(event) {
+		event.preventDefault();
+		$('.form').removeClass('hide')
+		$('.message').addClass('hide');
+		var href = $(location).attr('href');
+		if (href.indexOf('#1') == -1) {
+			href += '#1'
+		};
+		console.log(href)
+		$(location).attr('href', href);
+		if (poi) fun(poi)
+	});
+}
+
+function getMessage(point, map, fun) {
+	$('.message-list').children('li').remove
+	var mPoint = new BMap.Point(point.lng, point.lat);
+	var mOption = {
+		poiRadius: 500,
+		numPois: 20
+	}
+	var myGeo = new BMap.Geocoder();
+	myGeo.getLocation(mPoint,
+		function mCallback(rs) {
+			var allPois = rs.surroundingPois; //获取全部POI（该点半径为100米内有6个POI点）
+			console.log(allPois)
+			var ele = $('<li>');
+			$('<p>').addClass('name').appendTo(ele);
+			$('<p>').addClass('placeaddress').appendTo(ele);
+			(function() {
+				for (i = 0; i < allPois.length; ++i) {
+					var li = ele.clone()
+					li.children('.name').text(allPois[i].title)
+					li.children('.placeaddress').text(allPois[i].address)
+					if (i == 0) {
+						li.addClass('active')
+						map.addOverlay(new BMap.Marker(allPois[i].point))
+						fun(allPois[i])
+					}
+					li.appendTo('.message-list')
+					li.data('i', i)
+					li.data('poi', allPois[i])
+					li.on('click', function(event) {
+						var i = $(this).data('i')
+						event.preventDefault();
+						map.clearOverlays();
+						$('.message-list .active').removeClass('active')
+						$(this).addClass('active');
+						map.addOverlay(new BMap.Marker(allPois[i].point));
+						fun($(this).data('poi'))
+					});
+				}
+			})()
+		}, mOption
+	);
+}
+
+function getCenter(fun) {
+	var geolocation = new BMap.Geolocation();
+	var point = {
+		lng: 130.000000,
+		lat: 29.827328
+	}
+	geolocation.getCurrentPosition(function(r) {
+		if (this.getStatus() == BMAP_STATUS_SUCCESS) fun(r.point)
+		else {
+			console.log('getCenter')
+			getCenter(fun)
+		}
+	});
+	return point
+}
+
+function POST(url, obj) {
+	if (!obj.title) obj.title = '一句话为浙大120周年庆生'
+	if (!obj.placename) obj.placeconnername = '角落'
+	$.post(url, obj, function(data, textStatus, xhr) {
+		if (data.status == 201) {
+			if (data.msg != '') {
+				$(location).attr('href', 'login?redirect=index');
+			}
+		}
+		if (data.data == "dis ok") {
+			$(location).attr('href', 'article?tab=1');
+		} else if (data.data == "save ok") {
+			$(location).attr('href', 'article?tab=2');
+		}
+		console.log(data)
+	});
+}
+
+function getProtect(fun) {
+	$.get('', function(data) {
+		/*optional stuff to do after success */
+		var article = data.data
+		$('#title').text(article.title)
+		$('#connername').text(article.conner.name)
+		$('#address').text(article.conner.placeaddress)
+		$('#content').text(article.conner.content)
+		if (article.imageurl) {
+			$('#preview').html('<img id=imghead onclick=$("#previewImg").click()>')
+			$('#imghead').load(function() {
+				$(this).attr('src', article.imageurl);
+				var rect = util.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+				this.width = rect.width;
+				this.height = rect.height;
+				//img.style.marginLeft = rect.left+'px';
+				this.style.marginTop = rect.top + 'px';
+			});
+		}
+		fun(data)
+	});
+}
+
+function previewImage(file) {
+	var reader = new FileReader();
+	reader.readAsDataURL(file.files[0])
+	reader.onload = function(evt) {
+		var box = $('<div>').css({
+			'width': '100%',
+			'height': $(window).height() + 'px',
+			'position': 'fixed',
+			'top': '0',
+			'left': '0',
+			'background-color': 'black',
+			'display':'-webkit-flex',
+			'display':'-webkit-flex',
+			'display':'-moz-box',
+			'display':'-ms-flexbox',
+			'display': 'flex',
+			'-webkit-box-direction': 'normal',
+			'-webkit-box-orient': 'vertical',
+			'-moz-flex-direction': 'column',
+			'-webkit-flex-direction': 'column',
+			'flex-direction': 'column'
+		});
+		box.append($('<div>').css({
+			'-webkit-flex':'1',
+			'-ms-flex':'1',
+			'-webkit-box-flex':'1',
+			'-moz-box-flex':'1',
+			'flex': '1',
+			'background-color': '#f0f0f0'
+		}))
+		var imgBox = $('<div>').appendTo(box);
+
+		var img = $('<img>').attr({
+			'src': evt.target.result,
+			'id': 'uploadimg'
+		}).css('width', '100%').appendTo(imgBox);
+		var buttonBox = $('<div>').css({
+			'position': 'absolute',
+			'bottom': '0',
+			'right': '0',
+			'display': 'flex',
+		}).appendTo(box);
+		$('<div>').text('取消').css({
+			'width': '60px',
+			'text-align': 'center',
+			'line-height': '30px',
+			'font-size': '1rem',
+			'margin': '5px',
+			'border-radius': '5px',
+			'background-color': '#32cd32',
+			'color': 'white',
+			'position': 'relative',
+			'z-index': '1000'
+		}).attr('id', 'cutCac').appendTo(buttonBox);
+		$('<div>').text('确定').css({
+			'width': '60px',
+			'text-align': 'center',
+			'line-height': '30px',
+			'font-size': '1rem',
+			'margin': '5px 20px',
+			'border-radius': '5px',
+			'background-color': '#32cd32',
+			'color': 'white',
+			'position': 'relative',
+			'z-index': '1000'
+		}).attr('id', 'cutCof').appendTo(buttonBox);
+		box.append($('<div>').css({
+			'-webkit-flex':'1',
+			'-ms-flex':'1',
+			'flex': '1',
+			'-webkit-box-flex':'1',
+			'-moz-box-flex':'1',
+			'background-color': '#f0f0f0'
+		}))
+		$('body').append(box)
+		img.load(function() {
+			var jcrop_api;
+			var height = img.height();
+			var width = img.width();
+			var c = height <= width ? height / 2 * 0.8 : width / 2 * 0.66;
+			$('#uploadimg').Jcrop({
+				bgFade: true,
+				bgOpacity: .2,
+				allowSelect: false,
+				allowResize: false,
+				trackDocument: false,
+				touchSupport: true,
+				// createBorders: [width / 2 - c*1.5, height / 2 - c, width / 2 + c*1.5, height / 2 + c],
+				setSelect: [width / 2 - c*1.5, height / 2 - c, width / 2 + c*1.5, height / 2 + c]
+			}, function() {
+				jcrop_api = this;
+			});
+			$('#cutCac').on('click', function(event) {
+				event.preventDefault();
+				jcrop_api.destroy()
+				box.remove()
+			});
+			$('#cutCof').on('click', function(event) {
+				event.preventDefault();
+				var uploadimg = document.getElementById('uploadimg')
+				var cvs = document.createElement('canvas');
+				var width = jcrop_api.getWidgetSize()[0],
+					height = jcrop_api.getWidgetSize()[1];
+				cvs.width = width;
+				cvs.height = height;
+				var ctx = cvs.getContext("2d");
+				var destX = 0,
+					destY = 0;
+				ctx.drawImage(uploadimg, destX, destY, width, height);
+				//把选中框里的图片内容存起来
+				var option = jcrop_api.tellSelect()
+				var imageData = ctx.getImageData(option.x, option.y, option.w, option.h);
+				cvs.width = option.w;
+				cvs.height = option.h;
+				//然后再画上去
+				ctx.putImageData(imageData, 0, 0);
+				var headimg = document.getElementById('imghead')
+				var base64 = ctx.canvas.toDataURL();
+				imghead.src = base64
+				console.log(base64)
+				$.ajax({
+					type: "POST",
+					url: "/pic/upload0",
+					data: {
+						file: base64
+					},
+					xhr: function() { 
+					//获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数  
+						console.log('progress')
+						myXhr = $.ajaxSettings.xhr();
+						if (myXhr.upload) { //检查upload属性是否存在  
+							//绑定progress事件的回调函数  
+							console.log('upload')
+							$('.progress-box').removeClass('hide')
+							myXhr.upload.addEventListener('progress', Handling, false);
+						}
+						return myXhr; //xhr对象返回给jQuery使用  
+					},
+					success: function(data) {
+						console.log('--------')
+						alert("上传成功" + data);
+						var obj = JSON.parse(data)
+						console.log(obj)
+						img.src = obj.url
+						article.imageurl = obj.url
+						$('.progress-box').addClass('hide')
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						$('.progress-box').addClass('hide')
+						alert("上传失败，请检查网络后重试");
+					}
+				});
+				jcrop_api.destroy()
+				box.remove()
+				console.log(1)
+			});
+		});
+	}
+	/*var MAXWIDTH = 70;
+	var MAXHEIGHT = 70;
+	var div = document.getElementById('preview');
+	if (file.files && file.files[0]) {
+		div.innerHTML = '<label>图片</label> <img id=imghead onclick=$("#previewImg").click()>';
+		var img = document.getElementById('imghead');
+		// img.onload = function() {
+		// 	var rect = util.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+		// 	img.width = rect.width;
+		// 	img.height = rect.height;
+		// 	//img.style.marginLeft = rect.left+'px';
+		// 	img.style.marginTop = rect.top + 'px';
+		// }
+		var reader = new FileReader();
+		reader.readAsDataURL(file.files[0])
+		reader.onload = function(evt) {
+			var fd = new FormData();
+			fd.append('uploadFile',file.files[0])
+			$.ajax({
+				type: "POST",
+				url: "/pic/upload",
+				data:fd,
+				processData:false,
+				contentType:false,
+				success: function(data) {
+					alert("上传成功"+data);
+					var obj = JSON.parse(data)
+					console.log(obj)
+					img.src = obj.url
+					article.imageurl = obj.url
+					
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					alert("上传失败，请检查网络后重试");
+				}
+			});
+			img.src = evt.target.result;
+		}
+	} else //兼容IE
+	{
+		var sFilter = 'filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+		file.select();
+		var src = document.selection.createRange().text;
+		div.innerHTML = '<img id=imghead>';
+		var img = document.getElementById('imghead');
+		img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+		var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+		status = ('rect:' + rect.top + ',' + rect.left + ',' + rect.width + ',' + rect.height);
+		div.innerHTML = "<div id=divhead style='width:" + rect.width + "px;height:" + rect.height + "px;margin-top:" + rect.top + "px;" + sFilter + src + "\"'></div>";
+	// } */
+}
+function Handling (e) { 
+	console.log(e)
+	var percent = e.loaded/e.total*100;
+	$('.load-bar-inner').animate({width: percent + '%'}, 20)
+	console.log(percent)
+}
+</script>
+</html>

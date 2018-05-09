@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>我的</title>
+    <link rel="stylesheet" href="../css/weui.min.css"/>
+    <link rel="stylesheet" href="../css/example.css"/>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
+    <script type="text/javascript" src="../js/tab.js"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+        document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getTime()+'"><\/script>')
+	</script>
+    <style type="text/css">
+    body{
+        background-color: #f2f2f2;
+        height: 100vh;
+    }
+    header{
+    	background-color: #fff;
+    }
+    .unlogin{
+        width: 100%;
+        height: 100px;
+        font-size: 20px;
+        line-height: 100px;
+        text-align: center;
+        color: #666;
+        background-color: #e0e0e0;
+    }
+    .xny-item{
+        background-color: #fff;
+    }
+
+    .xny-item .jifen{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .xny-item-body .xny-art-title{
+        padding-top: 12px;
+        font-size: 18px;
+        color: #1d2088;
+        line-height: 34px;
+    }
+    .xny-info{
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+    }
+    .xny-info span{
+        display: inline-block;
+        padding: 0 10px;
+        margin-right: 5px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 5px;
+        color:#fff;
+        background-color: #808080;
+        float: left;
+    }
+    .xny-info img{
+        float: left;
+        width: 40px;
+        margin-top: -5px;
+    }
+    .xny-biaoqian{
+        display: flex;
+    }
+    .xny-biaoqian-item{
+        flex: 1;
+        text-align: center;
+    }
+    .xny-biaoqian-item img{
+        width: 70px;
+    }
+    .xny-biaoqian-box{
+        width: 70px;
+        padding: 20px 0;
+        margin: 0 auto;
+        text-align: center;
+        line-height: 25px;
+    }
+    .xny-biaoqian-box i{
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        font-size: 16px;
+        line-height: 25px;
+        font-style: normal;
+        color: #fff;
+        background-color: #3BB287;
+    }
+    .xny-biaoqian-box span{
+        font-size: 12px;
+        color: #808080;
+    }
+    .user-list{
+        padding: 16px 0;
+    }
+    .user-item{
+        overflow: hidden;
+        background-color: #fff;
+        border-bottom: 2px solid #f2f2f2;
+    }
+    .user-image-box{
+        float: left;
+        padding: 10px 20px;
+    }
+    .user-image-box img{
+        display: block;
+        width: 20px;
+        height: 20px;
+    }
+    .user-content{
+        padding-left: 60px;
+    }
+    .user-content p{
+        font-size: 16px;
+        line-height: 40px;
+        color: #111;
+    }
+    .user-content p i{
+        position: relative;
+        top: -6px;
+        left: -4px;
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        font-size: 12px;
+        line-height: 16px;
+        text-align: center;
+        font-style: normal;
+        border-radius: 50%;
+        background-color: #E50110;
+        color: #fff;
+    }
+    </style>
+</head>
+<body >
+    <div class="main-pages">
+        <header><div class="unlogin">未登入</div></header>
+        <div class="user-list"></div>
+    </div>
+    <footer class="footer"></footer>
+
+</body>
+<script type="text/x-jquery-tmpl" id="user">
+    <div class="xny-item">
+        <div class="xny-user-img">
+            <img src="{{= util.userHeadImage(imageurl)}}">
+        </div>
+        <div class="xny-item-body">
+            <div class="xny-art-title">{{= username}}</div>
+			<div class="xny-info"><span>{{= rankName}}</span>
+                <img src="{{= rankImgs[rank]}}"></div>
+			<div class="xny-msg"><span class="xny-msg-item">{{= rankInfo}}</span></div>    
+        </div>
+        <div class="xny-icon jifen">
+            <img src="../images/score_1.png">
+            <span>{{= integral}}</span>
+        </div>
+    </div>
+	<div class="xny-biaoqian">
+        <div class="xny-biaoqian-item">
+                <div class="xny-biaoqian-box">
+                    <i>{{= corneraccount}}</i>
+                    <br>
+                    <span>占领的角落</span>
+                </div>
+            </div>
+            <div class="xny-biaoqian-item xintu">
+                <img src="../images/evlop.png">
+            </div>
+            <div class="xny-biaoqian-item">
+                <div class="xny-biaoqian-box">
+                    <i>{{= articleaccount}}</i>
+                    <br>
+                    <span>发布的文章</span>
+                </div>
+            </div>
+        </div>
+</script>
+<script type="text/x-jquery-tmpl" id="list">
+    {{each(i, item) list}}
+        <div class="user-item" onclick="util.href('{{= url}}')">
+            <div class="user-image-box">
+                <img src="{{= image}}">
+            </div>
+            <div class="user-content">
+                <p>
+                    {{= text}}
+                    {{if text=='消息通知'}}
+                        <i>{{= inum}}</i>
+                    {{/if}}
+                </p>
+            </div>
+        </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+var xny = new XNY()
+    ,tab = new Tab('.footer', 5)
+    ,user = {}
+    ,data = {"status":200,"msg":"OK","data":{"id":51,"username":"Eson","imageurl":null,"token":"1493C7FD1CF98CCEE693B5266AA85D81","userForm":0,"openid":null,"sex":false,"language":null,"city":null,"province":null,"country":null,"headimagurl":null,"privilege":null,"session_key":null,"taglib":"下沙","usertype":0}}
+    ,rankImgs =(function () {
+        var arr = [];
+        for (var i = 0; i <= 6; i++) {
+            arr.push('../images/ic_user level_'+ i +'.png')
+        }
+        return arr;
+    })()
+$(function () {
+	if (window.history && window.history.pushState) {　　
+		$(window).on('popstate', function() {　　
+			window.history.pushState('forward', null, '#');　　
+			window.history.forward(1);　　
+		});　　
+	}
+	window.history.pushState('forward', null, '#'); //在IE中必须得有这两行
+	window.history.forward(1);
+   $.get('/user/getuserinfo', function(data) {
+        
+        if(data.status!=201){
+            user = data.data
+            $.get('/record/user/rank?userid=' + user.id, function(data){
+            	user = $.extend(user, data.data)
+                $('header').html('')
+                $('#user').tmpl(user).appendTo('header')
+                $('header .xintu').on('click', function () {
+                    $(location).attr('href', '/xintu?userid='+ user.id)
+                })
+            	$.get('/notify/getunread', function(data){
+            		user = $.extend(user, data.data)
+                    $('#list').tmpl({list: getconfig(user)}).appendTo('.user-list')
+            	})
+            })
+        }else{
+        	$(location).attr('href', 'login');
+        }
+    });
+})
+
+function getconfig(user) {
+    return [
+            {
+                text: '消息通知'
+                ,image: '../images/msg.png'
+                ,url: 'advice'
+                ,inum: user.unreadRemind
+            },
+            {
+                text: '文章管理'
+                ,image: '../images/wenzhang.png'
+                ,url: 'article'
+            },
+            {
+                text: '角落占领'
+                ,image: '../images/zhanling.png'
+                ,url: 'author?authorid='+ user.id +'&tab=2'
+            },
+            
+            {
+                text: '圈子加入'
+                ,image: '../images/quanadd.png'
+                ,url: 'quan'
+            },
+
+            {
+                text: '喜欢的故事'
+                ,image: '../images/xihuan.png'
+                ,url: 'articlelist'
+            },
+      /*  
+        {
+            text: '我的角落'
+            ,image: '../images/wodejiaoluo.png'
+            ,url: 'author?authorid=' + user.id
+        }, */
+        {
+            text: '关注的作者'
+            ,image: '../images/yonghu.png'
+            ,url: 'guanzhu'
+        },
+       
+     /*    {
+            text: '邀请码'
+            ,image: '../images/yaoqingma.png'
+            ,url: 'invite'
+        }, */
+        {
+            text: '用户设置'
+            ,image: '../images/shezhi.png'
+            ,url: 'setup'
+        }, 
+        {
+            text: 'http测试'
+            ,image: '../images/shezhi.png'
+            ,url: 'http://bgtree.cn/page/xintu'
+        }, 
+        {
+            text: 'https测试'
+            ,image: '../images/shezhi.png'
+            ,url: 'xintu'
+        } 
+    ]
+}
+</script>
+</html>

@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>收藏</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getDate()+'">')
+</script>
+<style type="text/css">
+body, html{
+	margin: 0px;
+	padding:0px;
+	height: 100%;
+    width: 100%;
+    font-size: 0.9rem;
+    font-family: Verdana,"华文细黑";
+}
+li{
+    list-style: none;
+}
+.flex-row{
+    display: flex;
+}
+.hide{
+    display: none;
+}
+.cs-header{
+    padding-top: 8px;
+}
+.cs-header h1{
+    padding: 2px 10px;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #ddd;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<!-- <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+</head>
+<body>
+    <div class="toindex">
+        <h1></h1>
+    </div>
+    <header class='cs-header'>
+        <h1>收藏</h1>
+    </header>
+    <ul class="conner-list"></ul>
+    <div class="more">加载更多</div>
+</body>
+</html>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+!(function($) {
+    var xny = new XNY(true)
+    var page = 1;
+    var size = data.getSize.cornermapSize;
+    var str = data.loadmore[1]
+    $('.more').on('click',function(){
+    	getAuthor()
+    })
+    function getAuthor () {
+    	if($('.more').text() == str) return
+         $.get('/record/corner/favor?page='+ page +'&size='+ size, function(data) {
+        	 var arr = data.data
+        	 if(arr.length < size) $('.more').text(str)
+        	 page++
+        	 for(var i = 0; i < arr.length; i++){
+        		 var li = $('<li>').append(xny.createConner(arr[i].corner,true)).css('border-bottom', '1px solid #ddd'); 
+                 li.appendTo('.conner-list')
+        	 }
+         });
+       /*  xny.getData2('',function (articles) {
+            console.log(article)
+            for (var i = 0; i < articles.length; i++) {
+                var article = articles[i]
+                var li = $('<li>').append(xny.createConner(article.conner,true)).css({
+                    'border-bottom': '1px solid #ddd',
+                    'padding': '5px 0'
+                });
+                li.find('.icon-box').remove()
+                li.appendTo('.conner-list')
+            };
+            
+        }) */
+    }
+    getAuthor()
+})(jQuery)
+</script>

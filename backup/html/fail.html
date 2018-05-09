@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>地图</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<link rel="stylesheet" type="text/css" href="../css/complete.css">
+<style type="text/css">
+body, html {
+	margin: 0px;
+	padding:0px;
+	height: 100%;
+    background-color: #efeff4;
+    font-size: 0.9rem;
+}
+li{
+    list-style: none;
+}
+#allmap {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+.header{
+    display: flex;
+    height: 7%
+}
+.flex-left{
+    flex:1;
+    width: 65%;
+    margin:auto 0;
+}
+.flex-right{
+    width: 35%;
+    margin: auto 0;
+}
+.flex-right a{
+    font-size: 1rem;
+    padding: 0rem
+}
+.block{
+    position: absolute;
+    top: 7%;
+    left: 0;
+    width: 100%
+}
+.map{
+    width: 100%;
+    height: 65%
+}
+.swiper{
+    height: 35%;
+    width: 100%;
+    overflow: hidden;
+}
+.hiSlider-wrap,.hiSlider,.hiSlider-item{
+    height: 100%
+}
+.article-list{
+    width: 100%;
+    padding-bottom: 30px
+}
+.hide{
+    display: none;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<!-- <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="flex-left">
+            <div class="weui-search-bar" id="searchBar">
+                <form class="weui-search-bar__form">
+                    <div class="weui-search-bar__box">
+                        <i class="weui-icon-search"></i>
+                        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+                        <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+                    </div>
+                    <label class="weui-search-bar__label" id="searchText" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                        <i class="weui-icon-search"></i>
+                        <span>搜索</span>
+                    </label>
+                </form>
+                <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+            </div>
+        </div>
+        <div class="flex-right">
+            <a id="switch" class="weui-btn weui-btn_primary" href="javascript:;">切换为列表</a>
+        </div>
+    </header>
+    <section id="page1" class="block" style="height:88%;width:100%">
+        <div class='map'>
+            <div id="allmap"></div>
+        </div>
+        <div class="swiper">
+            <ul class="hiSlider">
+            </ul>
+        </div>
+    </section>
+    <section id="page2" class="block hide">
+        <ul class="article-list"></ul>
+    </section>
+    <section class="footer">
+        <ul>
+            <li id="shouye">
+                <img src="../images/cindex.png">
+                首页
+            </li>
+            <li>
+                <img src="../images/czuobiao_1.png">
+                附近
+            </li>
+            <li id="article">
+                <img src="../images/csend.png">
+                发布
+            </li>
+            <li id="mine">
+                <img src="../images/xihuan1.png">
+                我的
+            </li>
+        </ul>
+    </section>
+</body>
+</html>
+<script type="text/javascript" src="../js/xny.js"></script>
+<script type="text/javascript">
+!(function($) {
+    var xny = new XNY();
+    var map = new BMap.Map("allmap");
+    var lng, lat
+    var markers = []
+    var geolocation = new BMap.Geolocation();
+    var width
+    var currentmarker = null
+    init()
+    function init (){
+    	geolocation.getCurrentPosition(function(r) {
+            console.log(2)
+            lng = r.point.lng
+            lat = r.point.lat
+                // var marker = new BMap.Marker(new BMap.Point(lng,lat))
+                // console.log(marker.getIcon())
+                // marker.setIcon(marker.getIcon().setImageUrl('../images/x6.png'))
+                // map.addOverlay(marker)
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                map.centerAndZoom(new BMap.Point(lng, lat), 15);
+                setMarkers('/article//nearbylist?lat=' + lat + '&log=' + lng + '&page=1&size=500', function() {
+                    width = $('.hiSlider-item').width()
+                    $('.swiper ul').hiSlider({
+                        isFlexible: true,
+                        isSupportTouch: true,
+                        isShowPage: false,
+                        isShowTitle: false,
+                        isAuto: false,
+                        isShowControls: false,
+                        onMoveAfter: function() {
+                            var left = $('.swiper ul').position().left;
+                            var i = -left / width;
+                            if (i == markers.length) i = 0;
+                            map.panTo(markers[i].getPosition())
+                            if (currentmarker) {
+                                map.removeOverlay(currentmarker)
+                                currentmarker.setIcon(currentmarker.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x5.png'))
+                                map.addOverlay(currentmarker)
+                                map.removeOverlay(markers[i])
+                                markers[i].setIcon(markers[i].getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                                map.addOverlay(markers[i])
+                                currentmarker = markers[i]
+                            } else {
+                                map.removeOverlay(markers[i])
+                                markers[i].setIcon(markers[i].getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                                currentmarker = markers[i]
+                                map.addOverlay(markers[i])
+                            }
+                        }
+                    })
+                })
+            } else init()
+        });
+    }
+    
+    $('#switch').on('click', function(event) {
+        event.preventDefault();
+        if ($('#page1').hasClass('hide')) {
+            $('#page1').removeClass('hide')
+            $('#page2').addClass('hide')
+        } else {
+            $('#page1').addClass('hide')
+            $('#page2').removeClass('hide')
+        };
+    });
+
+    function setMarkers(url, fun) {
+        xny.getData(url, function(arr) {
+            var ele = xny.createLi().addClass('hiSlider-item');
+            ele.find('.address').after($('<p>').attr('class', 'distance'))
+            for (var i = 0; i < arr.length; i++) {
+                (function() {
+                    var li = ele.clone();
+                    $('.swiper ul').append(li)
+                    xny.updateText(li, arr[i])
+                    li.find('.distance').text('距离您：' + arr[i].distance + 'km')
+                    xny.setEvent(li, arr[i])
+                    var li2 = li.clone(true).removeClass('hiSlider-item').css({
+                        margin: '10px 0',
+                        borderBottom: '1px solid #ddd',
+                        paddingBottom: '10px'
+                    });
+                    $('.article-list').append(li2)
+                    var point = new BMap.Point(arr[i].lng, arr[i].lat)
+                    var marker = new BMap.Marker(point)
+                    marker.i = i
+                    var icon = marker.getIcon()
+                    icon.setImageUrl('http://120.26.47.238/www/image/2017/server/x5.png')
+                    icon.setSize(new BMap.Size(30, 30))
+                    icon.setImageSize(new BMap.Size(30, 30))
+                    marker.setIcon(icon)
+                    marker.setShadow(marker.getShadow().setImageUrl(''))
+                    map.addOverlay(marker)
+                    marker.addEventListener('click', function() {
+                        map.panTo(this.getPosition());
+                        if (marker.i == 0) {
+                            marker.i = markers.length
+                        };
+                        var left = -marker.i * width
+                        $('.swiper ul').css('left', left + 'px');
+                        if (currentmarker) {
+                            map.removeOverlay(currentmarker)
+                            currentmarker.setIcon(currentmarker.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x5.png'))
+                            map.addOverlay(currentmarker)
+                            map.removeOverlay(this)
+                            this.setIcon(this.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                            map.addOverlay(this)
+                            currentmarker = this
+                        } else {
+                            map.removeOverlay(this)
+                            this.setIcon(this.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                            currentmarker = this
+                            map.addOverlay(this)
+                        }
+                    })
+                    markers.push(marker)
+                })();
+            }
+            fun();
+        })
+    }
+})(jQuery)
+</script>

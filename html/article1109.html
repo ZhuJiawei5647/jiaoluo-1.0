@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>发布</title>
+<!-- <link rel="stylesheet" type="text/css" href="../css/art_complete.css"> -->
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getDate()+'">')
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<style type="text/css">
+body,html{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	font-size: 0.9rem
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+}
+.header ul{
+	border-bottom:1px solid #ddd;
+}
+.header ul li{
+	font-size: 1.2rem;
+	text-align: center;
+}
+.header ul li a{
+	display:inline-block;
+	width:80px;
+	color:black;
+	text-decoration:none;
+	line-height: 3rem;
+}
+.header ul li.active a{
+	color:#fc554c;
+	border-bottom:2px solid #fc554c;
+	margin-bottom:-1px;
+}
+.hide{
+	display: none;
+}
+.article-create{
+	position:fixed;
+	bottom:80px;
+	right:20px;
+	z-index:1001;
+}
+.article-create img{
+	width:70px;
+}
+.article-list{
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+</head>
+<body>
+	<header class="header">
+		<ul class="flex-row">
+			<li id="publish" class="flex-grow"><a>已发布</a></li>
+			<li id="keep" class="flex-grow"><a>草稿箱</a></li>
+			<li id="hide" class="flex-grow"><a>不公开</a></li>
+		</ul>
+	</header>
+	<section id="publish-item" class='hide'>
+		<div class="article-create"><img alt="" src="../images/new_art.png"></div>
+		<ul class="article-list"></ul>
+		<div class="more pubmore">加载更多</div>
+	</section>
+	<section id="keep-item" class="hide">
+		<ul class="article-list"></ul>
+		<div class="more keepmore">加载更多</div>
+	</section>
+	<section id="hide-item" class="hide">
+		<ul class="article-list"></ul>
+		<div class="more hidemore">加载更多</div>
+	</section>
+    <section class="footer">
+        <ul>
+            <li id="shouye">
+                <img src="../images/art_cindex.png"><br>
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/art_zuobiao.png"><br>
+                附近
+            </li>
+            <li id="add">
+                <img src="../images/new_art.png"><br>
+            </li>
+            <li id="article">
+                <img src="../images/art_csend.png"><br>
+                发布
+            </li>
+            <li id="mine">
+                <img src="../images/art_yonghu.png"><br>
+                我的
+            </li>
+        </ul>
+    </section>
+</body>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+!(function($) {
+	var active, showpage
+	var tab = util.GetQueryString('tab')
+	var xny = new XNY();
+	var pubpage = 1,keeppage = 1,hidepage = 1;
+	console.log(tab)
+	if (tab && tab != 1) {
+		console.log(tab)
+		switch (tab) {
+			case '2':
+				console.log('tab')
+				active = $('#keep')
+				showpage = $('#keep-item')
+				keeppage++
+				createHtml('/article/inter/user/article?status=1&page=1&size=' + data.getSize.articleSize, $('#keep-item ul'),function(length){
+					if(length < data.getSize.articleSize) $('.keepmore').text(data.loadmore[1])
+				},true)
+				break;
+			case '3':
+				active = $('#hide')
+				showpage = $('#hide-item')
+				hidepage++
+				createHtml('/article/inter/user/article?status=3&page=1&size=' + data.getSize.articleSize, $('#hide-item ul'),function(length){
+					if(length < data.getSize.articleSize) $('.hidemore').text(data.loadmore[1])
+				})
+				break;
+			default:
+				active = $('#publish')
+				showpage = $('#publish-item')
+				pubpage++
+				createHtml('/article/inter/user/article?status=2&page=1&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+					if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+				})
+				break;
+		}
+	} else {
+		active = $('#publish')
+		showpage = $('#publish-item')
+		pubpage++
+		createHtml('/article/inter/user/article?status=2&page=1&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+		})
+	}
+	active.addClass('active')
+	showpage.removeClass('hide')
+	$('.article-create').on('click', function(event) {
+		$(location).attr('href', 'publish');
+	})
+	$('#publish').one('click', function(event) {
+		if(pubpage > 1) return;
+		createHtml('/article/inter/user/article?status=2&page=1&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+		})
+	});
+	$('#keep').one('click', function(event) {
+		if(keeppage > 1) return;
+		createHtml('/article/inter/user/article?status=1&page=1&size=' + data.getSize.articleSize, $('#keep-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.keepmore').text(data.loadmore[1])
+		},true)
+	});
+	$('#hide').one('click', function(event) {
+		if(hidepage > 1) return;
+		createHtml('/article/inter/user/article?status=3&page=1&size=' + data.getSize.articleSize, $('#hide-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.hidemore').text(data.loadmore[1])
+		})
+	});
+	$('.pubmore').on('click', function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/article/inter/user/article?status=2&page='+ pubpage +'&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+		})
+		pubpage++;
+	})
+	$('.keepmore').on('click', function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/article/inter/user/article?status=1&page='+ keeppage +'&size=' + data.getSize.articleSize, $('#keep-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.keepmore').text(data.loadmore[1])
+		})
+		keeppage++;
+	})
+	$('.hidemore').on('click', function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/article/inter/user/article?status=3&page='+ hidepage +'&size=' + data.getSize.articleSize, $('#hide-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.hidemore').text(data.loadmore[1])
+		})
+		hidepage++;
+	})
+	$('#publish').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#publish-item').removeClass('hide')
+		showpage = $('#publish-item')
+	});
+	$('#keep').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#keep-item').removeClass('hide')
+		showpage = $('#keep-item')
+	});
+	$('#hide').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#hide-item').removeClass('hide')
+		showpage = $('#hide-item')
+	});
+
+	function createHtml(ul, sel, fun, iskeep) {
+		xny.getData(ul, function(arr) {
+			for (var i = 0; i < arr.length; i++) {
+				(function() {
+					console.log(arr.length)
+					if(iskeep){
+						var li = $('<li>').append(xny.createLi(arr[i])).css({
+							'padding-top': '10px',
+							'border-bottom': '1px solid #ddd',
+						});
+						!(function(){
+							var k = i;
+							li.on('click',function(){
+								$(location).attr('href','publish?id='+arr[k].articleid)
+							})
+						})()
+					}else{
+						var li = $('<li>').append(xny.createLi(arr[i], true)).css({
+							'padding-top': '10px',
+							'border-bottom': '1px solid #ddd',
+						});
+					}
+					sel.append(li)
+				})()
+			};
+			fun(arr.length)
+		})
+
+	}
+})(jQuery)
+</script>
+</html>

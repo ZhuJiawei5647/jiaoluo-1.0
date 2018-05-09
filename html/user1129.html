@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title></title>
+    <link rel="stylesheet" href="../css/weui.min.css"/>
+    <link rel="stylesheet" href="../css/example.css"/>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+	</script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
+    <style type="text/css">
+    body,html{
+		margin: 0px;
+		padding: 0px;
+        width: 100%;
+		font-size: 0.9rem
+    }
+    body{
+    	padding-bottom:40px;
+    }
+    input,button{
+        background: none;
+        outline: none;
+        border: none;
+        padding: 0;
+        font-size: 1rem;
+        font-family: "微软雅黑","Microsoft Yahei"
+    }
+    ul{
+    	padding:0;
+    	margin:0;
+    }
+    li{
+    	list-style:none
+    }
+    #user{
+    	padding:15px 0;
+    	margin-right:20px;
+    	font-size:1.1rem;
+    	background: url(../images/xiangyou1.png) right center no-repeat;
+        background-size: 25px 25px;
+    }
+    .user-area{
+        padding: 5px 20px 5px 0;
+        font-size: 1.2rem;
+        border-bottom: 1px solid #ddd;
+    }
+    .area-item{
+    	position:relative;
+        background: url(../images/xiangyou1.png) right center no-repeat;
+        background-size: 25px 25px;
+    }
+    .area-item .msgnum{
+    	float:right;
+    	padding:0 10px;
+    	border-radius:10px;
+    	margin-top:4px;
+    	margin-right:30px;
+    	font-size:0.9rem;
+    	background-color:red;
+    	color:white;
+    }
+   .area-item .anonum{
+    	float:right;
+    	padding:0 10px;
+    	border-radius:10px;
+    	margin-top:4px;
+    	margin-right:30px;
+    	font-size:0.9rem;
+    	background-color:red;
+    	color:white;
+    }
+    .item-icon{
+        width:18px;
+        height: 18px;
+        margin: 0 10px;
+        margin-bottom: -2px;
+    }
+    .tag-name{
+    	float:right;
+    	margin-right: 30px;
+    	color:#333;
+    	/* background-color: #00bfff; */
+    	border-radius: 5px;
+    	padding: 0 10px;
+    }
+    .userimage{
+    	width:40px;
+    	height:40px;
+    	border-radius:20px;
+    }
+    </style>
+</head>
+<body >
+    <div class="main-pages">
+        <div id="user" class="user-area">
+            <div style="display:flex">
+                <div>
+                    <img class="item-icon userimage" src="../images/check.png">
+                </div>
+                <div style="flex:1" id ="username">
+                    未登入
+                </div>
+            </div>
+            <div class="" id="timer">
+            </div>
+        </div>
+        
+       <div class="user-area">
+         	<div class="area-item">
+                <div class="tag-group"><img class="item-icon" src="../images/tag_gronp.png">角落群<span class="tag-name"></span></div>
+            </div>
+        </div> 
+<!--         <div class="user-area">
+         	<div class="area-item">
+                <div class="ano"><img class="item-icon" src="../images/laba.png">系统公告<span class="anonum"></span></div>
+            </div>
+            
+            
+        </div> -->
+         <div class="user-area">
+         	
+            <div class="area-item">
+                <div class="msg"><img class="item-icon" src="../images/message.png">消息通知<span class="msgnum"></span></div>
+            </div>
+            
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="con-crea"><img class="item-icon" src="../images/art_zuobiao.png">我的角落</div>
+            </div>
+           <!--  <div class="area-item">
+                <div class="art-pub"><img class="item-icon" src="../images/icon_24.png">发布的故事</div>
+            </div> -->
+        </div>
+        <div class="user-area">
+            <!-- <div class="area-item">
+                <div class="con-pass"><img class="item-icon" src="../images/cfoot.png">踩过的角落</div>
+            </div> -->
+            <div class="area-item">
+                <div class="art-author"><img class="item-icon" src="../images/art_yonghu.png">关注的作者</div>
+            </div>
+       	</div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="con-coll"><img class="item-icon" src="../images/user_favor.png">占领的角落</div>
+            </div>
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="art-befavor"><img class="item-icon" src="../images/happy.png">喜欢的故事</div>
+            </div>
+<!--             <div class="area-item">
+                <div class="art-read"><img class="item-icon" src="../images/user_read.png">看过的故事</div>
+            </div>
+            <div class="area-item">
+                <div class="art-com"><img class="item-icon" src="../images/user_comment.png">评过的故事</div> -->
+            <!-- </div> -->
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="user-invite"><img class="item-icon" src="../images/invite.png">邀请码</div>
+            </div>
+        </div>
+        <div class="user-area">
+            <div class="area-item">
+                <div class="art-manage"><img class="item-icon" src="../images/article_new.png">文章管理</div>
+            </div>
+        </div>
+<!--         <div class="user-area">
+            <div class="area-item">
+                <div class="user-friend"><img class="item-icon" src="../images/friend.png">好友</div>
+            </div>
+        </div> -->
+<!--         <div class="user-area">
+            <div class="area-item">
+                <div class="weixin-pay"><img class="item-icon" src="../images/weixin.png">微信支付</div>
+            </div>
+        </div>
+         <div class="user-area">
+            <div class="area-item">
+                <div class="weibo-show"><img class="item-icon" src="../images/weibo.png">微博</div>
+            </div>
+        </div> -->
+          
+    </div>
+    <footer class="footer"></footer>
+
+</body>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/tab.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+var xny = new XNY()
+    ,tab = new Tab('.footer', 5)
+    ,user = {};
+$('#user').on('click',function(){
+    $(location).attr('href', 'setup');
+})
+$.get('/user/getuserinfo', function(data) {
+	
+    if(data.status!=201){
+    	var timer = new Date().toLocaleString();
+        user = data.data
+        $('.userimage').attr("src",util.userHeadImage(user.imageurl))
+    	$('#username').html("<label>欢迎，"+user.username+"</label>")
+        $(document).attr('title', user.username);
+        if(user.taglib) $('.tag-name').text(user.taglib);
+        else $('.tag-name').text('暂未加入群组').css('background-color','#ccc')
+        $.get('/notify/getunread', function(data){
+        	$('.msgnum').text(data.data.unreadRemind)
+        	if(data.data.unreadRemind == 0) $('.msgnum').remove();
+        	$('.anonum').text(data.data.unreadAno)
+        	if(data.data.unreadAno == 0) $('.anonum').remove();
+        	
+        })
+        
+    }else{
+    	$(location).attr('href', 'login');
+    }
+});
+$('.msg').on('click', function(event) {
+    event.preventDefault();
+	$(location).attr('href','advice')
+});
+$('.ano').on('click', function(event) {
+    event.preventDefault();
+	$(location).attr('href','announce')
+});
+$('.con-crea').on('click', function(event) {
+    event.preventDefault();
+	$(location).attr('href','author?authorid=' + user.id + '&username=' + user.username)
+});
+$('.art-pub').on('click', function(event) {
+    event.preventDefault();
+	$(location).attr('href','author?authorid=' + user.id + '&username=' + user.username + '&tab=2')
+});
+$('.art-author').on('click', function(event) {
+    event.preventDefault();
+    $(location).attr('href', 'guanzhu');
+});
+$('.con-coll').on('click', function(event) {
+    event.preventDefault();
+    $(location).attr('href', 'connersave');
+});
+
+$('.art-befavor').on('click', function(event) {
+    event.preventDefault();
+    $(location).attr('href', 'articlelist?tab=1');
+});
+$('.art-read').on('click', function(event) {
+    event.preventDefault();
+    $(location).attr('href', 'articlelist?tab=2');
+});
+$('.art-com').on('click', function(event) {
+    event.preventDefault();
+    $(location).attr('href', 'articlelist?tab=3');
+});
+$('.user-invite').on('click', function(){
+	$(location).attr('href', 'invite')
+})
+$('.user-friend').on('click', function(){
+	$(location).attr('href', 'inviteuser')
+})
+$('.weixin-pay').on('click', function(){
+	$(location).attr('href', '/kk/weixin/h5pay')
+})
+$('.tag-group').on('click', function(){
+	$(location).attr('href', 'group')
+})
+$('.weibo-show').on('click', function(){
+	$(location).attr('href', 'weiboshow')
+})
+$('.art-manage').on('click', function(){
+	$(location).attr('href', 'article')
+})
+</script>
+</html>

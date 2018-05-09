@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>地图</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<style type="text/css">
+body, html {
+	margin: 0px;
+	height: 100%;
+    background-color: #efeff4 
+}
+li{
+    list-style: none;
+}
+.map{
+	width: 100%;
+	height: 60%
+}
+#allmap {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+.header{
+    display: flex;
+}
+.flex-left{
+    width: 65%;
+}
+.flex-right{
+    width: 35%
+}
+.flex-right a{
+    font-size: 1rem;
+    padding: 0rem
+}
+.swiper{
+    height: 30%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.hiSlider-wrap,.hiSlider,.hiSlider-item{
+    height: 100%
+}
+.green{
+    background-color: green;
+}
+.blue{
+    background-color: blue;
+}
+.yellow{
+    background-color: yellow;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=wdNYY5uNwSIORKycLLq7p4VEvR7zByCf&s=1"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="flex-left">
+            <div class="weui-search-bar" id="searchBar">
+                <form class="weui-search-bar__form">
+                    <div class="weui-search-bar__box">
+                        <i class="weui-icon-search"></i>
+                        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+                        <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+                    </div>
+                    <label class="weui-search-bar__label" id="searchText" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                        <i class="weui-icon-search"></i>
+                        <span>搜索</span>
+                    </label>
+                </form>
+                <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+            </div>
+        </div>
+        <div class="flex-right">
+            <a class="weui-btn weui-btn_primary" href="javascript:;">切换为地图</a>
+        </div>
+    </header>
+    <section class='map'>
+    <div id="allmap"></div>
+    </section>
+    <section class="swiper">
+        <ul class="hiSlider">
+        </ul>
+    </section>
+</body>
+</html>
+<script type="text/javascript">
+var map = new BMap.Map("allmap");
+var lng,lat
+var markers = []
+var geolocation = new BMap.Geolocation();
+var width
+geolocation.getCurrentPosition(function(r) {
+    lng = r.point.lng
+    lat = r.point.lat
+    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+        map.centerAndZoom(new BMap.Point(lng,lat), 15);
+        setMarkers(lng, lat);
+        width = $('.hiSlider-item').width()
+        $('.swiper ul').hiSlider({isFlexible:true,isSupportTouch:true,isShowPage:false,isShowTitle:false,isAuto:false,isShowControls:false,onMoveAfter:function(){
+            var left = $('.swiper ul').position().left;
+            var i = -left/width;
+            if (i == markers.length) i = 0;
+            map.panTo(markers[i].point)
+        }})
+    }
+});
+function setMarkers (lng, lat){
+	//console.log((new Date()).getTime())
+   //var arr = getData()
+    //console.log((new Date()).getTime())
+   // console.log(arr);
+    var arr = getData2(lng, lat)
+      for(var i = 0; i < arr.length; i++){
+        (function () {
+            var li = $('<li>').addClass('hiSlider-item')
+            $('<h3>').text(arr[i].title).appendTo(li)
+            $('<p>').text(arr[i].content).appendTo(li)
+            $('<p>').text(arr[i].address).appendTo(li)
+            $('.swiper ul').append(li)
+            var marker = new BMap.Marker(arr[i].point)
+            marker.i = i
+            map.addOverlay(marker)
+            marker.addEventListener('click',function(){
+                map.panTo(this.getPosition());
+                if (marker.i == 0) {marker.i = markers.length};
+                var left = -marker.i * width
+                $('.swiper ul').css('left', left+'px');
+            })
+            markers.push(marker)
+            console.log(markers)
+        })(); 
+    } 
+}
+function getData2 (lng, lat){
+    var arr = []
+    for (var i = 0; i < 6; i++) {
+        var obj = {}
+        var a = lng + 0.01 * Math.random()
+        var b = lat + 0.01 * Math.random()
+        obj.point = new BMap.Point(a, b)
+        obj.title = '标题' + i
+        obj.content = '大口径风扇考虑考虑更健康十分谨慎考虑房价深刻解放了快速'
+        obj.address = '浙江省政府'
+        arr.push(obj)
+    };
+    return arr;
+}
+function getData (){
+	var array = []
+    $.get('/article/alllist?page=1&size=10', function(data) {
+        
+        var arr = data.data
+
+        for (var i = 0; i < arr.length; i++) {
+        	var obj = {}
+            obj.point = new BMap.Point(arr[i].placelongitude, arr[i].placelatitude)
+            obj.title = arr[i].title
+            obj.content = arr[i].artbegin
+            obj.address = arr[i].conner.placeaddress
+            obj.boring = arr[i].article_boring
+            obj.boringNum = arr[i].boring
+            obj.favor = arr[i].article_favor
+            obj.favorNum = arr[i].favor
+            obj.befavor = arr[i].conner_favor
+            obj.befavorNum = arr[i].conner.befavor
+            obj.pass = arr[i].conner.pass
+            obj.coments = arr[i].coments
+            console.log(obj)
+            array.push(obj)
+        };
+        for(var i = 0; i < array.length; i++){
+            (function () {
+                var li = $('<li>').addClass('hiSlider-item')
+                $('<h3>').text(array[i].title).appendTo(li)
+                $('<p>').text(array[i].content).appendTo(li)
+                $('<p>').text(array[i].address).appendTo(li)
+                $('.swiper ul').append(li)
+                var marker = new BMap.Marker(array[i].point)
+                marker.i = i
+                map.addOverlay(marker)
+                marker.addEventListener('click',function(){
+                    map.panTo(this.getPosition());
+                    if (marker.i == 0) {marker.i = markers.length};
+                    var left = -marker.i * width
+                    $('.swiper ul').css('left', left+'px');
+                })
+                markers.push(marker)
+                console.log(markers)
+            })();
+        }
+    });
+	
+	 console.log(array)
+    return array;
+}
+</script>

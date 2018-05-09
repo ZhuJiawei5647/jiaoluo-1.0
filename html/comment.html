@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>评论</title>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/data.js"></script>
+	<style type="text/css">
+	body,html{
+		padding: 0;
+		margin:0;
+	}
+	body{
+		min-height: 100%;
+	}
+	ul,li,p,h1{
+		padding: 0;
+		margin: 0;
+	}
+	textarea{
+		background: none;
+		outline: none;
+		border: none;
+		padding: 0;
+		margin: 0;
+	}
+	.com-header{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 40px;
+	}
+	.com-body{
+		margin-top: 40px;
+		margin-bottom: 40px;
+	}
+	.com-footer{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		min-height: 40px;
+		background-color: #f3f3f3;
+	}
+
+	.com-title{
+		font-size: 1.05rem;
+		line-height: 40px;
+		font-weight: normal;
+		text-align: center;
+		background-color: #F0F8FF;
+	}
+	.media{
+		overflow: hidden;
+	}
+	.media .img-box{
+		float: left;
+		width: 70px;
+		text-align: center;
+	}
+	.media .img-box img{
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+	}
+	.media .media-top{
+		padding-top: 6px;
+		overflow: hidden;
+		vertical-align: middle;
+	}
+	.media .media-top span{
+		vertical-align: bottom;
+	}
+	.media .media-top span.time{
+		position: relative;
+		top: 1px;
+		float: right;
+		margin-right: 8px;
+		font-size: 0.9rem;
+		color: #ccc;
+	}
+	.media .media-top span.ans-num{
+		float: right;
+		margin-right: 10px;
+		font-size: 0.9rem;
+		color: #ccc;
+	}
+	.media .media-top span.name{
+		color: #1E90FF;
+	}
+	.media .content{
+		overflow: hidden;
+		padding: 5px 5px 5px 0;
+	}
+	.com-box{
+		padding: 10px 0;
+		border-bottom: 1px solid #ddd;
+	}
+	.com-ans{
+		list-style: none;
+	}
+	.msg-send{
+		overflow: hidden;
+		position: relative;
+	}
+	.msg-send .btn-box{
+		float: right;
+		width: 60px;
+	}
+	.msg-send .btn-box label{
+		position: absolute;
+		bottom: 10px;
+		font-size: 0.9rem;
+		line-height: 20px;
+		text-indent: 0.5rem;
+	}
+	.input-container{
+		background-color: #F0FFFF;
+		margin: 5px 10px;
+		margin-right: 70px;
+		padding: 5px 10px;
+		border-radius: 10px;
+	}
+	.msg-send .input-box{
+		position: relative;
+		overflow: hidden;
+	}
+	.msg-send .input-box pre{
+		margin: 0;
+		display: block;
+		font-size: 0.9rem;
+		line-height: 20px;
+		max-height: 60px;
+		min-height: 20px;
+		white-space:pre-wrap;
+	    white-space:-moz-pre-wrap;
+	    white-space:-pre-wrap;
+	    white-space:-o-pre-wrap;
+	    word-wrap:break-word;
+	    word-break: break-all;
+	    visibility: hidden;
+	    overflow: hidden;
+	}
+	.msg-send .input-box textarea{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding-right: 20px;
+		font-size: 0.9rem;
+		line-height: 20px;
+	}
+	.msg-send .input-box textarea::-webkit-input-placeholder {
+		font-size: 0.9rem;
+		line-height: 20px;
+	}
+
+	.msg-send .input-box textarea:-moz-placeholder {
+		font-size: 0.9rem;
+		line-height: 20px;
+　　}
+
+	.msg-send .input-box textarea::-moz-placeholder {
+		font-size: 0.9rem;
+		line-height: 20px;
+	}
+
+	.msg-send .input-box textarea:-ms-input-placeholder {
+		font-size: 0.9rem;
+		line-height: 20px;
+	}
+	.com-ans-more{
+		text-align: center;
+		font-size: 0.9rem;
+		line-height: 2rem;
+		background-color: #f6f6f6;
+	}
+	</style>
+</head>
+<body>
+	<header class="com-header">
+		<h1 class="com-title">文章：</h1>
+	</header>
+	<section class="com-body">
+		<div class="com-box media">
+			<div class="img-box">
+				<img src="" alt="没有头像">
+			</div>
+			<div class="media-top">
+				<span class="time"></span>
+				<span class="ans-num"></span>
+				<span class="name"></span>
+			</div>
+			<p class="content">
+			</p>
+		</div>
+		<ul class="com-ans-list">
+		</ul>
+		<div class="com-ans-more">加载更多</div>
+	</section>
+	<footer class="com-footer">
+		<section class="msg-send">
+			<div class="btn-box">
+				<label id="report">发表</label>
+			</div>
+			<div class="input-container">
+				<div class="input-box">
+					<pre><span></span><br></pre>
+					<textarea id="ansinput" placeholder="回复:"></textarea>
+				</div>
+			</div>
+		</section>
+	</footer>
+</body>
+	<script type="text/javascript">
+		var comid = util.GetQueryString('comid')
+		var userid;
+		var anspage = 1;
+		var size = data.getSize.detailAnsSize;
+		var loadmore = data.loadmore;
+		$.get('/record/comment/detail?commentid=' + comid + '&page='+ anspage +'&size=' + size,function (data) {
+			var data = data.data;
+			var $comBox = $('.com-box');
+			$comBox.find('img').attr('src', util.userHeadImage(data.author.userheadimageurl));
+			$comBox.find('.time').text(data.created);
+			$comBox.find('.ans-num').text('回复' + data.ans.length);
+			$comBox.find('.name').text(data.author.username)
+			$comBox.find('.content').text(data.content)
+			$('.com-title').text('文章：'+data.articletitle).on('click', function(){
+				$(location).attr('href','detail?id='+data.articleid)
+			})
+			userid = data.author.userid;
+			if(data.ans.length < size) $('.com-ans-more').text(loadmore[1])
+			createAnslist(data.ans);
+		})
+		$('#ansinput').on('input', function(event) {
+			event.preventDefault();
+			if ($(this).val() != '') $('#report').css('color', '#1E90FF');
+			else $('#report').css('color', '#aaa')
+			$(this).prev().html($(this).val())
+		});
+		$('#report').on('click', function() {
+			if ($('#ansinput').val() != '') {
+				var self = $(this)
+				$.get('/action/comment/ans?commentid=' + comid + '&touserid=' + userid + '&anscontent=' + $('#ansinput').val() + '&type=1', function(data) {
+					if (data.status != 201) {
+						$('#comment').val('')
+						self.css('color', '#aaa');
+						ansinit()
+					} else {
+						$(location).attr('href', 'login');
+					}
+				});
+			};
+		})
+		$('.com-ans-more').on('click', getmoreans)
+		function ansinit() {
+			anspage = 1;
+			$.get('/record/comment/ans?commentid=' + comid + '&page='+ anspage +'&size=' + size, function (data) {
+				var list = data.data
+				$('.com-ans-list').find('li').remove();
+				if(list.length < size) $('.com-ans-more').text(loadmore[1])
+				else $('.com-ans-more').text(loadmore[0]);
+				createAnslist(list)
+			}).fail(function (a,b,c) {
+				if(b == "parsererror"){
+					console.log('服务器报错')
+				}
+			})
+		}
+		function getmoreans(argument) {
+			anspage++;
+			if($('.com-ans-more').text() == loadmore[1]) return;
+			$.get('/record/comment/ans?commentid=' + comid + '&page='+ anspage +'&size=' + size, function (data) {
+				var list = data.data
+				if(list.length < size) $('.com-ans-more').text(loadmore[1])
+				createAnslist(list)
+			}).fail(function (a,b,c) {
+				if(b == "parsererror"){
+					console.log('服务器报错')
+				}
+			})
+		}
+		function createAnslist(list) {
+			for (var i = 0; i < list.length; i++) {
+				!(function (i) {
+					var $li = $('<li>').css('padding', '5px');
+					var $media = $('<div>').addClass('media');
+					var $imgBox = $('<div>').addClass('img-box');
+					var $img = $('<img>').attr('src',util.userHeadImage(list[i].forUser.userheadimageurl));
+					var $mediaTop = $('<div>').addClass('media-top');
+					var $time = $('<span>').addClass('time').text(util.changeTime(list[i].created));
+					var $name = $('<span>').addClass('name').text(list[i].forUser.username);
+					var $content = $('<p>').addClass('content').text(list[i].anscomment);
+					$li.append($media)
+					$media.append($imgBox)
+					$media.append($mediaTop)
+					$media.append($content)
+					$imgBox.append($img)
+					$mediaTop.append($time)
+					$mediaTop.append($name)
+					$('.com-ans-list').append($li)
+				})(i)
+			}
+		}
+	</script>
+</html>

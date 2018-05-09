@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>消息通知</title>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<style type="text/css">
+		html,body{
+			padding: 0;
+			margin: 0;
+		}
+		ul,li{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		.msg-head{
+			margin: 0;
+			padding: 0;
+			padding-top: 8px;
+			font-size: 1.05rem;
+			font-weight: normal;
+			line-height: 2rem;
+			text-indent: 20px;
+			border-bottom: 2px solid #008000;
+		}
+		.advice-list{
+			padding: 0 5px;
+		}
+		.advice-list li{
+			overflow: hidden;
+			position: relative;
+			cursor: pointer;
+			border-bottom: 1px solid #ddd;
+		}
+		.advice-list p{
+			margin: 0;
+			padding: 10px 20px 0;
+			font-size: 1rem;
+			line-height: 1.2rem;
+			overflow: hidden;
+		    white-space: nowrap;
+		    text-overflow: ellipsis;
+		}
+		.advice-list span.t{
+			float: right;
+			font-size: 0.9rem;
+			color: #aaa;
+			margin: 0 20px;
+		}
+		.advice-list span.point{
+			position: absolute;
+			top: 15px;
+			left: 5px;
+			width: 0px;
+			height: 0px;
+			border-radius: 20px; 
+			background:#f00;
+			border:2px solid #f00;
+		}
+		.advice-list li.read p{
+			color: #aaa;
+		}
+	</style>
+</head>
+<body>
+	<h2 class="msg-head">消息通知</h1>
+	<ul class="advice-list">
+	</ul>
+</body>
+<script type="text/javascript">
+	$.get('/notify/getnotify',function (data) {
+		/* var data = {"status":200,"msg":"OK","data":{"unread":4,"unreadNotify":[{"id":122,"messagetype":2,"userid":51,"author":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"notifyid":6,"notify":{"id":6,"content":"Eson评论了你的文章<<测试>>","userid":51,"sender":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"target":196,"targettype":"文章","action":"评论","created":1506326191000},"created":1506326220000,"read":false},{"id":123,"messagetype":2,"userid":51,"author":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"notifyid":7,"notify":{"id":7,"content":"Eson回复了你的评论","userid":51,"sender":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"target":756,"targettype":"评论","action":"回复","created":1506326202000},"created":1506326220000,"read":false},{"id":121,"messagetype":2,"userid":51,"author":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"notifyid":1,"notify":{"id":1,"content":"æ¶æ¯æåï¼","userid":51,"sender":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"target":196,"targettype":"文章","action":"评论","created":1506318802000},"created":1506325196000,"read":false},{"id":120,"messagetype":2,"userid":51,"author":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"notifyid":4,"notify":{"id":4,"content":"Eson评论了你的文章<<测试>>","userid":51,"sender":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":true,"created":1500941900000,"ofSelf":false,"likeAuthor":false},"target":196,"targettype":"文章","action":"评论","created":1506323926000},"created":1506325195000,"read":false}],"read":0,"readNotify":[]}}
+ */		var list = data.data.unreadNotify.concat(data.data.readNotify);
+		if (!list || list.length == 0) {$('body').append($('<div>').text('你还未收到任何消息').css({
+			'position': 'absolute',
+			'top': '40vh',
+			'left': '0',
+			'width': '100%',
+			'font-size': '1.1rem',
+			'text-align': 'center',
+			'color': '#aaa'
+		}))}
+		else {
+			for (var i = 0; i < list.length; i++) {
+				var li = $('<li>')
+				var p = $('<p>').text(list[i].notify.content)
+				var time = $('<span>').addClass('t').text(util.changeTime(list[i].notify.created))
+				var point = $('<span>').addClass('point')
+				li.append(p)
+				li.append(time)
+				if (!list[i].read) {
+					li.append(point)
+				}else {
+					li.addClass('read')
+				}
+				!(function (i, obj) {
+					li.on('click', function () {
+						// console.log(i)
+						$this = $(this)
+						if(!obj.read){
+							$.get('/notify/readnotify?notifyid=' + obj.notifyid, function (data) {
+								console.log(data);
+								$this.find('.point').remove();
+								$this.addClass('read')
+							})
+						}
+					})
+				})(i, list[i])
+				$('.advice-list').append(li)
+			}
+		}
+	})
+</script>
+</html>

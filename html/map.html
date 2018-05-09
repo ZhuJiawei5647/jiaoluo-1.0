@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>附近</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getTime()+'">')
+</script>
+<style type="text/css">
+body{
+	height: 100vh;
+	overflow:hidden;
+}
+#allmap {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+	font-family: "微软雅黑";
+}
+.header{
+    position: relative;
+    height: 7%
+}
+.header-left {
+    float: left;
+    width: 65%;
+    height: 100%;
+    padding: 4px 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+.header-left .location{
+    position: relative;
+    height: 100%;
+    width: 97%;
+    margin-left: 3%;
+    border-radius: 4px;
+    text-align: left;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #ddd;
+}
+.header-left .location a{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
+    line-height: 20px;
+}
+.header-left .location a i {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    vertical-align: top;
+    background: url(../images/dizhi2.png) center center no-repeat;
+    background-size: 16px 16px;
+}
+.header-left .location a span {
+    vertical-align: top;
+}
+.header-right {
+    float: left;
+    width: 35%;
+    height: 100%;
+    padding: 4px 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+.header-right .change-btn{
+    position: relative;
+    display: block;
+    height: 100%;
+    width: 90%;
+    max-height: 40px;
+    margin: 0 5%;
+    background-color: #35dbfe;
+    border-radius: 4px;
+}
+.header-right .change-btn span{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    transform: translateY(-50%);
+    color: #eee;
+    text-align: center;
+}
+.block{
+    position: absolute;
+    top: 7%;
+    left: 0;
+    width: 100%
+}
+.map{
+    width: 100%;
+    height: 50%
+}
+.swiper{
+    height: 47%;
+    width: 100%;
+    overflow: hidden;
+}
+.hiSlider-wrap,.hiSlider,.hiSlider-item{
+    height: 100%
+}
+.article-list{
+    width: 100%;
+    padding-bottom: 30px
+}
+.hide{
+    display: none;
+}
+.favor-box .xny-icon img, .like-box .xny-icon img{
+	height: 22px;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/corner.js"></script>
+<!-- <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+</head>
+<body>
+    <section class="main-pages">
+        <header class="header">
+            <div class="header-left">
+                <button class="location">
+                    <a href="javascript:;">
+                        <i></i><span>杭州</span>
+                    </a>
+                </button>
+            </div>
+            <div class="header-right">
+                <button id="switch" class="change-btn" href="javascript:;">
+                    <span>切换为列表</span>
+                </button>
+            </div>
+        </header>
+        <section id="page1" class="block" style="height:93%;width:100%">
+            <div class='map'>
+                <div id="allmap"></div>
+            </div>
+            <div class="swiper">
+                <ul class="hiSlider">
+                </ul>
+            </div>
+        </section>
+        <section id="page2" class="block hide">
+            <ul class="article-list"></ul>
+        </section>
+    </section>
+    <footer class="footer"></footer>
+</body>
+</html>
+<script type="text/x-jquery-tmpl" id="iconlist">
+		<ul class="xny-icon-list">
+			<li class="favor-box">{{html $(XNY.tmpls.favorHtml).tmpl({
+					id: $data.corner.cornerid,
+					value: $data.corner.befavor,
+					favor: $data.corner.likeCorner,
+					ofself: false
+				}).prop('outerHTML')}}</li>
+			<li class="like-box">{{html xny.createLike($data).prop('outerHTML')}}</li>
+		</ul>
+</script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/tab.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+var xny = new XNY()
+!(function($) {
+    var map = new BMap.Map("allmap")
+        ,lng = 0
+        ,lat = 0
+        ,tab = new Tab('footer', 2)
+        ,markers = []
+        ,geolocation = new BMap.Geolocation()
+        ,width = 0
+        ,currentmarker = null
+    init()
+    function init (){
+    	geolocation.getCurrentPosition(function(r) {
+            $('.location a span').text(r.address.city)
+            lng = r.point.lng
+            lat = r.point.lat
+                // var marker = new BMap.Marker(new BMap.Point(lng,lat))
+                // console.log(marker.getIcon())
+                // marker.setIcon(marker.getIcon().setImageUrl('../images/x6.png'))
+                // map.addOverlay(marker)
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                map.centerAndZoom(new BMap.Point(lng, lat), 15);
+
+	   	       	 $.get('/user/getuserinfo', function(data) {
+	   	       	     if(data.status!=201){
+	   	                 var marker = new BMap.Marker(new BMap.Point(lng, lat));
+	   	                 var icon = marker.getIcon()
+	   	                 icon.setImageUrl(util.userHeadImage(data.data.imageurl))
+	   	                 icon.setSize(new BMap.Size(30, 30))
+	   	                 icon.setImageSize(new BMap.Size(30, 30))
+	   	                 marker.setIcon(icon)
+	   	                 marker.setShadow(marker.getShadow().setImageUrl(''))
+	   	                 map.addOverlay(marker)
+	   	       	     }
+	   	       	 });
+                setMarkers('/corner/inter/nearby/list?lat=' + lat + '&log=' + lng + '&page=1&size=500', function() {
+                    width = $('.hiSlider-item').width()
+                    $('.swiper .hiSlider').hiSlider({
+                        isFlexible: true,
+                        isSupportTouch: true,
+                        isShowPage: false,
+                        isShowTitle: false,
+                        isAuto: false,
+                        isShowControls: false,
+                        onMoveAfter: function() {
+                            var left = $('.swiper .hiSlider').position().left;
+                            var i = -left / width;
+                            if (i == markers.length) i = 0;
+                            map.panTo(markers[i].getPosition())
+                            if (currentmarker) {
+                                map.removeOverlay(currentmarker)
+                                currentmarker.setIcon(currentmarker.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x5.png'))
+                                map.addOverlay(currentmarker)
+                                map.removeOverlay(markers[i])
+                                markers[i].setIcon(markers[i].getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                                markers[i].setTop(true)
+                                map.addOverlay(markers[i])
+                                currentmarker = markers[i]
+                            } else {
+                                map.removeOverlay(markers[i])
+                                markers[i].setIcon(markers[i].getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                                currentmarker = markers[i]
+                                map.addOverlay(markers[i])
+                            }
+                        }
+                    })
+                })
+            } else init()
+        });
+    }
+    
+    $('#switch').on('click', function(event) {
+        event.preventDefault();
+        if ($('#page1').hasClass('hide')) {
+            $('#page1').removeClass('hide')
+            $('#page2').addClass('hide')
+            $(this).html('<span>切换为列表</span>')
+        } else {
+            $('#page1').addClass('hide')
+            $('#page2').removeClass('hide')
+            $(this).html('<span>切换为地图</span>')
+        };
+    });
+
+    function setMarkers(url, fun) {
+        xny.getData(url, function(arr) {
+        	
+            for (var i = 0; i < arr.length; i++) {
+                !(function() {
+                	var k = i;
+                    arr[i].article.corner = arr[i];
+                	var li = $('<li>').append(xny.createItem(arr[i].article).find('.xny-icon-list').remove().end()).addClass('hiSlider-item')
+                	/* if (arr[i].likeCorner) li.append($('#iconlist').tmpl(arr[i].article))
+                	else  */li.append($('<div class="favoricon" style="padding: 10px 0;text-align: center;border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;"><span>探索角落秘密</span><br><img src="../images/evlop.png" style="height: 40px"/></div>').on('click', function(){
+                		var id = arr[k].cornerid;
+	                	Loc.getCenter(function(point) {
+	                		$.get('/action/conner/pass?cornerid='+ id +'&lat=' + point.lat + '&lng=' + point.lng, function(data){
+                                if (!data.data) data.data = {}
+	    						xny.createCai(data, {
+                                    id: id,
+                                    name: arr[k].name
+                                })
+	    					})
+	                		/* $.get('/action/conner/zhan?lat=' + point.lat + '&lng=' + point.lng + '&cornerid=' + id + '&favor=1', function(data) {
+	                			if (data.status == 200) {
+	                				arr[i].article.corner.befavor++
+	                				arr[i].article.corner.likeCorner = true;
+	                				li.find('.favoricon').remove()
+	                				li.append($('#iconlist').tmpl(arr[i].article))
+	                			} else {
+	                				xny.alert({content: data.msg})
+	                			}
+	                		}) */
+	                	})
+                		/* $('.favor-box .xny-icon').click(); */
+					}))
+                	li.find('.xny-msg').append($('<span class="xny-msg-item">').text(arr[i].distance + 'km'))
+                    $('.hiSlider').append(li)
+                    var li2 = li.clone(true).removeClass('hiSlider-item');
+                    $('.article-list').append(li2)
+                    var point = new BMap.Point(arr[i].placelongitude, arr[i].placelatitude)
+                    var marker = new BMap.Marker(point)
+                    marker.i = i
+                    var icon = marker.getIcon()
+                    icon.setImageUrl('http://120.26.47.238/www/image/2017/server/x5.png')
+                    if (i == 0) {
+                        icon.setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png');
+                        marker.setTop(true)
+                        currentmarker = marker
+                        map.panTo(point);
+                    };
+                    icon.setSize(new BMap.Size(30, 30))
+                    icon.setImageSize(new BMap.Size(30, 30))
+                    marker.setIcon(icon)
+                    marker.setShadow(marker.getShadow().setImageUrl(''))
+                    map.addOverlay(marker)
+                    marker.addEventListener('click', function() {
+                        map.panTo(this.getPosition());
+                        if (marker.i == 0) {
+                            marker.i = markers.length
+                        };
+                        var left = -marker.i * width
+                        $('.swiper ul').css('left', left + 'px');
+                        if (currentmarker) {
+                            map.removeOverlay(currentmarker)
+                            currentmarker.setIcon(currentmarker.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x5.png'))
+                            map.addOverlay(currentmarker)
+                            map.removeOverlay(this)
+                            this.setIcon(this.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                            map.addOverlay(this)
+                            currentmarker = this
+                        } else {
+                            map.removeOverlay(this)
+                            this.setIcon(this.getIcon().setImageUrl('http://120.26.47.238/www/image/2017/server/x6.png'))
+                            currentmarker = this
+                            map.addOverlay(this)
+                        }
+                    })
+                    markers.push(marker)
+                })();
+            }
+            fun();
+        })
+    }
+})(jQuery)
+</script>

@@ -1,0 +1,665 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>角落,记你与我的事</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/iscroll.js"></script>
+<style type="text/css">
+body{
+	font-size: 0.9rem;
+}
+h1{
+	font-size: 1.1rem;
+	font-weight: normal;
+}
+h2{
+	font-size: 1.1rem;
+	font-weight: normal;
+}
+input,button,textarea{
+	background: none;
+	outline: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+pre{
+    display:block;
+    visibility:hidden;
+    line-height: 26px;
+    min-height: 26px;
+    max-height: 78px;
+	padding:0 10px;
+    border:1px solid #fff;
+    white-space:pre-wrap;
+    white-space:-moz-pre-wrap;
+    white-space:-pre-wrap;
+    white-space:-o-pre-wrap;
+    word-wrap:break-word;
+}
+pre span{
+	display: inline-block;
+	font-size: 1rem;
+}
+.hide{
+	display: none;
+}
+.item{
+	border-bottom: 1px solid #ddd;
+	padding: 6px 0;
+}
+.flex-row{
+	display: flex
+}
+.flex-between{
+	justify-content:space-between
+}
+.flex-left{
+	flex:1;
+}
+.flex-right{
+	width:20%
+}
+.icon{
+	width: 50%;
+	padding-top: 2px
+}
+.icon img{
+	width: 20px;
+	height: 20px;
+}
+.title{
+	font-size: 1rem;
+	padding-left: 40px;
+	background: url(../images/icon_24.png) 11px 4px no-repeat;
+	background-size: 18px 18px
+}
+.connername{
+	font-size: 1rem;
+	line-height: 1.2rem;
+	padding-left: 40px;
+	background: url(../images/zuobiao.png) 12px 2px no-repeat;
+	background-size: 16px 16px 
+}
+.address{
+	line-height: 1.2rem;
+	padding-left: 40px;
+}
+.author{
+	font-size: 1rem;
+	line-height: 1.2rem;
+	padding-left: 40px;
+	background: url(../images/check.png) 12px 2px no-repeat;
+	background-size: 16px 16px 
+}
+.time{
+	line-height: 1.2rem;
+	padding-left: 40px;
+	background: url(../images/shizhong.png) 12px 2px no-repeat;
+	background-size: 16px 16px 
+}
+.image{
+	text-align: center;
+}
+.image img{
+	width: 80%
+}
+.content{
+	font-size: 1rem;
+	padding-left: 40px;
+	padding-right:20px;
+	text-align:justify
+}
+.content p{
+	text-indent: 1.8rem
+}
+/*.comments{
+	font-size: 1rem;
+	line-height: 1.2rem;
+	padding-left: 40px;
+	background: url(../images/xinxi.png) 12px 2px no-repeat;
+	background-size: 16px 16px 
+}
+.comment-add{
+	
+	text-align: center;
+	padding: 5px 0;
+	background-color:#32cd32 
+}
+.comment-item img{
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	margin: 0 10px
+}
+.item-right{
+	padding-right: 5px;
+	flex:1;
+}
+.comment-head{
+	padding-top: 5px;
+}
+.comment-content{
+	text-indent: 1rem;
+	
+}*/
+/*.com{
+	position:fixed;
+	font-size: 1rem;
+	left:0;
+	bottom:0;
+	width:100%;
+	background-color:white
+}
+.com-content{
+	text-indent: 1.8rem;
+	margin:0 auto;
+	width:90%;
+	height:100px;
+	resize:none;
+}*/
+footer{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	z-index:1000;
+	background-color:white;
+}
+.detail-footer,.comment-container{
+	display: flex;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+	width: 100%;
+	border-top: 1px solid #eee;
+	padding-right: 10px;
+}
+.detail-footer{
+	height: 40px;
+}
+.detail-footer-item{
+	height: 100%;
+	margin-left: 10px;
+	line-height: 40px;
+}
+.comment-container div{
+	margin-left: 10px;
+}
+.detail-footer-item img{
+	margin: 0 6px;
+}
+.detail-footer-item div{
+	width: 100%;
+	display: inline-block;
+	height: 26px;
+	line-height: 26px;
+	font-size: 1rem;
+	border:1px solid #ddd;
+	border-radius: 13px;
+	background-color: #eee;
+	text-indent: 3rem;
+}
+.detail-footer-item img{
+	width: 26px;
+	height: 26px;
+	margin-top: 5px;
+}
+.comment-container textarea{
+	position: absolute;
+	top: 0;
+	left: 0;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	-webkit-box-sizing:border-box; /* Safari */
+	min-height: 28px;
+	height: 100%;
+	width: 100%;
+	line-height: 26px;
+	border-radius: 13px;
+	padding:0 10px;
+	font-size: 1rem;
+	border:1px solid #ddd;
+	background-color: #eee;
+	resize:none;
+}
+.comment-container label{
+	padding: 0 10px;
+	font-size: 1.1rem;
+	color: #aaa;
+}
+.transparent{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+}
+.comments,.favor,.boring{
+	position: relative;
+}
+.comments span,.favor span,.boring span{
+	position: absolute;
+	top: 2px;
+	left: 60%;
+	padding: 0 5px;
+	border-radius: 8px;
+	font-size: 0.6rem;
+	line-height: 0.8rem;
+	background-color: red;
+	color: white;
+}
+.more{
+	height:40px;
+	line-height:40px;
+	font-size:0.8rem;
+	text-align:center;
+	background-color:#eee
+}
+</style>
+</head>
+<body>
+	<div id="wrapper">
+		<div class="item flex-row" >
+			<div class="title flex-left" id="title">角落记事 </div>
+			 <div class="flex-right" style="text-align:center" id='shouye_loc'><img width=25px height=25px src="../images/shouye.png"></div>
+		</div>
+		<div class="item flex-row i2">
+			<div class="flex-left">
+				<h2 class="connername" id="connername">帝都小分队</h2>
+				<p class="address" id="address">三里屯SOHO</p>
+			</div>
+			<div class="flex-right flex-row">
+				<div class="icon">
+					<img src="../images/cfoot.png">
+					<span id="pass">2</span>
+				</div>
+				<div class="icon">
+					<img src="../images/clike.png">
+					<span id="befavor">1</span>
+				</div>
+			</div>
+		</div>
+		<div class="item flex-row">
+			<div class="flex-left">
+				<p class="author">作者：<span id="author">Howard</span></p>
+				<p class="time">发布：<span id="time">2017年5月13日 1：18</span></p>
+			</div>
+			<div class="headimage flex-right" style="text-align:center">
+			</div>
+			<div class="button-box" style="width:15%;text-align:center;"><button style="width:80%;padding:2px 0;background-color:blue;border-radius:5px;color:white;font-size:0.7rem">关注</button></div>
+		</div>
+		<div class="item i4">
+			<div class="image">
+			</div>
+			<div class="content" id="content">
+				三里屯向ZJU发来贺电
+			</div>
+		</div>
+	</div>
+	<div>
+		<!-- <div class="flex-row" style="padding:5px 0">
+			<div class="flex-left">
+				<div class="comments">
+					评论 <span id="comments"> </span>
+				</div>
+			</div>
+			<div class="flex-right flex-row">
+				<div class="icon">
+					<img src="../images/happy.png">
+					<span id="favor">2</span>
+				</div>
+				<div class="icon">
+					<img src="../images/sleeping.png">
+					<span id="boring">1</span>
+				</div>
+			</div>
+		</div>
+		<div class="comment-add">添加评论</div> -->
+		<div class="comment-box">
+			<h5 class="coment-title">用户评论</h5>
+			<ul class="comment-list">
+			</ul>
+			<div class="more">加载更多</div>
+		</div>
+	</div>
+	<div style="height:80x;border:none">
+		<br/><br/><br/><br/>
+	</div>
+	<!-- <div class="com hide">
+		<div style="text-align:right;padding-right:20px">
+			<label class="com-add"  style='font-size:15px;color:white;border:none;background-color:#32cd32;padding:5px;margin-right:30px;'>提交</label>
+			<label class="com-cancle" style='font-size:15px;color:white;border:none;background-color:#FF3B30;padding:5px;margin-right:10px;'>取消</label>
+		</div>
+		<div style="text-align:center">
+			<textarea class="com-content" style='font-size:20px' id="comment"></textarea>
+		</div>
+	</div> -->
+	<footer>
+		<section class="detail-footer">
+			<div class="detail-footer-item" style="flex:1">
+				<div id="add">添加评论</div>
+			</div>
+			<div class="detail-footer-item comments">
+				<img src="../images/xinxi.png">
+				<span id="comments">16</span>
+			</div>
+			<div class="detail-footer-item favor">
+				<img src="../images/happy.png" style="width:22px;height:22px;margin-top:7px;opacity:0.6">
+				<span id="favor">2</span>
+			</div>
+			<div class="detail-footer-item boring">
+				<img src="../images/sleeping.png" style="width:22px;height:22px;margin-top:7px;opacity:0.6">
+				<span id="boring">1</span>
+			</div>
+		</section>
+		<section class="comment-container" style="display:none;">
+			<div style="flex:1;padding:6px 0">
+				<div style="position:relative;min-height:28px;">
+					<pre><span></span><br></pre>
+					<textarea id="comment" placeholder="评论"></textarea>
+				</div>
+			</div>
+			<div style="height:40px;line-height:40px">
+				<label id="report">发表</label>
+			</div>
+		</section>
+	</footer>
+	<div class="transparent hide"></div>
+</body>
+<script type="text/javascript">
+	var articleid;
+	var placeid;
+	var connerFavor;
+	$('#shouye_loc').on('click', function(event) {
+		$(location).attr('href', 'index')
+	})
+	$('.button-box button').on('click', function(event) {
+		event.preventDefault();
+		if ($(this).text() == '关注') {
+			$(this).text('已关注').css({
+				'background-color': '#ddd',
+				'color': 'black'
+			});
+		} else if ($(this).text() == '已关注') {
+			$(this).text('关注').css({
+				'background-color': 'blue',
+				'color': 'white'
+			});
+		};
+	});
+	// $('.comments').on('click', function(event) {
+	// 	event.preventDefault();
+	// 	if ($('.comment-list').hasClass('hide')) {
+	// 		$('.comment-list').removeClass('hide')
+	// 	} else {
+	// 		$('.comment-list').addClass('hide')
+	// 	};
+	// });
+	// $('.comment-add').on('click', function(event) {
+	// 	$.get('/user/getuserinfo', function(data) {
+	// 		if (data.status != 201) {
+	// 			$('.com').removeClass('hide')
+	// 		} else {
+	// 			var redirect = window.location.href
+	// 			$(location).attr('href', 'login?redirect=' + redirect);
+	// 		}
+	// 	});
+	// })
+
+	// $('.com-cancle').on('click', function(event) {
+
+	// 	$('.com').addClass('hide')
+
+	// })
+	// $('.com-add').on('click', function(event) {
+	// 	var comm = document.getElementById('comment').value;
+
+	// 	if (comm == '') {
+	// 		return;
+	// 	}
+	// 	$.get('/action/article/comment?articleId=' + articleid + '&commentcontent=' + comm, function(data) {
+	// 		if (data.status != 201) {
+	// 			$('.com').addClass('hide')
+	// 		} else {
+	// 			$(location).attr('href', 'login');
+	// 		}
+
+	// 	});
+
+
+	// })
+	$('.comments').on('click', function(event) {
+		$('.comment-box').toggleClass('hide')
+	});
+	$('#pass').parent('.icon').on('click', function(event) {
+		event.preventDefault();
+		console.log('pass')
+		Post('/action/conner/pass?placeid=' + placeid + '&pass=' + 0, function(data) {
+			if (data.data == "ok") {
+				var num = Number($('#pass').text());
+				var num1 = num + 1;
+				$('#pass').text(num1)
+			} else if (data.data == "pass limit") {
+				alert("今天已踩完，改天再来转转吧")
+			}
+		})
+	});
+	$('#befavor').parent('.icon').on('click', function(event) {
+		var self = $(this)
+		event.preventDefault();
+		var favor = 1
+		if (!connerFavor) favor = 1;
+		else favor = 2
+		console.log(favor)
+		console.log('befavor')
+		Post('/action/conner/favor?placeid=' + placeid + '&favor=' + favor, function(data) {
+			console.log(data)
+			if (data.data == "ok") {
+				var num = Number($('#befavor').text());
+				var num1 = favor == 1 ? num + 1 :num - 1;
+				$('#befavor').text(num1);
+				self.find('img').attr('src', favor == 1 ? '../images/clike.png' : '../images/clikeit.png');
+				connerFavor = favor == 1 ? true : false
+			}
+		})
+	});
+	$('#favor').parent('.detail-footer-item').on('click', function(event) {
+		var self = $(this)
+		if (self.find('img').attr('src') == '../images/clike.png') return;
+		event.preventDefault();
+		console.log('favor')
+		Post('/action/article/zan?articleId=' + articleid + '&zan=' + true, function(data) {
+			console.log(data)
+			if (data.msg == "OK") {
+				var favornum = Number($('#favor').text());
+				favornum++;
+				var boringnum = Number($('#boring').text());
+				boringnum--;
+				$('#favor').text(favornum);
+				self.find('img').attr('src','../images/happy_1.png');
+				var boring = $('#boring').parent('.detail-footer-item').find('img')
+				if(boring.attr('src') != '../images/sleeping.png'){
+					$('#boring').text(boringnum)
+					boring.attr('src', '../images/sleeping.png');
+				}
+			}
+		})
+	});
+	$('#boring').parent('.detail-footer-item').on('click', function(event) {
+		var self = $(this)
+		if (self.find('img').attr('src') == '../images/sleeping_1.png') return;
+		event.preventDefault();
+		console.log('boring')
+		Post('/action/article/zan?articleId=' + articleid + '&zan=' + false, function(data) {
+			console.log(data)
+			if (data.msg == "OK") {
+				console.log('123')
+				var favornum = Number($('#favor').text());
+				favornum--;
+				var boringnum = Number($('#boring').text());
+				boringnum++;
+				$('#boring').text(boringnum)
+				var favor = $('#favor').parent('.detail-footer-item').find('img')
+				if(favor.attr('src') != '../images/happy.png'){
+					$('#favor').text(favornum);
+					favor.attr('src','../images/happy.png');
+				}
+				self.find('img').attr('src', '../images/sleeping_1.png');
+			}
+		})
+	});
+	var add = document.getElementById('add');
+	add.addEventListener('touchstart', function(event) {
+		event.preventDefault();
+		$(this).css('opacity', '0.6');
+	}, false)
+	add.addEventListener('touchend', function(event) {
+		event.preventDefault();
+		$(this).css('opacity', '1');
+		$('.detail-footer').css('display', 'none');
+		$('.comment-container').css('display', 'flex');
+		console.log(1)
+		$('.transparent').removeClass('hide')
+	}, false)
+	$('#add').on('mousedown', function(event) {
+		event.preventDefault();
+		$(this).css('opacity', '0.6');
+	});
+	$('#add').on('mouseup', function(event) {
+		event.preventDefault();
+		$(this).css('opacity', '1');
+		$('.detail-footer').css('display', 'none');
+		$('.comment-container').css('display', 'flex');
+		console.log(1)
+		$('.transparent').removeClass('hide')
+	});
+	$('#comment').on('input', function(event) {
+		event.preventDefault();
+		if ($(this).val() != '') $('#report').css('color', '#4093fa');
+		else $('#report').css('color', '#aaa')
+		$('pre span').text($(this).val())
+	});
+	$('.transparent').on('click', function(event) {
+		event.preventDefault();
+		$('.comment-container').css('display', 'none');
+		$('.detail-footer').css('display', 'flex');
+		$(this).addClass('hide')
+	});
+	$('#report').on('click', function(event) {
+		event.preventDefault();
+		if ($('#comment').val() != '') {
+			var self = $(this)
+			$.get('/action/article/comment?articleId=' + articleid + '&commentcontent=' + $('#comment').val(), function(data) {
+				if (data.status != 201) {
+					$('.comment-container').css('display', 'none');
+					$('.detail-footer').css('display', 'flex');
+					$('#comment').val('')
+					self.css('color', '#aaa');
+					getComments()
+				} else {
+					$(location).attr('href', 'login');
+				}
+			});
+		};
+	});
+	getData();
+	getComments();
+
+	function GetQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		var context = "";
+		if (r != null)
+			context = r[2];
+		reg = null;
+		r = null;
+		return context == null || context == "" || context == "undefined" ? "" : context;
+	}
+
+	function getData() {
+		console.log('data')
+		articleid = util.GetQueryString('id')
+		$.get('/article/inter/articleInfo?articleId=' + articleid, function(data) {
+			/*optional stuff to do after success */
+			var article = data.data
+			placeid = article.conner.id
+			$('#title').text(article.title)
+			$('#connername').text(article.conner.name)
+			$('#address').text(article.conner.placeaddress)
+			$('#author').text(article.username)
+			$('#time').text(util.changeTime(article.updated))
+			$('#content').text('')
+			var str = article.content.split('<br>')
+			console.log(str)
+			for(var i = 0; i < str.length; i++){
+				$('<p>').text(str[i]).appendTo($('#content'))
+			}
+			console.log(article.conner.pass)
+			$('#pass').text(article.conner.pass)
+			$('#befavor').parent('.icon').find('img').attr('src', article.conner_favor ? '../images/clike.png' : '../images/clikeit.png');
+			$('#befavor').text(article.conner.befavor)
+			connerFavor = article.conner_favor;
+			$('#favor').parent('.detail-footer-item').find('img').attr('src', article.article_favor ? '../images/happy_1.png' : '../images/happy.png');
+			$('#favor').text(article.favor)
+			$('#boring').parent('.detail-footer-item').find('img').attr('src', article.article_boring ? '../images/sleeping_1.png' : '../images/sleeping.png');
+			$('#boring').text(article.boring)
+			$('#comments').text(article.comments)
+			if (article.userimageurl==""||article.userimageurl==null||article.userimageurl=="Null"
+				    	||article.userimageurl=="NULL"||article.userimageurl=="null") {
+				
+			}else{
+				var headImg = $('<img id="headimage" src="" style="width:40px;height:40px;border-radius:20px">').attr('src', article.userimageurl)
+				$('.headimage').append(headImg)
+			}
+			if (article.imageurl==""||article.imageurl==null||article.imageurl=="Null"
+		    	||article.imageurl=="NULL"||article.imageurl=="null") {
+				
+			}else{
+				var contentImg = $('<img id="contentimage" src="">').attr('src', article.imageurl)
+				$('.image').append(contentImg)
+			}
+
+		});
+	}
+
+	function getComments() {
+		$('.comment-item').remove()
+		$.get('/record/article/comment?articleId=' + articleid + '&page=1&size=10', function(data) {
+			var arr = data.data
+			console.log(arr)
+			for (var i = 0; i < arr.length; i++) {
+				var li = $('<li>').html(
+					'<div>' +
+					'<img style="width:30px;height:30px;border-radius:15px;margin:0 10px" src="../images/yonghu.png">' +
+					'</div>' +
+					'<div class="item-right" style="flex:1">' +
+					'<div class="flex-row comment-head">' +
+					'<div class="comment-user flex-left">Han</div>' +
+					'<div class="comment-time" >2017年5月17日 13:36</div>' +
+					'</div>' +
+					'<p class="comment-content">这是评论</p>' +
+					'</div>').addClass('comment-item flex-row')
+				li.find('img').attr('src', arr[i].imageurl == null || arr[i].imagerurl == "null" ? "../images/yonghu.png" : arr[i].imageurl);
+				li.find('.comment-user').text(arr[i].username)
+				li.find('.comment-time').text(util.changeTime(arr[i].created))
+				li.find('.comment-content').text(arr[i].content)
+				$('.comment-list').append(li).removeClass("hide")
+			}
+		});
+	}
+
+	function Post (url, success, faile) {
+		$.get(url, function(data) {
+			if(data.status==201){
+			}
+			success(data)
+		});
+	}
+</script>
+</html>

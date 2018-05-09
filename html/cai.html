@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>踩</title>
+	<link rel="stylesheet" href="../css/jquery.Jcrop.min.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/xny_form.js"></script>
+	<script type="text/javascript" src="../js/exif.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+	</script>
+	<style type="text/css">
+		.xny-param{
+			overflow: hidden;
+		}
+		.xny-key{
+			float: left;
+			width: 100px;
+			height: 40px;
+		}
+		.xny-value{
+			padding-left: 100px;
+			position: relative;
+		}
+		.xny-key label{
+			display: inline-block;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			font-size: 14px;
+			line-height: 40px;
+		}
+		.xny-value span{
+			font-size: 14px;
+			line-height: 40px;
+		}
+
+		textarea{
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 100%;
+			height: 100px;
+			padding: 5px 10px;
+			font-size: 16px;
+			line-height: 24px;
+		}
+		.img-box{
+			padding: 5px 10px;
+		}
+		.img-box img{
+			display: inline-block;
+			width: 120px;
+			min-height: 80px;
+			background: url(../images/camera.png) center center no-repeat;
+			background-size: 70px;
+		}
+
+		.btn-container{
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			line-height: 40px;
+			height: 40px;
+		}
+
+		.btn-container .xny-btn-box{
+			height: 100%;
+			line-height: 40px;
+		}
+
+		.btn-container .xny-btn-box button{
+			border-radius: 0;
+		}
+
+		/*imgcut*/
+		.xny-page.imgcut .xny-header{
+		}
+		.imgcut .img{
+			width: 100%;
+		}
+		.imgcut .img img{
+			width: 100%;
+		}
+	</style>
+</head>
+<body></body>
+<script type="text/x-jquery-tmpl" id="cai">
+	<div>
+		<form class="" onsubmit="return false;">
+			<header style="border-bottom: 1px solid #ddd">
+				{{if (status == 200)}}
+				<div>
+					<div class="xny-param">
+						<div class="xny-key"><label></label></div>
+						<div class="xny-value"><span>{{= data.author.username}}</span></div>
+					</div>
+				</div>
+				<div>
+					<div class="xny-param">
+						<div class="xny-key"><label>秘密</label></div>
+						<div class="xny-value"><span>{{= data.secretdec}}</span></div>
+					</div>
+				</div>
+				<div>
+					<div class="xny-param">
+						<div class="xny-key"><label>图片</label></div>
+						<div class="xny-value"><img class="img" src="{{= data.secretimg}}" alt=""></div>
+					</div>
+				</div>
+				{{else}}
+				<div>{{= msg}}</div>
+				{{/if}}
+			</header>
+			
+			<section>
+				<div class="textarea-box">
+					<textarea id="content" name="secretdec" placeholder="秘密"></textarea>
+				</div>
+				<div class="img-box">
+					<input type="text" id="imageurl" name="secretimg" style="display: none;">
+					<input type="file" class="imagefile" style="display: none;" id="previewImg">
+					<img id="imghead" src="" alt="" onclick="console.log($('#previewImg')),$('#previewImg').click();">
+				</div>
+				<div class="btn-container">
+					<div class="xny-btn-box">
+						<button class="xny-button publish" style="background-color: #323f4f">发布</button>
+					</div>
+				</div>
+			</section>
+			
+		</form>
+	</div>
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+	var xny = new XNY()
+		,form = new Form()
+		,cornerid = util.GetQueryString('cornerid')
+	Loc.getCenter(function(point){
+		$.get('/action/conner/pass?cornerid='+ cornerid +'&lat=' + point.lat + '&lng=' + point.lng, function(data){
+			var wd = xny.createWd({
+				hasbg: true,
+				bgclose: true,
+				bgopcity: 0.3,
+				fullHeight:true,
+				titleexit: true,
+				title: '这有一个小秘密',
+				size: ['90%', '80%'],
+				position: 'center',
+				content: $('#cai').tmpl(data)
+			}, function ($page, wd) {
+				$page.find('.imagefile').on('change', function (event) {
+					console.log(123)
+					util.previewJcropImage(xny, this, 1.5, function (data, base64) {
+						console.log("上传成功")
+						var obj = JSON.parse(data)
+						$page.find('#imghead').attr('src', base64)
+						$page.find('imageurl').val(obj.url)
+					})
+				})
+				form.submit($page.find('.publish'), function (data) {
+					data.cornerid = cornerid
+					$.post('/secret/add/secret',data, function(data) {
+						xny.alert({content:data.msg})
+						wd.close();
+					})
+				})
+			})
+		})
+	})
+</script>
+</html>

@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>发布</title>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+</head>
+<style type="text/css">
+body,html,ul,h1,p{
+	margin: 2px;
+	padding: 2px;
+	width: 100%;
+	min-height: 100%;
+	font-size: 1rem
+}
+input,button{
+	background: none;
+	outline: none;
+	border: none;
+	padding: 0;
+	font-size: 1rem;
+	font-family: "微软雅黑","Microsoft Yahei"
+}
+li{
+	list-style: none;
+}
+.header h1{
+	font-size: 1.2rem;
+	font-weight: normal;
+	line-height: 2rem;
+	text-indent: 0.5rem;
+	border-bottom: 1px solid #ddd
+}
+.container-box{
+	padding: 5px 0;
+	border-bottom: 1px solid #ddd;
+	padding-left: 40px;
+}
+.container-box label{
+	color: #666
+}
+.address{
+	margin-bottom: 10px
+}
+.content textarea{
+	width: 90%;
+	height: 300px;
+}
+.fixed{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+	text-align: center;
+	line-height: 3rem;
+}
+.flex-grow div{
+	display: inline-block;
+	width: 120px;
+	text-align: center;
+	font-size: 1.1rem;
+	line-height: 2rem;
+	border-radius: 5px;
+}
+#publish{
+	padding:5px 10px;
+	color:white;
+	background-color: #32cd32;
+}
+#save{
+	padding:5px 10px;
+	color:white;
+	background-color: #FF3B30;
+}
+.message{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-height: 100%;
+	background-color: #eee;
+}
+.hide{
+	display: none;
+}
+.message-head{
+	padding: 0 10px;
+	background-color: #eee;
+}
+.message-head>div{
+	line-height: 30px;
+}
+.message-list li{
+	padding: 10px 40px;
+}
+.message-list li.active{
+	background-color: #ddd
+}
+#input{
+	width: 100%
+}
+#cancel,#confirm{
+	padding-left: 50px;
+	padding-top: 10px;
+	padding-right: 50px;
+	padding-bottom: 10px;
+	margin-right:20px;
+	background-color: #32cd32;
+	border-radius: 5px;
+	color: white;
+}
+</style>
+<body>
+	<header class="header">
+		<h1>角落故事</h1>
+	</header>
+	<section>
+		<div class="container-box">
+			<div class="address">
+				<label>地址</label>
+				<label id="address" >选择所在位置</label>
+			</div>
+			<div class="connername">
+				<label>角落</label>
+				<input id="connername" type="text" placeholder="角落（默认）">
+			</div>
+		</div>
+		<div class="container-box">
+			<div class="title">
+				<label>标题</label>
+				<input id="title" type="text" placeholder="#一句话为浙大120周年庆生#（默认）">
+			</div>
+		</div>
+		<div class="container-box">
+			<div class="content">
+				<div style="margin-bottom:10px"><label >内容</label></div>
+				<textarea id="content" placeholder="内容"></textarea>
+			</div>
+		</div>
+	</section>
+	<div class="fixed flex-row">
+		<div class="flex-grow">
+			<div id="publish">发布</div>
+		</div>
+		<div class="flex-grow">
+			<div id="save">存到草稿箱</div>
+		</div>
+	</div>
+	<div class="message hide">
+		<div style="position:fixed;top:0;left:0;width:100%">
+			<div class="message-head flex-row">
+				<div>
+					<button id="cancel" >取消</button>
+				</div>
+				 <div style="flex:1">
+					<input id="input">
+				</div> 
+				<div>
+					<button id="confirm" >确定</button>
+				</div>
+			</div>
+			<div id="allmap" style="height:250px;width:100%"></div>
+		</div>
+		<ul class="message-list" style="margin-top:280px"></ul>
+	</div>
+</body>
+<script type="text/javascript">
+	!(function ($) {
+		var article = {}
+		var id = GetQueryString(id)
+		if(id){
+			getProtect(function (data) {
+				article.title = data.title;
+				article.content = data.content;
+				article.placecity = data.conner.city;
+				article.placename = data.conner.name;
+				article.placeaddress = data.conner.placeaddress;
+				article.placelongitude = data.conner.placelongitude;
+				article.placelatitude = data.conner.placelatitude;
+			})
+		}
+		$('#address').on('click', function(event) {
+			event.preventDefault();
+			var self = $(this)
+			
+			$('.message').removeClass('hide')
+			getAddress(function(data){
+				console.log(data)
+				self.html(data.title);
+				article.placecity = data.city;
+				article.placeaddress = data.title;
+				article.placelongitude = data.point.lng;
+				article.placelatitude = data.point.lat;
+				console.log(article)
+			})
+		});
+		$('#connername').on('blur', function(event) {
+			event.preventDefault();
+			article.placename = $(this).val()
+			console.log(article)
+		});
+		$('#title').on('blur', function(event) {
+			event.preventDefault();
+			article.title = $(this).val()
+			console.log(article)
+		});
+		$('#content').on('blur', function(event) {
+			event.preventDefault();
+			article.content = $(this).val()
+			console.log(article)
+		});
+		$('#publish').on('click', function(event) {
+			event.preventDefault();
+			POST('/article/inter/distribute',article)
+		});
+		$('#save').on('click', function(event) {
+			event.preventDefault();
+			POST('/article/inter/save',article)
+		});
+	})(jQuery)
+	function getAddress (fun) {
+		$('.message-list').children('li').remove()
+		var map = new BMap.Map("allmap")
+		var poi = null
+		getCenter(function(point){
+			map.centerAndZoom(new BMap.Point(point.lng, point.lat), 16);
+			getMessage(point,map,function(data){
+				poi = data
+			})
+		})
+		$('#cancel').on('click', function(event) {
+			event.preventDefault();
+			$('.message').addClass('hide')
+		});
+		$('#confirm').on('click', function(event) {
+			event.preventDefault();
+			$('.message').addClass('hide')
+			if (poi) fun(poi)
+		});
+	}
+	function getMessage(point,map,fun){
+		var mPoint = new BMap.Point(point.lng, point.lat);
+		var mOption = {
+			poiRadius: 2000,
+			numPois: 20
+		}
+		var myGeo = new BMap.Geocoder();
+		myGeo.getLocation(mPoint,
+			function mCallback(rs) {
+				var allPois = rs.surroundingPois; //获取全部POI（该点半径为100米内有6个POI点）
+				var ele = $('<li>');
+				$('<p>').addClass('name').appendTo(ele);
+				$('<p>').addClass('placeaddress').appendTo(ele);
+				(function () {
+					for (i = 0; i < allPois.length; ++i) {
+						var li = ele.clone()
+						li.children('.name').text(allPois[i].title)
+						li.children('.placeaddress').text(allPois[i].address)
+						li.appendTo('.message-list')
+						li.data('i', i)
+						li.data('poi', allPois[i])
+						li.on('click', function(event) {
+							var i = $(this).data('i')
+							event.preventDefault();
+							map.clearOverlays();
+							$('.message-list .active').removeClass('active')
+							$(this).addClass('active');
+							map.panTo(new BMap.Point(allPois[i].point.lng,allPois[i].point.lat))
+							map.addOverlay(new BMap.Marker(allPois[i].point));
+							fun($(this).data('poi'))
+						});
+						
+					}
+				})()
+			}, mOption
+		);
+	}
+	function getCenter(fun){
+		var geolocation = new BMap.Geolocation();
+		var point = {lng:130.000000,lat:29.827328}
+		geolocation.getCurrentPosition(function(r) {
+			if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            	fun(r.point)
+        	}
+        });
+        return point
+	}
+	function POST (url,obj) {
+		
+		$.post(url, obj, function(data, textStatus, xhr) {
+				 if(data.status==201){
+						if(data.msg!=''){
+							 $(location).attr('href', 'login?redirect=index');
+						}
+		            }
+			if(data.data=="dis ok"){
+				$(location).attr('href', 'article?tab=1');
+			}else if(data.data=="save ok"){
+				$(location).attr('href', 'article?tab=2');
+			}
+			
+			console.log(data)
+		});
+	}
+	function getProtect (fun) {
+		$.get('', function(data) {
+			/*optional stuff to do after success */
+			$('#title').text('some text')
+    		$('#connername').text('some text')
+    		$('#address').text('some text')
+    		$('#author').text('some text')
+    		$('#time').text(changtime('some text'))
+    		$('#content').text('some text')
+    		fun(data.data)
+		});
+	}
+	function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        var context = "";
+        if (r != null)
+             context = r[2];
+        reg = null;
+        r = null;
+        return context == null || context == "" || context == "undefined" ? "" : context;
+    }
+</script>
+</html>

@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>圈子</title>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" src="../js/tab.js"></script>
+
+
+	<style type="text/css">
+	body{
+		padding-bottom: 50px;
+		overflow-y: scroll;
+	}
+	/*quan-item*/
+	.qz-quan-item{
+		background-color: white;
+		border: 1px solid #ddd;
+	}
+	.qz-title{
+		line-height: 30px;
+		border-bottom: 1px solid #ddd;
+	}
+	.qz-title .qz-name{
+		margin: 0 10px;
+	}
+	.qz-title button{
+		float: right;
+		margin: 3px 10px;
+		background: green;
+		font-size: 0.9rem;
+		color: white;
+		padding: 0 10px;
+		line-height: 24px;
+		border-radius: 5px;
+	}
+	</style>
+</head>
+<body>
+	<section class="main-pages">
+		<header class="qz-header">
+			<div class="qz-top">
+				<img src="../images/quanzi.png">圈子
+				<span class="qz-more">更多<i class="qz-icon"></i></span>
+			</div>
+		</header>
+		<section>
+			<header><h2 class="qz-h2">新的圈子</h2></header>
+			<div class="qz-new">
+			</div>
+		</section>
+		<section>
+			<header><h2 class="qz-h2">我的圈子</h2></header>
+			<ul class="qz-list"></ul>
+		</section>
+	</section>
+    <footer class="footer"></footer>
+</body>
+<script type="text/x-jquery-tmpl" id="qznew">
+	<a class="qz-button" href="/page/quandetail?id=${'${'}arr[0].taglibid}">({{= arr[0].userdistance}}km)${'${'}arr[0].taglib}</a>
+	<a class="qz-button qz-button-blue" href="/page/quandetail?id=${'${'}arr[1].taglibid}">({{= arr[1].userdistance}}km)${'${'}arr[1].taglib}</a>
+	<a class="qz-create" href="/page/quancreate"></a>
+</script>
+<script type="text/x-jquery-tmpl" id="listItem">
+	<li class="qz-list-item">
+		<div onclick="util.href('/page/quandetail?id={{= taglib.taglibid}}')" class="qz-block qz-quan-item">
+			<div class="qz-title"><span class="qz-name">{{= taglib.taglib}}</span><div style="float:right"><span class="qz-msg-item"><img src="../images/message.png" style="margin-bottom: -5px; height: 20px;">{{= 11}}</span></div></div>
+			<div class="qz-user"><img src="{{= util.userHeadImage(taglib.author.userheadimageurl)}}"><span class="qz-username">{{= taglib.author.username}}</span><i class="qz-icon">圈主</i></div>
+			<p style="padding:5px 10px; border-top: 1px solid #ddd;"><span class="qz-msg-item">{{= lastDate? util.getDate(lastDate) : ''}}</span>{{= lastAnno}}</p>
+			<div class="qz-msg"><span class="qz-msg-item">成员数：{{= taglib.memberscount}}</span><span class="qz-msg-item">文章数：{{= taglib.articlescount}}</span><span class="qz-msg-item">{{= util.changeTime(created)}}</span></div>
+		</div>
+		<div class="qz-block qz-quan-item">
+			<p style="padding: 2px 0; border-bottom: 1px solid #ddd;"><span class="qz-msg-item">最新文章</span></p>
+			{{html taglib.article? xny.createItem(taglib.article).html() : '<p style="font-size:0.9rem; padding: 5px 10px;">还未创建文章</p>'}}
+		</div>
+	</li>
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript">
+main();
+var xny = new XNY()
+	,tab = new Tab('.footer', 4)
+function main() {
+	init()
+	$('.qz-top .qz-more').on('click', function () {
+	
+		$(location).attr('href', '/page/quanlist')
+	})
+}
+
+function init() {
+	Loc.getCenter(function (point) {
+		load('/taglib/getNewTagList?page=1&size=2&lat='+point.lat+'&lon='+point.lng, function (data) {
+			console.log(data)
+			$('#qznew').tmpl({arr:data.data}).appendTo('.qz-new')
+		})
+	})
+	
+	load('/taglib/getUserTagList', function (data) {
+		for (var i = 0; i < data.data.length; i++) {
+			$(function (data) {
+				$('#listItem').tmpl(data).appendTo('.qz-list');
+			}(data.data[i]))
+		}
+	})
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			success(data)
+		})
+	}
+}
+</script>
+</html>

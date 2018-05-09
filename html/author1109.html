@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getDate()+'">')
+</script>
+<style type="text/css">
+body, html{
+	margin: 0px;
+	padding:0px;
+	height: 100%;
+    width: 100%;
+    font-size: 0.9rem;
+    font-family: Verdana,"华文细黑";
+}
+li{
+    list-style: none;
+}
+.flex-row{
+    display: flex;
+}
+.flex-grow{
+    flex-grow:1;
+}
+.hide{
+    display: none;
+}
+.auth-head{
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #ddd
+}
+.userimage img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+.username{
+    font-size: 1.2rem;
+    line-height: 24px;
+    font-weight: bold;
+}
+.auth-focus{
+    position: absolute;
+    top: 40px;
+    right: 15%;
+}
+.auth-focus img{
+	width:80px;
+}
+.tab ul{
+    border-bottom:1px solid #ddd;
+}
+.tab ul li{
+    font-size: 1rem;
+    text-align: center;
+    line-height: 3rem;
+}
+.tab ul li.active{
+    color:#fc554c;
+}
+.content{
+	height:42px;
+}
+.article-list li,.corner-list li{
+	border-bottom:1px solid #ddd;
+	padding-top:8px;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+</head>
+<body>
+    <div class="toindex">
+        <h1></h1>
+    </div>
+    <section class="auth-head">
+        <div>
+            <div class="userimage"></div>
+            <span class="username"></span>
+        </div>
+        <div class="auth-focus"></div>
+    </section>
+    <div class="tab">
+        <ul class="flex-row">
+            <li id="tab-conner" class="flex-grow active">角落</li>
+            <li id="tab-article" class="flex-grow">文章</li>
+        </ul>
+    </div>
+    <div>
+    	<div class="article hide">
+        	<ul class="article-list"></ul>
+        	<div class="more artmore">加载更多</div>
+    	</div>
+    	<div class="corner">
+        	<ul class="corner-list"></ul>
+    		<div class="more cornermore">加载更多</div>
+    	</div>
+    </div> 
+   
+</body>
+</html>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+!(function($) {
+    var xny = new XNY(true)
+    var articlepage = 1,
+    	cornerpage = 1;
+    var tab = util.GetQueryString('tab')
+    $('#tab-conner').on('click', function(event) {
+        event.preventDefault();
+        $('.article').addClass('hide')
+        $('.corner').removeClass('hide')
+        $('#tab-article').removeClass('active')
+        $(this).addClass('active')
+    });
+    $('#tab-article').on('click', function(event) {
+        event.preventDefault();
+        $('.article').removeClass('hide')
+        $('.corner').addClass('hide')
+        $(this).addClass('active')
+        $('#tab-conner').removeClass('active')
+    });
+    $('.artmore').on('click', function(e){
+    	getArticlelist()
+    })
+    $('.cornermore').on('click', function(e){
+    	getCornerlist()
+    })
+    if(tab == '2'){
+    	$('#tab-article').click()
+    }
+    function getAuthor (authorid) {
+    	var size = data.getSize.authorSize
+    	var str = data.loadmore[1]
+        $.get('/record/user/info?page=1&size='+ size +'&authorid='+util.GetQueryString('authorid'), function(data) {
+            updateAuthor(data.data)
+            var articles = data.data.articles;
+            var corners = data.data.corners;
+            console.log(corners)
+            for (var i = 0; i < articles.length; i++) {
+                $('.article-list').append($('<li>').append(xny.createArticle(articles[i], true)).append(xny.createConner(articles[i].corner,true)))
+            };
+            articlepage = 2;
+            if(articles.length < size){
+            	$('artmore').text(str)
+            }
+            for (var j = 0; j < corners.length; j++){
+            	console.log(corners[j])
+                $('.corner-list').append($('<li>').append(xny.createConner(corners[j],true)))
+            }
+    		cornerpage = 2
+            if(corners.length < size){
+            	$('cornermore').text(str)
+            }
+        });
+        // updateAuthor(articles[0])
+        // for (var i = 0; i < articles.length; i++) {
+        //     $('.article-list').append(xny.createLi(articles[i], true).css({
+        //         'padding-top': '5px',
+        //         'border-bottom': '1px solid #ddd'
+        //     }))
+        // };
+    }
+    function getArticlelist(){
+    	var size = data.getSize.authorSize
+    	var str = data.loadmore[1]
+    	if($('.artmore').text() == str) return
+    	$.get('/article/inter/author/article?page='+ articlepage +'&size='+ size +'&authorid='+util.GetQueryString('authorid'),function(data){
+    		var arr = data.data
+    		if(arr.length < size) $('.artmore').text(str)
+    		articlepage++
+    		for(var i = 0; i < arr.length; i++){
+    			$('.article-list').append($('<li>').append(xny.createArticle(arr[i], true)).append(xny.createConner(arr[i].corner,true)))
+    		}
+    	})
+    }
+    function getCornerlist(){
+    	var size = data.getSize.authorSize
+    	var str = data.loadmore[1]
+    	if($('.cornermore').text() == str) return
+    	$.get('/corner/inter/author/corner?page='+ cornerpage +'&size='+ size +'&authorid='+util.GetQueryString('authorid'),function(data){
+    		var arr = data.data
+    		if(arr.length < size) $('.cornermore').text(str)
+    		cornerpage++
+    		for(var i = 0; i < arr.length; i++){
+                $('.corner-list').append($('<li>').append(xny.createConner(arr[i],true)))
+            }
+    	})
+    }
+    function updateAuthor (article) {
+        $('.username').text(article.username)
+        $('.userimage').append($('<img>').attr('src', util.userHeadImage(article.userheadimageurl)))
+       /*  if (!(article.userheadimageurl==""||article.userheadimageurl==null||article.userheadimageurl=="Null"||article.userheadimageurl=="NULL")) {
+            $('.userimage').append($('<img>').attr('src', util.userHeadImage(article.userheadimageurl)))
+        }; */
+        if(article.ofSelf) $('.auth-focus').append('<img src="../images/self.png" style="width:30px;height:30px;vertical-align:middle">')
+        else {
+        	if (article.likeAuthor) {
+            	$('.auth-focus').append($('<img>').attr('src', "../images/yiguanzhu.png"))
+    		}else {
+    			$('.auth-focus').append($('<img>').attr('src', "../images/guanzhu.png"))
+    		}
+            $('.auth-focus').on('click', function(event) {
+            	var self = $(this)
+                event.preventDefault();
+            	if (!article.likeAuthor) {
+        			console.log('关注')
+    				$.get('/action/author/like?authorid=' + article.userid + '&zan=true', function(data) {
+    					self.find('img').attr('src', "../images/yiguanzhu.png")
+    					article.likeAuthor = true
+    					console.log('已关注')
+    				});
+    			} else {
+    				$.get('/action/author/like?authorid=' + article.userid + '&zan=false', function(data) {
+    					self.find('img').attr('src', "../images/guanzhu.png")
+    					article.likeAuthor = false
+    				});
+    			};
+            });
+        }
+        $(document).attr('title', article.username);
+    }
+    var articles = [{
+                "articleid": 140,
+                "aurthorid": 31,
+                "username": "杨冰",
+                "userimageurl": "http://wx.qlogo.cn/mmopen/4NqpzGruXyrmADU6uYHelHgC7MbPJwibLJjGBfkcdfTPABuZEj9dAS4BI3PiariaJcO0NKxv8QU9v5V1fWia8FPaYw036IH5m4G2/0",
+                "title": "#一句话为浙大120周年庆生#",
+                "imageurl": "http://120.26.47.238/www/image/2017/06/20/1497945889622768.png",
+                "status": 2,
+                "boring": 0,
+                "favor": 0,
+                "comments": 2,
+                "readtime": 4,
+                "artbegin": "看来撒娇发神经了世界粮食价格临时拘留所考虑放假哦额",
+                "created": 1497945893000,
+                "updated": 1497945893000,
+                "conner": {
+                    "id": 119,
+                    "name": "角落",
+                    "placename": "联德机械(杭州)有限公司",
+                    "placeaddress": "杭州经济技术开发区18号大街77号",
+                    "placelatitude": 30.286449,
+                    "placelongitude": 120.361314,
+                    "placecity": "杭州市",
+                    "conner_favor": false,
+                    "befavor": 3,
+                    "pass": 3,
+                    "created": 1497945893000,
+                    "updated": 1497945893000,
+                    "sort": 0,
+                    "distance": 0.0,
+                    "userid": null,
+                    "username": null,
+                    "userimageurl": null,
+                    "articles": null
+                },
+                "content": null,
+                "article_favor": false,
+                "article_boring": false,
+                "user_favor": true,
+                "comment_list": null
+            },{
+                "articleid": 140,
+                "aurthorid": 31,
+                "username": "杨冰",
+                "userimageurl": "http://wx.qlogo.cn/mmopen/4NqpzGruXyrmADU6uYHelHgC7MbPJwibLJjGBfkcdfTPABuZEj9dAS4BI3PiariaJcO0NKxv8QU9v5V1fWia8FPaYw036IH5m4G2/0",
+                "title": "#一句话为浙大120周年庆生#",
+                "imageurl": "http://120.26.47.238/www/image/2017/06/20/1497945889622768.png",
+                "status": 2,
+                "boring": 0,
+                "favor": 0,
+                "comments": 2,
+                "readtime": 4,
+                "artbegin": "看来撒娇发神经了世界粮食价格临时拘留所考虑放假哦额",
+                "created": 1497945893000,
+                "updated": 1497945893000,
+                "conner": {
+                    "id": 119,
+                    "name": "角落",
+                    "placename": "联德机械(杭州)有限公司",
+                    "placeaddress": "杭州经济技术开发区18号大街77号",
+                    "placelatitude": 30.286449,
+                    "placelongitude": 120.361314,
+                    "placecity": "杭州市",
+                    "conner_favor": false,
+                    "befavor": 3,
+                    "pass": 3,
+                    "created": 1497945893000,
+                    "updated": 1497945893000,
+                    "sort": 0,
+                    "distance": 0.0,
+                    "userid": null,
+                    "username": null,
+                    "userimageurl": null,
+                    "articles": null
+                },
+                "content": null,
+                "article_favor": false,
+                "article_boring": false,
+                "user_favor": false,
+                "comment_list": null
+            },{
+                "articleid": 140,
+                "aurthorid": 31,
+                "username": "杨冰",
+                "userimageurl": "http://wx.qlogo.cn/mmopen/4NqpzGruXyrmADU6uYHelHgC7MbPJwibLJjGBfkcdfTPABuZEj9dAS4BI3PiariaJcO0NKxv8QU9v5V1fWia8FPaYw036IH5m4G2/0",
+                "title": "#一句话为浙大120周年庆生#",
+                "imageurl": "http://120.26.47.238/www/image/2017/06/20/1497945889622768.png",
+                "status": 2,
+                "boring": 0,
+                "favor": 0,
+                "comments": 2,
+                "readtime": 4,
+                "artbegin": "看来撒娇发神经了世界粮食价格临时拘留所考虑放假哦额",
+                "created": 1497945893000,
+                "updated": 1497945893000,
+                "conner": {
+                    "id": 119,
+                    "name": "角落",
+                    "placename": "联德机械(杭州)有限公司",
+                    "placeaddress": "杭州经济技术开发区18号大街77号",
+                    "placelatitude": 30.286449,
+                    "placelongitude": 120.361314,
+                    "placecity": "杭州市",
+                    "conner_favor": false,
+                    "befavor": 3,
+                    "pass": 3,
+                    "created": 1497945893000,
+                    "updated": 1497945893000,
+                    "sort": 0,
+                    "distance": 0.0,
+                    "userid": null,
+                    "username": null,
+                    "userimageurl": null,
+                    "articles": null
+                },
+                "content": null,
+                "article_favor": false,
+                "article_boring": false,
+                "user_favor": false,
+                "comment_list": null
+            }];
+    getAuthor (util.GetQueryString('authorid'))
+})(jQuery)
+</script>

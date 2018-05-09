@@ -1,0 +1,340 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title></title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+</script>
+<style type="text/css">
+body, html{
+	margin: 0px;
+	padding:0px;
+	height: 100vh;
+    width: 100%;
+    font-size: 0.9rem;
+    font-family: Verdana,"华文细黑";
+    overflow: hidden;
+}
+li{
+    list-style: none;
+}
+.flex-row{
+    display: flex;
+}
+.flex-grow{
+    flex-grow:1;
+}
+.hide{
+    display: none;
+}
+.auth-head{
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #ddd
+}
+.userimage img{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+.username{
+    font-size: 1.2rem;
+    line-height: 24px;
+    font-weight: bold;
+}
+.auth-focus{
+    position: absolute;
+    top: 40px;
+    right: 15%;
+}
+.auth-focus .xny-icon img{
+	height: 20px;
+}
+.tab ul{
+    border-bottom:1px solid #ddd;
+}
+.tab ul li{
+    font-size: 1rem;
+    text-align: center;
+    line-height: 3rem;
+}
+.tab ul li.active{
+    color:#fc554c;
+}
+.tab-content{
+    height: calc(100% - 190px);
+    width: 100%;
+    overflow-y: scroll;
+}
+.content{
+	height:42px;
+}
+.article-list li,.corner-list li{
+	border-bottom:1px solid #ddd;
+	padding-top:8px;
+}
+.corner{
+	width: 100%;
+	height: 100%;
+}
+.corner .map{
+    width: 100%;
+    height: calc(100% - 60px);
+}
+.corner .map #allmap{
+    width: 100%;
+    height: 100%;
+}
+.swiper{
+    height: 60px;
+    width: 100vw;
+    overflow: hidden;
+}
+.hiSlider-wrap,.hiSlider,.hiSlider-item{
+	width: 100vw;
+    height: 100%;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/corner.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+</head>
+<body>
+    <header class="top"></header>
+    <section class="auth-head">
+        <div>
+            <div class="userimage"></div>
+            <span class="username"></span>
+        </div>
+        <div class="auth-focus"></div>
+    </section>
+    <div class="tab">
+        <ul class="flex-row">
+            <li id="tab-article" class="flex-grow active">创作文章</li>
+            <li id="tab-conner" class="flex-grow">占领角落</li>
+        </ul>
+    </div>
+    <div class="tab-content">
+    	<div class="article">
+        	<ul class="article-list"></ul>
+        	<div class="more-box artmore"></div>
+    	</div>
+    	<div class="corner hide">
+            <div class='map'>
+                <div id="allmap"></div>
+            </div>
+            <div class="swiper">
+                <ul class="hiSlider">
+                </ul>
+            </div>
+        	<!-- <ul class="corner-list"></ul>
+    		<div class="more-box cornermore"></div> -->
+    	</div>
+    </div> 
+   
+</body>
+</html>
+
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+var xny = new XNY()
+    ,id = util.GetQueryString('authorid')
+    ,tab = util.GetQueryString('tab')
+!(function($) {
+
+    $('.top').append(xny.createToindex())
+    $('#tab-conner').on('click', function(event) {
+        event.preventDefault();
+        $('.article').addClass('hide')
+        $('.corner').removeClass('hide')
+        $('#tab-article').removeClass('active')
+        $(this).addClass('active')
+    });
+    $('#tab-article').on('click', function(event) {
+        event.preventDefault();
+        $('.article').removeClass('hide')
+        $('.corner').addClass('hide')
+        $(this).addClass('active')
+        $('#tab-conner').removeClass('active')
+    });
+    if(tab == '2'){
+    	$('#tab-conner').click()
+    }
+
+    getAuthor()
+
+    function getAuthor () {
+    	var size = data.getSize.authorSize;
+        $.get('/record/user/info?page=1&size='+ size +'&authorid='+id, function(data) {
+            var author = data.data;
+            $('.username').text(author.username)
+            $('.userimage').append($('<img>').attr('src', util.userHeadImage(author.userheadimageurl)))
+            if(author.ofSelf) $('.auth-focus').append('<img src="../images/self.png" style="width:30px;height:30px;vertical-align:middle">')
+            else {
+                $('.auth-focus').append(xny.createGuanzhu({author:author}))
+            }
+            $(document).attr('title', author.username);
+            getArticlelist()
+            getCornerlist(author)
+        });
+    }
+    function getArticlelist(){
+    	var size = xny.data.config.size.authorSize
+            ,more = xny.createMore('.artmore',{
+                url: '/article/inter/author/article'
+                ,page: 1
+                ,size: size
+                ,where: {authorid: id}
+                ,list: 'data'
+                ,done: function (data) {
+                    var arr = data.data 
+                    console.log(arr)
+                    for(var i = 0; i < arr.length; i++){
+                        $('.article-list').append($('<li>').append(xny.createItem(arr[i])))
+                    }
+                }
+            })
+    }
+    function getCornerlist(author){
+    	// var size = xny.data.config.size.authorSize
+     //        ,more = xny.createMore('.cornermore',{
+     //            url: '/corner/inter/author/corner'
+     //            ,page: 1
+     //            ,size: size
+     //            ,where: {authorid: id}
+     //            ,list: 'data'
+     //            ,done: function (data) {
+     //                var arr = data.data 
+     //                console.log(arr)
+     //                for(var i = 0; i < arr.length; i++){
+     //                	console.log(i)
+     //                    $('.corner-list').append($('<li>').append(xny.createCorner(arr[i])))
+     //                }
+     //            }
+     //        })
+        var map = new BMap.Map("allmap")
+            ,markers = []
+            ,currentmarker = null
+            ,width = 0;
+        Loc.getCenter(function (point) {
+            map.centerAndZoom(new BMap.Point(point.lng, point.lat), 15);
+
+	       	 $.get('/user/getuserinfo', function(data) {
+	       	     if(data.status!=201){
+	                 var marker = new BMap.Marker(point);
+	                 var icon = marker.getIcon()
+	                 icon.setImageUrl(util.userHeadImage(data.data.imageurl))
+	                 icon.setSize(new BMap.Size(30, 30))
+	                 icon.setImageSize(new BMap.Size(30, 30))
+	                 marker.setIcon(icon)
+	                 marker.setShadow(marker.getShadow().setImageUrl(''))
+	                 map.addOverlay(marker)
+	       	     }
+	       	 });
+            
+            setMarkers('/record/corner/favor?page=1&size=50&userid=' + id, function() {
+	            width = $('.hiSlider-item').width()
+	            $('.swiper ul').hiSlider({
+	                isFlexible: true,
+	                isSupportTouch: true,
+	                isShowPage: false,
+	                isShowTitle: false,
+	                isAuto: false,
+	                isShowControls: false,
+	                onMoveAfter: function() {
+	                    var left = $('.swiper ul').position().left;
+	                    var i = -left / width;
+	                    if (i == markers.length) i = 0;
+	                    map.panTo(markers[i].getPosition())
+	                    if (currentmarker) {
+                            map.removeOverlay(currentmarker)
+	                        currentmarker.setIcon(currentmarker.getIcon().setImageUrl('../images/unzhan.png'))
+                            map.addOverlay(currentmarker)
+	                        map.removeOverlay(markers[i])
+	                        markers[i].setIcon(markers[i].getIcon().setImageUrl('../images/zhan.png'))
+	                        markers[i].setTop(true)
+	                        map.addOverlay(markers[i])
+	                        currentmarker = markers[i]
+	                    } else {
+                            map.removeOverlay(markers[i])
+	                        markers[i].setIcon(markers[i].getIcon().setImageUrl('../images/zhan.png'))
+	                        map.addOverlay(markers[i])
+	                        currentmarker = markers[i]
+                        }
+	                }
+	            })
+	        })
+        })
+        
+
+        function setMarkers(url, fun) {
+            xny.getData(url, function(arr) {
+                
+                for (var i = 0; i < arr.length; i++) {
+                    !(function() {
+                        var li = $('<li>').append(xny.createCorner(arr[i])).addClass('hiSlider-item')
+                        $('.hiSlider').append(li)
+
+                        var point = new BMap.Point(arr[i].corner.placelongitude, arr[i].corner.placelatitude)
+                        var marker = new BMap.Marker(point)
+                        marker.i = i
+                        var icon = marker.getIcon()
+                        icon.setImageUrl('../images/unzhan.png')
+                        if (i == 0) {
+                            icon.setImageUrl('../images/zhan.png');
+                            marker.setTop(true)
+                            currentmarker = marker
+                            map.panTo(marker.getPosition());
+                        };
+                        icon.setSize(new BMap.Size(30, 30))
+                        icon.setImageSize(new BMap.Size(30, 30))
+                        marker.setIcon(icon)
+                        marker.setShadow(marker.getShadow().setImageUrl(''))
+                        map.addOverlay(marker)
+                        marker.addEventListener('click', function() {
+                            map.panTo(this.getPosition());
+                            if (marker.i == 0) {
+                                marker.i = markers.length
+                            };
+                            var left = -marker.i * width
+                            $('.swiper ul').css('left', left + 'px');
+                            if (currentmarker) {
+                                map.removeOverlay(currentmarker)
+                                currentmarker.setIcon(currentmarker.getIcon().setImageUrl('../images/unzhan.png'))
+                                map.addOverlay(currentmarker)
+                                map.removeOverlay(this)
+                                this.setIcon(this.getIcon().setImageUrl('../images/zhan.png'))
+                                map.addOverlay(this)
+                                currentmarker = this
+                            } else {
+                                map.removeOverlay(this)
+                                this.setIcon(this.getIcon().setImageUrl('../images/zhan.png'))
+                                map.addOverlay(this)
+                                currentmarker = this
+                            }
+                        })
+                        markers.push(marker)
+                    })();
+                }
+                fun();
+            })
+        }
+    }
+})(jQuery)
+</script>

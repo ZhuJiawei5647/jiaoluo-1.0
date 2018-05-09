@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<!-- <meta property="wb:webmaster" content="8d2996602d8aaa24"/> -->
+<title>角落记事</title>
+<link rel="stylesheet" type="text/css" href="../css/weui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getTime()+'">')
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+
+<script src="../js/wb.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/data.js" type="text/javascript"></script>
+<style type="text/css">
+body, html {
+	padding:0px;
+	margin: 0px;
+	height: 100%;
+    background-color: #efeff4;
+    font-size: 0.9rem;
+}
+/* html{
+	font-size:1.1rem;
+} */
+li{
+    list-style: none;
+}
+.header{
+    width: 100%
+}
+.hiSlider-item img{
+    width: 100%
+}
+.flex-left{
+    flex:1;
+}
+.article-list{
+    width: 100%;
+}
+.hide{
+    display: none;
+}
+.content{
+	height:42px;
+}
+#more{
+    padding: 0;
+    text-align: center;
+    margin-top: -10px;
+    padding: 10px 0
+}
+</style>
+</head>
+<body>
+    <header class="header">
+        <ul class="hiSlider">
+            <!-- <li class="hiSlider-item">
+                <img src="http://120.26.47.238/www/image/2017/server/banner_04.jpg">
+            </li> -->
+            <li class="hiSlider-item">
+                <img src="http://120.26.47.238/www/image/2017/server/banner_New1.jpg">
+            </li>
+            <li class="hiSlider-item">
+                <img src="http://120.26.47.238/www/image/2017/server/banner_New02.jpg">
+            </li>
+        </ul>
+    </header>
+    <!--  <div>分享到<wb:share-button appkey="2114784714" addition="simple" type="button"></wb:share-button></div>
+ -->   <section>
+        <ul class="article-list"></ul>
+        <div id="more">加载更多</div>
+        <div style="width:300px;margin:0 auto; padding:20px 0;
+    margin-bottom: 60px;">
+            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010602006784" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="../images/backup.png" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">浙公网安备 33010602006784号</p></a>
+        </div>
+    </section>
+    
+    <section class="footer">
+        <ul>
+            <li class="active">
+                <img src="../images/art_cindex.png"><br>
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/art_zuobiao.png"><br>
+                附近
+            </li>
+            <li id="add">
+                <img src="../images/new_art.png"><br>
+            </li>
+            <li id="article">
+                <img src="../images/art_csend.png"><br>
+                发现
+            </li>
+            <li id="mine">
+                <img src="../images/art_yonghu.png"><br>
+                我的
+            </li>
+        </ul>
+    </section>
+</body>
+</html>
+
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript"> 
+console.log($(location).attr('href'))
+var href = $(location).attr('href')
+	$.get('/page/ticket?url='+href,function(data){
+		console.log(data)
+		if(data.status == 200){
+			wx.config({
+			    debug: false, //调试阶段建议开启
+			    appId: data.data.appid,//APPID
+			    timestamp: data.data.timestamp,//上面main方法中拿到的时间戳timestamp
+			    nonceStr: data.data.nonceStr,//上面main方法中拿到的随机数nonceStr
+			    signature: data.data.signature,//上面main方法中拿到的签名signature
+			    jsApiList: [
+			           //所有要调用的 API 都要加到这个列表中
+			          "onMenuShareTimeline",//分享朋友圈接口
+                    "onMenuShareAppMessage"//分享给朋友接口
+			    ]
+			});
+		}
+	})
+	var imgUrl = 'http://120.26.47.238/www/image/2017/server/job_banner_01.jpg'; 
+	var lineLink = 'https://bgtree.cn'; 
+	var descContent = "分享给朋友吧"; 
+	var shareTitle = '漫步角落，记录属于你我的故事'; 
+	var appid = 'wx1c87df25d29ed27b'; 
+	 
+	function shareFriend() { 
+	WeixinJSBridge.invoke('sendAppMessage',{ 
+	"appid": appid, 
+	"img_url": imgUrl, 
+	"img_width": "640", 
+	"img_height": "640", 
+	"link": lineLink, 
+	"desc": descContent, 
+	"title": shareTitle 
+	}, function(res) { 
+	_report('send_msg', res.err_msg); 
+	}) 
+	} 
+	function shareTimeline() { 
+	WeixinJSBridge.invoke('shareTimeline',{ 
+	"img_url": imgUrl, 
+	"img_width": "640", 
+	"img_height": "640", 
+	"link": lineLink, 
+	"desc": descContent, 
+	"title": shareTitle 
+	}, function(res) { 
+	_report('timeline', res.err_msg); 
+	}); 
+	} 
+	function shareWeibo() { 
+	WeixinJSBridge.invoke('shareWeibo',{ 
+	"content": descContent, 
+	"url": lineLink, 
+	}, function(res) { 
+	_report('weibo', res.err_msg); 
+	}); 
+	} 
+	// 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。 
+	document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() { 
+	 
+	// 发送给好友 
+	WeixinJSBridge.on('menu:share:appmessage', function(argv){ 
+	shareFriend(); 
+	}); 
+	 
+	// 分享到朋友圈 
+	WeixinJSBridge.on('menu:share:timeline', function(argv){ 
+	shareTimeline(); 
+	}); 
+	 
+	// 分享到微博 
+	WeixinJSBridge.on('menu:share:weibo', function(argv){ 
+	shareWeibo(); 
+	}); 
+	}, false); 
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+
+<script type="text/javascript">
+!(function($) {
+    var xny = new XNY();
+    var page = 1;
+    init('/article/index/list?page=' + page + '&size=20');
+    $('.hiSlider').hiSlider({
+        isFlexible: true,
+        isSupportTouch: true,
+        isShowPage: false,
+        isShowTitle: false,
+        isAuto: true,
+        isShowControls: false
+    });
+    $('#more').on('click', function(event) {
+        event.preventDefault();
+        if($(this).text() == data.loadmore[1]) return
+        page++
+        init('/article/index/list?page=' + page + '&size=' + data.getSize.indexSize);
+    });
+
+    function init(url) {
+        xny.getData(url, function(arr) {
+            console.log(1)
+            for (var i = 0; i < arr.length; i++) {
+                (function() {
+                    var li = xny.createLi(arr[i], true).css({
+                        margin: '10px',
+                        border: '1px solid #ddd',
+                        'background-color': '#fff'
+                    });
+                    li.children('div').css({
+                        margin: '10px 0'
+                    });
+                    $('.article-list').append(li)
+                })()
+				
+            };
+            if(arr.length < data.getSize.indexSize){
+            	$('#more').text(data.loadmore[1])
+            }
+        })
+    }
+})(jQuery)
+</script>

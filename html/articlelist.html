@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>历史纪录</title>
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<style type="text/css">
+body,html{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	font-size: 0.9rem
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+}
+.xny-header ul{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	display: flex;
+	background-color: #fff;
+	z-index: 1000;
+}
+.xny-header li{
+	flex: 1;
+}
+.xny-header li a{
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	line-height: 40px;
+	text-align: center;
+	color: #808080;
+	overflow: hidden;
+}
+.xny-header li.active a{
+	color: #000;
+	border-bottom: 2px solid #00b0ff;
+}
+.hide{
+	display: none;
+}
+.article-list{
+	padding-bottom: 40px;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+</head>
+<body>
+	<div class="toindex">
+        <h1></h1>
+    </div>
+	<header class="xny-header">
+		<ul>
+			<li id="publish"><a>喜欢</a></li>
+			<li id="keep"><a>已阅</a></li>
+			<li id="hide"><a>已评</a></li>
+		</ul>
+	</header>
+	<section id="publish-item" class='hide'>
+		<ul class="article-list"></ul>
+		<div class="more pubmore">加载更多</div>
+	</section>
+	<section id="keep-item" class="hide">
+		<ul class="article-list"></ul>
+		<div class="more keepmore">加载更多</div>
+	</section>
+	<section id="hide-item" class="hide">
+		<ul class="article-list"></ul>
+		<div class="more hidemore">加载更多</div>
+	</section>
+</body>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+!(function($) {
+	var active, showpage
+	var tab = util.GetQueryString('tab')
+	var xny = new XNY();
+	var size = data.getSize.articlelistSize
+	var pubpage = 1,
+		keeppage = 1,
+		hidepage = 1;
+	console.log(tab)
+	$('#publish').one('click', function(event) {
+		console.log('publish')
+		pubpage++;
+		createHtml('/record/article/zan?page=1&size=' + size, $('#publish-item ul'),function(length){
+			if(length < size) $('.pubmore').text(data.loadmore[1])
+		})
+	});
+	$('#keep').one('click', function(event) {
+		keeppage++;
+		createHtml('/record/article/read?page=1&size=' + size, $('#keep-item ul'),function(length){
+			if(length < size) $('.keepmore').text(data.loadmore[1])
+		})
+	});
+	$('#hide').one('click', function(event) {
+		hidepage++;
+		createHtml('/record/user/comment?page=1&size=' + size, $('#hide-item ul'),function(length){
+			if(length < size) $('.hidemore').text(data.loadmore[1])
+		})
+	});
+	$('#publish').on('click', function(event) {
+		console.log('publish2')
+		event.preventDefault();
+		if (active) active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		if (showpage) showpage.addClass('hide')
+		$('#publish-item').removeClass('hide')
+		showpage = $('#publish-item')
+	});
+	$('#keep').on('click', function(event) {
+		event.preventDefault();
+		if (active) active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		if (showpage) showpage.addClass('hide')
+		$('#keep-item').removeClass('hide')
+		showpage = $('#keep-item')
+	});
+	$('#hide').on('click', function(event) {
+		event.preventDefault();
+		if (active) active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		if (showpage) showpage.addClass('hide')
+		$('#hide-item').removeClass('hide')
+		showpage = $('#hide-item')
+	});
+	if (tab && tab != '1') {
+		console.log(tab)
+		switch (tab) {
+			case '2':
+				console.log('tab')
+				$('#keep').click()
+				break;
+			case '3':
+				console.log('tab')
+				$('#hide').click()
+				break;
+			default:
+				console.log('tab')
+				$('#publish').click()
+				break;
+		}
+	} else {
+		console.log('tab')
+		$('#publish').click()
+	}
+	$('.article-create').on('click', function(event) {
+		$(location).attr('href', 'publish');
+	})
+	
+	$('.pubmore').on('click',function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/record/article/zan?page='+ pubpage +'&size=' + size, $('#publish-item ul'),function(length){
+			if(length < size) $('.pubmore').text(data.loadmore[1])
+		})
+		pubpage++;
+	})
+	$('.keepmore').on('click',function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/record/article/read?page='+ keeppage +'&size=' + size, $('#keep-item ul'),function(length){
+			if(length < size) $('.keepmore').text(data.loadmore[1])
+		})
+		keeppage++;
+	})
+	$('.hidemore').on('click',function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/record/user/comment?page='+ hidepage +'&size=' + size, $('#hide-item ul'),function(length){
+			if(length < size) $('.hidemore').text(data.loadmore[1])
+		})
+		hidepage++;
+	})
+
+	function createHtml(ul, sel, fun) {
+		xny.getData(ul, function(arr) {
+			for (var i = 0; i < arr.length; i++) {
+				(function() {
+					console.log(arr.length)
+					var li = $('<li>').append(xny.createItem(arr[i].article))
+					if(arr[i].commentcontent){
+						li.append($('<p>').text('我的点评:'+arr[i].commentcontent).css({
+							'padding':'5px 20px',
+							'line-height':'28px',
+							'font-size':'1rem'
+						}))
+					}
+					sel.append(li)
+				})()
+			};
+			fun(arr.length)
+		})
+	}
+})(jQuery)
+</script>
+</html>

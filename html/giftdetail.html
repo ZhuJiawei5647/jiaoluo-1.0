@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>礼物详情</title>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+	</script>
+	<style type="text/css">
+		.xny-param{
+			overflow: hidden;
+		}
+		.xny-key{
+			float: left;
+			width: 100px;
+			height: 40px;
+		}
+		.xny-value{
+			padding-left: 100px;
+			position: relative;
+		}
+		.xny-key label{
+			display: inline-block;
+			width: 100%;
+			height: 100%;
+			text-align: center;
+			font-size: 14px;
+			line-height: 40px;
+		}
+		.xny-value span{
+			font-size: 14px;
+			line-height: 40px;
+		}
+		.xny-value .xny-btn-box{
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 80px;
+			height: 40px;
+			line-height: 40px;
+			background-color: green;
+			color: #fff;
+		}
+
+		.btn-box .xny-btn-box{
+			margin: 10px auto;
+			height: 36px;
+			line-height: 36px;
+		}
+	</style>
+</head>
+<body>
+    <header class="header">
+        <div class="xny-item">
+            <div class="xny-user-img">
+                <img src="../images/userhead.png">
+            </div>
+            <div class="xny-item-body">
+                <div class="xny-art" style="height:auto">
+                    <span class="xny-art-title"></span>
+                </div>
+				<div class="xny-cor">
+					<div class="xny-cor-content">
+						<img src="../images/dizhi.png"><span class="xny-cor-name"></span><span class="xny-cor-address"></span>
+					</div>
+				</div>
+            </div>
+        </div>
+    </header>
+	<section>
+		<div>
+			<div class="xny-param">
+				<div class="xny-key"><label>标题</label></div>
+				<div class="xny-value"><span class="title"></span></div>
+			</div>
+		</div>
+		<div>
+			<div class="xny-param">
+				<div class="xny-key"><label>信息</label></div>
+				<div class="xny-value"><span class="dec"></span></div>
+			</div>
+		</div>
+		<div>
+			<div class="xny-param">
+				<div class="xny-key"><label>图片</label></div>
+				<div class="xny-value"><img class="img" src="" alt=""></div>
+			</div>
+		</div>
+		<div>
+			<div class="xny-param">
+				<div class="xny-key"><label>数量</label></div>
+				<div class="xny-value">
+					<span class="num"></span>
+					<div class="xny-btn-box">
+						<div class="xny-button changenum">修改</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="xny-param">
+				<div class="xny-key"><label>剩余</label></div>
+				<div class="xny-value"><span class="numleft"></span></div>
+			</div>
+		</div>
+		<div>
+			<div class="xny-param">
+				<div class="xny-key"><label>打开</label></div>
+				<div class="xny-value"><span class="numget"></span></div>
+			</div>
+		</div>
+	</section>
+</body>
+<script type="text/x-jquery-tmpl" id="num">
+	<div class="numchange">
+		<div class="xny-form-item">
+			<div class="xny-label"><label>数量</label></div>
+			<div class="xny-input-block"><input class="changevalue" type="text" value="{{= value}}"></div>
+		</div>
+		<div class="btn-box">
+			<div class="xny-btn-box">
+				<div class="xny-button">修改</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+	var giftid = util.GetQueryString('giftid'),
+		xny = new XNY()
+	$(function () {
+		$.get('/gift/get/detail?giftid='+giftid, function (data) {
+	        var $header = $('.header')
+	        	,data = data.data
+	        $header.find('.xny-user-img img').attr('src', util.userHeadImage(data.author.userheadimageurl))
+	        $header.find('.xny-art-title').text( data.author.username)
+	        $header.find('.xny-cor-name').text(data.corner.name)
+	        $header.find('.xny-cor-address').text(data.corner.placename)
+
+	        $('.title').text(data.gifttitle)
+	        $('.dec').text(data.giftdec)
+	        $('.img').attr('src', data.giftimg)
+	        $('.num').text(data.giftnum)
+	        $('.numleft').text(data.giftnumleft)
+	        $('.numget').text(data.giftnumget)
+
+	        $('.changenum').on('click', function () {
+	        	console.log(1)
+	        	var wd = xny.createWd({
+					hasbg: true,
+					bgopcity: 0.4,
+					title: '性别',
+					position: 'center',
+					size: ['250px', '160px'],
+					content: $('#num').tmpl({
+						value: data.giftnum
+					})
+				})
+
+				$('.numchange .xny-button').on('click', function () {
+					var val = $('.changevalue').val()
+					$('.num').text(data.giftnum = val)
+					$('.numleft').text(data.giftnumleft = val - data.giftnumget)
+					wd.close()
+				})
+	        })
+		})
+	}())
+</script>
+</html>

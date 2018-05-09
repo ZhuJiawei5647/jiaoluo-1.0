@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>邀请</title>
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getDate()+'">')
+</script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+</head>
+<style type="text/css">
+	body,html{
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		font-size: 0.9rem;
+		font-family: "微软雅黑","Microsoft Yahei";
+		background-color: #f3f3f3
+	}
+	header,h3,h4{
+		padding: 0;
+		margin: 0;
+	}
+	ul,li{
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+	input,button{
+		background: none;
+		outline: none;
+		border: none;
+		padding: 0;
+	}
+	.hide{
+		display: none;
+	}
+	.invite-page{
+		width: 100%;
+		height: 100vh;
+		position: relative;
+		overflow: hidden;
+	}
+	.invite-page .header h3{
+		font-weight: normal;
+		padding: 0 20px;
+		line-height: 40px;
+		font-size: 1.1rem;
+		font-weight:bold;
+		background-color: #f4f4f4;
+		border-bottom: 1px solid #ddd;
+	}
+	.invite-page .header img{
+		width:20px;
+		margin-left:20px;
+		margin-top:-3px;
+		vertical-align:middle;
+	}
+	.text-area{
+		width: 100%;
+		padding-top: 15px;
+	}
+	.text-area .area-container{
+		width: 100%;
+		background-color: white;
+	}
+	.text-area .area-container-input{
+		width: 100%;
+		background-color: #f1f1f1;
+	}
+	.text-area .label{
+		display: inline-block;
+		width: 150px;
+		text-indent:20px;
+		line-height: 40px;
+		vertical-align: middle;
+		font-size: 1.1rem;
+	}
+	.text-area .text{
+		display: inline-block;
+		width: calc(100% - 170px);
+		height: 40px;
+		line-height: 40px;
+		font-size: 1.1rem;
+		border-radius: 5px;
+		vertical-align: middle;
+	}
+	.text-area .content{
+		padding-left:20px;
+		font-size:1.1rem;
+		line-height:40px;
+	}
+	.right-area{
+		position: absolute;
+		width: 100%;
+		top: 0;
+		left: 100%;
+		height: 100vh;
+		background-color: #f9f9f9;
+	}
+	.right-area-head{
+		width: 100%;
+		height: 40px;
+		position: relative;
+		background-color: white;
+	}
+	.right-area-head .left{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 40px;
+		height: 40px;
+	}
+	.button-box{
+		/* position:fixed;
+		bottom:0;
+		left:0; */
+		width:100%;
+		text-align: center;
+		background-color:#fff;
+	}
+	.button-box button{
+		font-family: "微软雅黑","Microsoft Yahei";
+		float:right;
+		margin-top:10px;
+		font-size:1rem;
+	}
+	.button-box button.cancel{
+		float:left;
+		margin-left:2%;
+	}
+	.button-box button.confirm{
+		margin-right:2%;
+		color: #999;
+	}
+	.button-box button img{
+		width:30px;
+	}
+	.list-area{
+		width: 100%;
+	}
+	.list-area{
+		width: 100%;
+	}
+	.list-area h4{
+		font-size: 1rem;
+		font-family: "微软雅黑","Microsoft Yahei";
+		font-weight: normal;
+		text-indent: 20px;
+		line-height: 30px;
+		background-color: #eee;
+	}
+	.list-area .list-container{
+		padding: 5px 0;
+	}
+	.list-area .list-container li{
+		line-height: 30px;
+		padding: 0 40px;
+	}
+</style>
+<body>
+    <!-- <div class="toindex">
+        <h1></h1>
+    </div> -->
+	<div class="invite-page">
+		<header class="header">
+			<h3>邀请码<img id="help" alt="" src="../images/help.png"></h3>
+		</header>
+		<div class="text-area">
+			<div id="codefrom" class="area-container">
+				<label class="label">输入邀请码</label>
+				<label class="text"></label>
+			</div>
+		</div>
+		<div class="text-area">
+			<div class="area-container">
+				<label class="label">我的邀请码</label>
+				<label id="mycode" class="text"></label>
+			</div>
+			<div class="list-area">
+			</div>
+		</div>
+		<div class="text-area">
+			<div class="area-container">
+				<label class="label" style="width:200px;">剩余可创建角落故事:</label>
+				<div class="content">
+				</div>
+			</div>
+		</div>
+		<div class="right-area">
+			<div id="invite" class="text-area hide" style="margin:0;padding:0;">
+				<div class="area-container-input">
+				<div class="button-box">
+					<button class="cancel">
+						取消
+						<!-- <img alt="" src="../images/cancel.png"> -->
+					</button>
+					<button class="confirm">
+						确定
+						<!-- <img alt="" src="../images/confirm.png"> -->
+					</button>
+					<label class="label" style="text-indent:0">输入邀请码</label></div>
+				</div>
+				<input id="changecode" class="text" placeholder="邀请码为七位" style="background-color:white;margin-top:20px;width:100%;text-indent:20px" type="text">
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+var xny = new XNY(true)
+$.get('/record/invitecode/get?page=1&size=5',function(data){
+	var users = data.data.inviteuser;
+	$('#mycode').text(data.data.invitecode)
+})
+
+getinvite()
+
+function getinvite(){
+	$.get('/record/invitecode/use', function(data){
+		if(data.data.beinvited){
+			if(data.data.invitecode == 'null'){
+				
+			}else{
+				$('.content').html('总共可发布<span class="disnumber"></span>篇&nbsp;&nbsp已发布<span class="leftnumber"></span>篇')
+				$('.disnumber').text(data.data.disnumber)
+				$('.leftnumber').text(data.data.disnumber - data.data.leftnumber)
+			}
+			$('#codefrom').css('background-color','#eee').find('.label').text('来自'+data.data.authorname+'的邀请')
+		}else{
+			$('#codefrom').on('click', function(event) {
+				event.preventDefault();
+				$('.right-area').animate({'left': '0px'}, 100);
+				$('#invite').removeClass('hide')
+			});
+		}
+	})
+}
+
+$('.cancel').on('click', function(event) {
+	event.preventDefault();
+	$('#changecode').val('')
+	$('.right-area').animate({'left': '100%'}, 100);
+	$('#invite').addClass('hide')
+	$('.confirm').css('color','#999').unbind('click')
+});
+$('#changecode').on('input',function(event){
+	event.preventDefault();
+	if($(this).val().length == 7){
+		$('.confirm').css('color','#78cE7C')
+		$('.confirm').on('click', function(event) {
+			event.preventDefault();
+			var code = $('#changecode').val()
+			if(code.length<7){
+				xny.alert({content: "邀请码小于7位"})
+				return;
+			}
+			$.get('/user/modify/invitecode?invitecode='+code,function(data){
+				if(data.data == 'add ok'){
+					$('#codefrom').unbind('click')
+					getinvite()
+				}
+				xny.alert({content: data.data})
+				$('.cancel').click();
+			})
+		});
+	}else{
+		$('.confirm').css('color','#999').unbind('click')
+	}
+})
+
+$('#help').on('click', function(){
+	$(location).attr('href','translate')
+})
+</script>
+</html>

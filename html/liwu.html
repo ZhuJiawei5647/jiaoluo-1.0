@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+<script type="text/x-jquery-tmpl" id="user">
+	<section class="common-item">
+		{{if (status == 200)}}
+		<div class="img-box">
+			<img src="{{= data.author.userheadimageurl?data.author.userheadimageurl : \'../images/userhead.png\'}}">
+		</div>
+		<div class="common-body">
+			<h3>{{= data.author.username}}</h3>
+			<p>{{= data.secretdec}}</p>
+			<div>{{ status == 199? "-- 鲁迅" : "-- " + data.author.author[0] + "*" }}</div>
+			<div class="content-box">
+				<div class="content">
+					{{if data.secretimg}}
+					<img src="{{= data.secretimg}}">
+					{{else data.secretdec}}
+					<span>{{= data.secretdec}}</span>
+					{{else}}
+					{{/if}}
+				</div>
+				<i class="xiaomimi"></i>
+			</div>
+		</div>
+		{{else}}
+		<div class="common-body">
+			<div class="content">
+				<i class="henyihan"></i>
+				<span>{{= msg}}</span>
+			</div>
+		</div>
+		{{/if}}
+		<i class="close"></i><div class="xian"></div><i class="wode"></i><button class="createcai"><span>留下我的回应</span></button></section>
+</script>
+</body>
+</html>

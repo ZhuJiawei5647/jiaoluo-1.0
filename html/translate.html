@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getDate()+'">')
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<title>何为邀请码</title>
+<style type="text/css">
+.translate{
+	padding: 10px 20px;
+}
+</style>
+</head>
+<body>
+    <div class="toindex">
+        <h1></h1>
+    </div>
+	<p class="translate">
+	</p>
+</body>
+<script>
+var xny = new XNY(true)
+$.get('/user/get/inviteinfo',function(data){
+	console.log(data.data)
+	var content = data.data.replace(/\n/g, '<br>')
+	$('.translate').html(content)
+})
+</script>
+</html>

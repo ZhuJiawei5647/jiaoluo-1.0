@@ -1,0 +1,618 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>圈子详情</title>
+	<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+	<script type="text/javascript" >
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+		document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+	</script>
+	<style type="text/css">
+	body{
+		background-color: #f2f2f2;
+		height: 100vh;
+	}
+	.xny-header{
+		background-color: #fff;
+	}
+	.xny-header .xny-btn-box{
+		position: absolute;
+		top: 5px;
+		right: 20px;
+		width: 60px;
+		height: 30px;
+		line-height: 30px;
+	}
+	.xny-header .xny-btn-box .xny-button{
+		background-color: transparent;
+		color: red;
+	}
+
+	.qz-nav{
+		margin-top: 15px;
+		width: 100%;
+		height: calc(100% - 15px);
+		position: relative;
+	}
+	.qz-nav-title{
+		height: 40px;
+		line-height: 40px;
+		background-color: #fff;
+		border-bottom: 1px solid #d3d3d3;
+		position: relative;
+	}
+	.qz-nav-list{
+		display: flex;
+		height: 100%;
+	}
+	.qz-nav-list li{
+		flex: 1;
+		text-align: center;
+		font-size: 0.95rem;
+	}
+	.qz-nav-list li.active{
+		background-color: #fff;
+		height: 38px;
+		border-bottom: 2px solid #00b0ff;
+		color: #000;
+	}
+	.qz-nav-content{
+		position: absolute;
+		top: 41px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 0;
+		overflow-y: scroll;
+	}
+	.qz-nav-item{
+		display: none;
+	}
+	/*圈子详情*/
+	.qz-nav-item .qz-user{
+		height: 40px;
+		line-height: 40px;
+		vertical-align: middle;
+	}
+	.qz-nav-item .qz-user .qz-icon{
+		height: 40px;
+		line-height: 40px;
+		vertical-align: middle;
+	}
+	.xny-item{
+		background-color: #fff;
+	}
+	.xny-msg-box{
+		overflow: hidden;
+		padding: 7px 20px 7px 40px;
+		border-bottom: 1px solid #f2f2f2;
+		position: relative;
+	}
+	.xny-msg-box.anno{
+		background: url(../images/gonggao--weidu.png) 18px 13px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box.anno.read{
+		background: url(../images/gonggao--yidu.png) 18px 13px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box.info{
+		background: url(../images/xiaoxiicon-weidu.png) 18px 8px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box.info.read{
+		background: url(../images/xiaoxi-yidu.png) 18px 8px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box h4{
+		padding: 0;
+		margin: 0;
+		font-size: 16px;
+		font-weight: normal;
+		line-height: 26px;
+	}
+	.xny-msg-box p{
+		font-size: 14px;
+	    overflow : hidden;
+	    text-overflow: ellipsis;
+	    display: -webkit-box;
+	    -webkit-line-clamp: 2;
+	    -webkit-box-orient: vertical;
+	}
+	.xny-msg-box .xny-msg-item{
+		position: absolute;
+		top: 0;
+		right: 0;
+		line-height: 26px;
+		margin: 5px 20px;
+	}
+	.group-out, .group-in{
+		background-color: #fff;
+		padding-top: 20px;
+	}
+	.group-out .btn, .group-in .btn{
+		display: block;
+		margin: 0 auto;
+		width: 60%;
+		height: 40px;
+		line-height: 40px;
+		font-size: 18px;
+		text-align: center;
+		border-radius: 8px;
+		color: #fff;
+		background-color: green;
+	}
+	.member li{
+		position: relative;
+		background-color: #fff;
+		border-top: 1px solid #f2f2f2;
+	}
+	.member li .xny-icon{
+		position: absolute;
+		top: 0;
+		right: 16px;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		background: url(../images/shanren.png) center center no-repeat;
+		background-size: 30px 30px;
+	}
+	.artcreate{
+		position: absolute;
+		bottom: 30px;
+		left: calc(50% - 40px);
+		width: 80px;
+		height: 80px;
+		border-radius: 40px;
+		background-color: #E53A40;
+		font-size: 16px;
+		font-family: 'Helvetica Neue',Helvetica,'PingFang SC','微软雅黑',Tahoma,Arial,sans-serif;
+		text-align: center;
+		line-height: 80px;
+		/*font-weight: bold;*/
+		color: #fff;
+	}
+	.membermng,.annocreate{
+		position: absolute;
+		bottom: 40px;
+		right: 0;
+		width: 120px;
+		height: 60px;
+		border-top-left-radius: 30px;
+		border-bottom-left-radius: 30px;
+		background-color: #fff;
+		font-size: 16px;
+		font-family: 'Helvetica Neue',Helvetica,'PingFang SC','微软雅黑',Tahoma,Arial,sans-serif;
+		text-indent: 30px;
+		line-height: 60px;
+		/*font-weight: bold;*/
+		color: red;
+	}
+	.swiper{
+	    height: 47%;
+	    width: 100%;
+	    overflow: hidden;
+	}
+	.hiSlider-wrap,.hiSlider,.hiSlider-item{
+	    height: 100%
+	}
+	</style>
+</head>
+<body>
+	<header class="xny-header">
+		<h1></h1>
+		<div class="xny-btn-box">
+			<span class="xny-button quit">退出</span>
+		</div>
+	</header>
+	<div class="xny-body">
+		<div class="qz-nav">
+			<header class="qz-nav-title">
+				<ul class="qz-nav-list">
+				</ul>
+			</header>
+			<div class="qz-nav-content">
+				<div class="qz-nav-item" style="display: block;">
+					<div class="group-out" style="display: none;">
+						<button class="btn">同意加入</button>
+					</div>
+					<div class="group-in" style="display: none;">
+						<button class="btn">邀请好友</button>
+						<div style="padding: 10px 0 0 20px;background-color: #fff;">
+							<!-- <div class="qz-user" style="border-bottom: 1px solid #f2f2f2">
+								<img class="author-image" src=""><span class="qz-username author-name"></span><i class="qz-icon">圈主</i>
+							</div> -->
+							<ul class="member"></ul>
+						</div>
+					</div>
+					<!-- <div class="membermng" style="display: none;">黑名单管理</div> -->
+				</div>
+				<div class="qz-nav-item">
+					<ul class="discorner"></ul>
+				</div>
+				<div class="qz-nav-item">
+					<ul class="passcorner"></ul>
+				</div>
+				<div class="qz-nav-item">
+					<div id="map" style="height: 200px; width: 100%"></div>
+					<div class="swiper"></div>
+				</div>
+			</div>
+		</div>
+		<div class="artcreate" style="display: none;">创建文章</div>
+	</div>
+</body>
+<script type="text/x-jquery-tmpl" id="nav">
+	<li class="active">成员<!-- <span class="qz-icon-blue"></span> --></li>
+	<li>信途计划<!-- <span class="qz-icon-blue"></span> --></li>
+	<li>完成信途<!-- <span class="qz-icon"></span> --></li>
+	<li>信途导航<!-- <span class="qz-icon"></span> --></li>
+</script>
+<script type="text/x-jquery-tmpl" id="btn">
+	{{if userin==1}}
+		<span onclick="quit({{= taglibid}})" class="xny-button">退出</span>
+	{{else}}
+		<span onclick="join({{= taglibid}})" class="xny-button">加入</span>
+	{{/if}}
+</script>
+<script type="text/x-jquery-tmpl" id="member">
+	{{each(i,user) members}}
+		<li>
+			<div class="qz-user"><img src="{{= util.userHeadImage(user.userheadimageurl)}}"><span class="qz-username">{{= user.username}}</span></div>
+			{{if quanzhu}}
+				<div class="xny-icon" data-id="{{= user.userid}}" onclick="deluser(this)"></div>
+			{{/if}}
+		</li>
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="corner">
+	<li class="xny-item">
+		<div style="border-bottom: 2px solid #f2f2f2">
+			<div class="xny-cor-content" onclick="util.href('cornermap?cornerid={{= corner.cornerid}}')">
+				<p>
+					<span class="xny-cor-name">{{= corner.name}}</span>
+					<span class="xny-cor-address">{{= corner.placeaddress}}</span>
+				</p>
+				<span class="xny-msg-item" style="float:right">{{= util.getDate(corner.created)}}</span>
+			</div>
+		</div>
+	</li>
+</script>
+<script type="text/javascript">
+var id = util.GetQueryString('userid')
+	,tab = util.GetQueryString('tab')
+	,map = new BMap.Map("map")
+	,xny = new XNY()
+	// ,data1 = {"status":200,"msg":"OK","data":{"group":{"author":[{"userid":51,"username":"Eson","userheadimageurl":null,"sex":false,"created":null,"ofSelf":false,"likeAuthor":false}],"id":1,"userid":51,"groupname":"eson的信途","remark":null},"discorner":[{"cornerid":141,"userid":null,"name":"江锦路160-162号","placename":"联华超市(和谐家园店)","placeaddress":"江锦路160-162号","placelatitude":30.259142,"placelongitude":120.217801,"placecity":"杭州市","befavor":0,"pass":0,"dashang":0,"created":1500046139000,"updated":null,"ifpass":0},{"cornerid":248,"userid":null,"name":"龙湖时代金沙天街","placename":"龙湖时代金沙天街","placeaddress":"杭州市江干区金沙大道560号","placelatitude":30.316055,"placelongitude":120.333961,"placecity":"杭州市","befavor":0,"pass":8,"dashang":0,"created":1520896942000,"updated":null,"ifpass":0},{"cornerid":249,"userid":null,"name":"18号大街桥","placename":"18号大街桥","placeaddress":"浙江省杭州市江干区","placelatitude":30.293949,"placelongitude":120.335704,"placecity":"杭州市","befavor":0,"pass":16,"dashang":0,"created":1521016074000,"updated":null,"ifpass":0},{"cornerid":250,"userid":null,"name":"中国建设银行(杭州金沙湖支行)","placename":"中国建设银行(杭州金沙湖支行)","placeaddress":"杭州市经济技术开发区上沙路550号-554号、华景街316号-320号","placelatitude":30.318542,"placelongitude":120.335398,"placecity":"杭州市","befavor":0,"pass":8,"dashang":0,"created":1521158321000,"updated":null,"ifpass":1}]}}
+
+$(function () {
+	init()
+})
+function init() {
+	load('/disciple/user/disciple', function (data) {
+		var data = data.data,
+			discorners = [],
+			passcorners = [];
+		xny.data.detail = data;
+		$('.xny-header h1').text(data.group.groupname);
+		$('#nav').tmpl(data).appendTo('.qz-nav-list');
+		if (data.group.isInGroup == 2) {
+			$('#member').tmpl({members: data.group.author}).appendTo('.member');
+			$('.group-in').show().find('.btn').on('click', function () {
+				$(location).attr('href', '/page/sharexintu?url=' + encodeURIComponent('https://bgtree.cn/disciple/author/disciple?userid=' + data.group.userid))
+			})
+		} else if(data.group.isInGroup == 0) {
+			$('.group-out').show().find('.btn').on('click', function () {
+				load('/disciple/user/joingroup?groupid=' + data.group.id, function (data) {
+					$(location).attr('href', '')
+				})
+			})
+		} else {
+			$('.quit').hide();
+		}
+
+		data.discorner.forEach(function (corner, index) {
+			$('#corner').tmpl({corner: corner}).appendTo(corner.ifpass? '.passcorner' : '.discorner')
+			if (!corner.ifpass) {
+				discorners.push(corner)
+			} else {
+				passcorners.push(corner)
+			}
+		})
+
+		$('.quit').on('click', function () {
+			quit(data.group.id)
+		})
+
+		$('.qz-nav-list li').each(function (i, el) {
+			$(this).on('click', function () {
+				$('.qz-nav-item').hide();
+				$('.qz-nav-item').eq(i).show();
+				$(el).siblings('li.active').removeClass('active')
+				$(el).addClass('active')
+			})
+			if (i === 3){
+				$(this).one('click', function(){
+					setTimeout(function(){
+						mapInit(discorners, passcorners)
+					},100)
+				})
+			}
+		})
+		if (tab && Number(tab)) $('.qz-nav-list li').eq(Number(tab)).click()
+	})
+}
+
+function quit(id){
+	$.get('/disciple/user/outgroup?groupid='+ id, function(data){ 
+		 if(data.status==200){
+			util.href('')
+		 }
+		 alert(data.msg)
+	 }) 
+}
+
+function deluser(self) {
+	var userid = $(self).data('id');
+	console.log(userid)
+	$.get('/taglib/defriend?userid='+ userid +'&taglibid='+ id,function (data) {
+		alert(data.msg)
+		if(data.status == 200){
+			$(self).parents('li').remove();
+		}
+	})
+}
+
+function mapInit(dcs, pcs) {
+	map.centerAndZoom(new BMap.Point(121.335468, 28.135212), 12)
+	var dicon = createIcon({
+			url: '../images/x5.png',
+			size: {
+				width: 35,
+				height: 35
+			},
+			imageSize: {
+				width: 35,
+				height: 35
+			}
+		}),
+		dicon2 = createIcon({
+			url: '../images/x6.png',
+			size: {
+				width: 35,
+				height: 35
+			},
+			imageSize: {
+				width: 35,
+				height: 35
+			}
+		})
+		picon = createIcon(null),
+		dms = createMarkers(dcs, dicon),
+		pms = createMarkers(pcs, picon),
+		controlClickHandler = (function () {
+			var b = true,
+				dmChange = markerChange(dms, dicon, dicon2),
+				pmChange = markerChange(pms, picon, picon);
+			return function (self) {
+				if (b) {
+					sliderInit(dcs, function (index) {
+						dmChange(index)
+					})
+					$(self).find('img').attr('src', '../images/userhead.png')
+					addMarkers(dms, function(index){
+						dmChange(index)
+						var left = -index * $('.hiSlider li').width()
+						$('.hiSlider').css('left', left + 'px');
+					})
+					dmChange(0)
+				} else {
+					sliderInit(pcs, function (index) {
+						pmChange(index)
+					})
+					$(self).find('img').attr('src', '')
+					addMarkers(pms, function (index) {
+						pmChange(index)
+						var left = -index * $('.hiSlider li').width()
+						$('.hiSlider').css('left', left + 'px');
+					})
+					pmChange(0)
+				}
+				b = !b;
+			}
+		})();
+
+	map.addControl(new Control(controlClickHandler));
+}
+
+function sliderInit(corners, fun) {
+	var $ul = $('<ul>').addClass('hiSlider')
+	corners.forEach(function (corner) {
+		$('#corner').tmpl({corner: corner}).addClass('hiSlider-item').appendTo($ul)
+	})
+	$('.swiper').html('').append($ul).find('ul').hiSlider({
+		isFlexible: true,
+		isSupportTouch: true,
+		isShowPage: false,
+		isShowTitle: false,
+		isAuto: false,
+		isShowControls: false,
+		onMoveAfter: function() {
+		    var left = $('.swiper .hiSlider').position().left;
+		    var i = -left / $('.hiSlider>li').width();
+		    if (i == corners.length) i = 0;
+		    fun(i)
+		}
+	})
+}
+
+function createMarkers(arr, icon){
+	var markers = [];
+	arr.forEach(function (c, index) {
+		var marker = new BMap.Marker(getPoint({
+			lng: c.placelongitude,
+			lat: c.placelatitude
+		}), {icon: icon});
+		markers.push(marker)
+	})
+	return markers;
+}
+
+function markerChange(markers, icon1, icon2) {
+	var currentmarker = null,
+		currentindex = -1;
+	return function (i) {
+		if (markers.length < 1) return;
+		if (currentindex != i) {
+			if (currentmarker) {
+				markerIconChange(currentmarker, icon1, false)
+			}
+			markerIconChange(markers[i], icon2, true)
+		}
+		map.panTo(markers[i].getPosition())
+		currentindex = i;
+		currentmarker = markers[i]
+	}
+}
+
+function markerIconChange(marker, icon, istop) {
+	map.removeOverlay(marker)
+	marker.setIcon(icon)
+	if (istop) marker.setTop(true)
+	map.addOverlay(marker)
+}
+
+function addMarkers(markers, fun) {
+	map.clearOverlays()
+	markers.forEach(function(marker, index){
+		map.addOverlay(marker)
+		marker.onclick = function () {
+			fun(index)
+		}
+	})
+}
+
+function createMarker(opt){
+	var marker = new BMap.Marker(getPoint(opt.point), Object.assign({}, opt, {
+			offset: getSize(opt.offset),
+			icon: getIcon(opt.icon),
+			shadow: getIcon(opt.shadow)
+		}));
+	return marker
+}
+
+function getPoint(opt){
+	if(opt
+		&& typeof opt.lng === 'number'
+		&& typeof opt.lat === 'number')
+		return new BMap.Point(opt.lng, opt.lat)
+	return null
+}
+
+function getSize(opt){
+	if(opt
+		&& typeof opt.width === 'number'
+		&& typeof opt.height === 'number')
+		return new BMap.Size(opt.width, opt.height)
+	return null
+}
+
+function createIcon(opt){
+	var icon = new BMap.Marker(new BMap.Point(129.335468, 30.135212)).getIcon()
+	if(opt && typeof opt.url === 'string'){
+		icon = new BMap.Icon(opt.url,
+			Object.assign(icon.size,getSize(opt.size)),
+			Object.assign({
+				anchor: icon.anchor,
+				imageOffset: icon.imageOffset,
+				infoWindowAnchor: icon.infoWindowAnchor,
+				printImageUrl: ''
+			}, {
+				anchor: getSize(opt.anchor),
+				imageOffset: getSize(opt.imageOffset),
+				infoWindowAnchor: getSize(opt.infoWindowAnchor),
+				printImageUrl: opt.printImageUrl
+			}))
+		if (opt.imageSize)
+			icon.setImageSize(getSize(opt.imageSize))
+		return icon;
+	}
+
+	return null
+}
+
+function Control(fun){
+	var ZoomControl = function (){
+		  // 默认停靠位置和偏移量
+	  this.defaultAnchor = BMAP_ANCHOR_TOP_RIGHT;
+	  this.defaultOffset = new BMap.Size(10, 90);
+	  this.clickHandler = fun
+	}
+
+	// 通过JavaScript的prototype属性继承于BMap.Control
+	ZoomControl.prototype = new BMap.Control();
+
+	// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
+	// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
+	ZoomControl.prototype.initialize = function(map){
+	  var that = this;
+	  // 创建一个DOM元素
+	  var div = document.createElement("div"),
+	  	  img = document.createElement("img");
+	  // 添加文字说明
+	  div.appendChild(img);
+	  // 设置样式
+	  img.src = '../images/userhead.png'
+	  img.style.height = "30px";
+	  img.style.width = "30px";
+	  div.style.cursor = "pointer";
+	  div.style.border = "1px solid gray";
+	  div.style.borderRadius = "50%";
+	  div.style.backgroundColor = "white";
+	  div.style.overflow = "hidden";
+	  // 绑定事件,点击一次放大两级
+	  div.onclick = function(e){
+		that.clickHandler(this)
+	  }
+	  // 添加DOM元素到地图中
+	  map.getContainer().appendChild(div);
+	  $(div).click();
+	  // 将DOM元素返回
+	  return div;
+	}
+	return new ZoomControl()
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			success(data)
+		})
+	}
+}
+</script>
+</html>

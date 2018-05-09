@@ -1,0 +1,532 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>layout 后台大布局 - Layui</title>
+  <link rel="stylesheet" href="../css/layui.css">
+  <style type="text/css">
+    .hide{
+      display: none;
+    }
+  </style>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo" style="font-weight: bold">角落后台管理</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+      <li class="layui-nav-item"><a href="">角落</a></li>
+      <li class="layui-nav-item"><a href="">好工作</a></li>
+      <!-- <li class="layui-nav-item">
+        <a href="javascript:;">其它系统</a>
+        <dl class="layui-nav-child">
+          <dd><a href="">邮件管理</a></dd>
+          <dd><a href="">消息管理</a></dd>
+          <dd><a href="">授权管理</a></dd>
+        </dl>
+      </li> -->
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item">
+        <a href="javascript:;">
+          <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+          贤心
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">基本资料</a></dd>
+          <dd><a href="">安全设置</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item"><a href="">退了</a></li>
+    </ul>
+  </div>
+  
+    
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;" id="userControl" data-page="user">用户管理</a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;" id="articleControl" data-page="article">文章管理</a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;" id="cornerControl" data-page="corner">地点管理</a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;" id="setup" data-page="setup">设置</a>
+        </li>
+        <li class="layui-nav-item layui-nav-itemed">
+          <a class="" href="javascript:;" id="announce" data-page="announce">公告</a>
+        </li>
+        <!-- <li class="layui-nav-item">
+          <a href="javascript:;">解决方案</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">列表一</a></dd>
+            <dd><a href="javascript:;">列表二</a></dd>
+            <dd><a href="">超链接</a></dd>
+          </dl>
+        </li> -->
+      </ul>
+    </div>
+  </div>
+  
+  <div class="layui-body" style="padding: 40px 20px">
+
+    <!-- 内容主体区域 -->
+    <section class="article hide">
+      <div class="demoTable" style="margin-top:20px">
+        搜索作者：
+        <div class="layui-inline">
+          <input class="layui-input" name="id" id="userSelect" autocomplete="off">
+        </div>
+        搜索状态：
+        <div class="layui-inline">
+          <input class="layui-input" name="id" id="statusSelect" autocomplete="off" placeholder="1草稿2发布3隐藏">
+        </div>
+        搜索地址：
+        <div class="layui-inline">
+          <input class="layui-input" name="id" id="cornerSelect" autocomplete="off">
+        </div>
+        <button class="layui-btn" data-type="reload">搜索</button>
+      </div>
+    </section>
+    <section class="user hide"></section>
+    <section class="corner hide"></section>
+    <section class="setup hide"></section>
+    <section class="announce hide"></section>
+
+    <!-- 表格 -->
+    <table id="test" class="layui-table" lay-filter="demo"></table>
+    
+    <!-- 图片 -->
+    <script type="text/html" id="img">
+      <a href="javascript:;" class="layui-table-link" lay-event="imgview">查看图片</a>
+    </script>
+	
+	<!-- 文章按钮 -->
+    <script type="text/html" id="articleBar">
+      <a class="layui-btn layui-btn-normal layui-btn-mini" lay-event="art-detail">详细信息</a>
+      {{#  if(d.status == 1){ }}
+        <a class="layui-btn layui-btn-primary layui-btn-disabled layui-btn-mini black" lay-event="art-black">拉黑</a>
+        <a class="layui-btn layui-btn-mini recover" lay-event="art-recover">恢复</a>
+      {{#  } else { }}
+        <a class="layui-btn layui-btn-primary layui-btn-mini black" lay-event="art-black">拉黑</a>
+        <a class="layui-btn layui-btn-disabled layui-btn-mini recover" lay-event="art-recover">恢复</a>
+      {{#  } }}
+      <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="art-del">删除</a>
+    </script>
+	
+	<!-- 用户按钮 -->
+    <script type="text/html" id="userBar">
+      <a class="layui-btn layui-btn-normal layui-btn-mini" lay-event="user-detail">详细信息</a>
+      {{#  if(d.userStatus == 1){ }}
+        <a class="layui-btn layui-btn-primary layui-btn-disabled layui-btn-mini black" lay-event="user-black">拉黑</a>
+        <a class="layui-btn layui-btn-mini recover" lay-event="user-recover">恢复</a>
+      {{#  } else { }}
+        <a class="layui-btn layui-btn-primary layui-btn-mini black" lay-event="user-black">拉黑</a>
+        <a class="layui-btn layui-btn-disabled layui-btn-mini recover" lay-event="user-recover">恢复</a>
+      {{#  } }}
+      <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="user-del">删除</a>
+    </script>
+	
+	<!-- 角落按钮 -->
+    <script type="text/html" id="cornerBar">
+      <a class="layui-btn layui-btn-normal layui-btn-mini" lay-event="corner-detail">详细信息</a>
+      {{#  if(true){ }}
+        <a class="layui-btn layui-btn-primary layui-btn-disabled layui-btn-mini black" lay-event="corner-black">拉黑</a>
+        <a class="layui-btn layui-btn-mini recover" lay-event="corner-recover">恢复</a>
+      {{#  } else { }}
+        <a class="layui-btn layui-btn-primary layui-btn-mini black" lay-event="corner-black">拉黑</a>
+        <a class="layui-btn layui-btn-disabled layui-btn-mini recover" lay-event="corner-recover">恢复</a>
+      {{#  } }}
+      <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="corner-del">删除</a>
+    </script>
+  </div>
+  
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    © layui.com - 底部固定区域
+  </div>
+</div>
+<!-- <script type="text/html" id="list">
+  <ul>
+  {{#  for(var i =0; i < d.list.length; i ++){ }}
+    <li>{{ d.list[i] }}</li>
+  {{#  } }}
+  </ul>
+  <div style="position: absolute; bottom: 0; left: 0; width: 100%; text-align: right;">
+    <a class="layui-btn layui-btn-normal" style="margin: 10px" lay-event="black">确定</a>
+  </div>
+</script> -->
+<script src="../js/layui.js"></script>
+<script>
+//JavaScript代码区域
+layui.use(['laydate', 'laypage', 'layer', 'table', 'element','jquery'], function(){
+  var laydate = layui.laydate //日期
+  ,laypage = layui.laypage //分页
+  layer = layui.layer //弹层
+  ,table = layui.table //表格
+  ,element = layui.element
+  ,$ = layui.$; //元素操作
+  
+  var page = $('.article')
+  
+  //监听Tab切换
+  element.on('tab(demo)', function(data){
+    layer.msg('切换了：'+ this.innerHTML);
+    console.log(data);
+  });
+
+  // $('.demoTable .layui-btn').on('click', function(){
+  //   var type = $(this).data('type');
+  //   if (type == 'getAuthor') {
+  //     layer.open({
+  //       type: 1,
+  //       title: '作者',
+  //       skin: 'layui-layer-demo', //样式类名
+  //       closeBtn: 0, //不显示关闭按钮
+  //       anim: 0,
+  //       area: ['200px', '300px'],
+  //       shadeClose: true, //开启遮罩关闭
+  //       content: '<div id="list"></div>'
+  //     });
+  //   }
+  // });
+/**
+ * 
+ */
+  //界面初始化
+  var active = {
+    articleLoad: function () {
+      page.addClass('hide')
+      $('.' + $(this).data('page')).removeClass('hide')
+      page = $('.' + $(this).data('page'))
+
+      table.reload('idTest',{
+          cols: [[
+          {field:'id', title: 'ID', width:80, sort: true, fixed: true},
+          {field:'title', title: '标题', width:135, edit:'text'},
+          {field:'artbegin', title: '内容', width:150, edit:'text'},
+          {field:'status', title: '状态', width:80},
+          {field:'aurthorid', title: '用户', width:80},
+          {field:'placeid', title: '地点', width:135},
+          {field:'imageurl', title: '图片', width:135, templet: '#img'},
+
+          {field:'favor', title: '喜欢', width:80},
+          {field:'boring', title: '不喜欢', width:80},
+          {field:'comments', title: '评论', width:80},
+          {field:'readtime', title: '浏览', width:80},
+          {field:'created', title: '时间', width:135, sort: true},
+          {field:'btn', fixed: 'right', width:240, align:'center', toolbar: '#articleBar'}
+        ]]
+        ,url:'/admin-manager/article/pull'
+      	,where:{
+      		'status': 0
+      		,'userid': 0
+      		,'cornerid': 0
+      	}
+        ,done: function(res, curr, count) {
+          $('.demoTable .layui-btn').unbind('click')
+          $('.demoTable .layui-btn').on('click', function(){
+        	  console.log($('#userSelect').val())
+	          table.reload('idTest',{
+	            where:{
+	              'status': $('#statusSelect').val()? $('#statusSelect').val() : 0
+	              ,'userid': $('#userSelect').val()? $('#userSelect').val() : 0
+	              ,'cornerid': $('#cornerSelect').val()? $('#cornerSelect').val() : 0
+	            }
+	          })
+	          $('.demoTable .layui-input').val('')
+          });
+        }
+      })
+    },
+    userLoad: function () {
+      page.addClass('hide')
+      $('.' + $(this).data('page')).removeClass('hide')
+      page = $('.' + $(this).data('page'))
+
+      table.reload('idTest',{
+          cols: [[
+          {field:'id', title: 'ID', width:80, sort: true, fixed: true},
+          {field:'username', title: '用户名', width:135},         
+          {field:'userfrom', title: '注册方式', width:80},
+          {field:'userstatus', title: '状态', width:80},
+          {field:'province', title: '省份', width:80},
+          {field:'city', title: '城市', width:80},
+          {field:'imageurl', title: '图片', width:135, templet: '#img'},
+          {field:'disnumber', title: '本月发布篇数', width:135},
+          {field:'invitecode', title: '邀请码', width:135},
+          {field:'leftnumber', title: '本月剩余发布篇数', width:135},
+          {field:'jobinvitecode', title: '工作邀请码', width:80},
+          {field:'jobdisnumber', title: '本月招聘数', width:80},
+          {field:'jobleftnumber', title: '本月剩余招聘数', width:80},
+          {field:'phone', title: '电话', width:135},
+          {field:'email', title: '邮箱', width:135},
+          {field:'sex', title: '性别', width:80},
+          {field:'birth', title: '出生日期', width:135},
+          {field:'btn', fixed: 'right', width:240, align:'center', toolbar: '#userBar'}
+        ]]
+        ,url:'/admin-manager/user/pull'
+        ,where:{
+          'userstatus': 0
+          ,'userfrom': 0
+          ,'username':''
+        }
+        ,done: function(res, curr, count) {
+        }
+      })
+    },
+    cornerLoad: function () {
+      page.addClass('hide')
+      $('.' + $(this).data('page')).removeClass('hide')
+      page = $('.' + $(this).data('page'))
+
+      table.reload('idTest',{
+          cols: [[
+          {field:'id', title: 'ID', width:80, sort: true, fixed: true},
+          {field:'name', title: '角落名', width:80},
+          {field:'placename', title: '地名', width:135},
+          {field:'placeaddress', title: '地址', width:135},
+          {field:'placelongitude', title: '经度', width:135},
+          {field:'placelatitude', title: '纬度', width:135},
+          {field:'placecity', title: '城市', width:135},
+          {field:'befavor', title: '关注', width:80},
+          {field:'pass', title: '踩过', width:80},
+          {field:'created', title: '创建日期', width:135},
+          {field:'updated', title: '更新日期', width:135},
+          {field:'userid', title: '创建人', width:135},
+          {field:'btn', fixed: 'right', width:240, align:'center', toolbar: '#cornerBar'}
+        ]]
+        ,url:'/admin-manager/corner/pull'
+        ,where:{
+          'userid': 0
+          ,'cornerstatus': 0
+          ,'cornername':''
+        }
+        ,done: function(res, curr, count) {
+        }
+      })
+    },
+    setup: function () {
+      page.addClass('hide')
+      $('.' + $(this).data('page')).removeClass('hide')
+      page = $('.' + $(this).data('page'))
+
+      
+    },
+    announce: function () {
+      page.addClass('hide')
+      $('.' + $(this).data('page')).removeClass('hide')
+      page = $('.' + $(this).data('page'))
+
+      
+    }
+  }
+
+	//事件
+	table.on('tool(demo)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+	    var data = obj.data //获得当前行数据
+	    console.log(data)
+	    ,layEvent = obj.event; //获得 lay-event 对应的值
+	    if(layEvent === 'art-black'){
+			var $tr0 = $(obj.tr[0])
+			$tr0.find('.black').addClass('layui-btn-disabled')
+			$tr0.find('.recover').removeClass('layui-btn-disabled')
+			var $tr2 = $(obj.tr[2])
+			$tr2.find('.black').addClass('layui-btn-disabled')
+			$tr2.find('.recover').removeClass('layui-btn-disabled')
+			layer.msg('拉黑');
+
+	    } else if(layEvent === 'art-recover'){
+			var $tr0 = $(obj.tr[0])
+			$tr0.find('.recover').addClass('layui-btn-disabled')
+			$tr0.find('.black').removeClass('layui-btn-disabled')
+			var $tr2 = $(obj.tr[2])
+			$tr2.find('.recover').addClass('layui-btn-disabled')
+			$tr2.find('.black').removeClass('layui-btn-disabled')
+			layer.msg('恢复');
+
+	    } else if(layEvent === 'art-detail'){
+			layer.open({
+				type: 2,
+				skin: '详细页面', //加上边框
+				shadeClose: true,
+					shade: 0.8,
+				area: ['380px', '90%'], //宽高
+				anim: 2,
+				content: 'dt?id=' + obj.data.id
+			});
+
+	    } else if(layEvent === 'imgview'){
+			layer.open({
+				type: 1,
+				title: '图片',
+				skin: 'layui-layer-demo', //样式类名
+				closeBtn: 0, //不显示关闭按钮
+				anim: 0,
+				shadeClose: true, //开启遮罩关闭
+				content: '<img src="'+ data.imageurl +'" alt="" width="300px" height="200px">'
+			});
+
+	    } else if(layEvent === 'art-del'){
+	      // layer.confirm('真的删除行么', function(index){
+	      //   obj.del(); //删除对应行（tr）的DOM结构
+	      //   layer.close(index);
+	      //   //向服务端发送删除指令
+	      // });
+	    } else if (layEvent === 'user-black') {
+			var $tr0 = $(obj.tr[0])
+			$tr0.find('.black').addClass('layui-btn-disabled')
+			$tr0.find('.recover').removeClass('layui-btn-disabled')
+			var $tr2 = $(obj.tr[2])
+			$tr2.find('.black').addClass('layui-btn-disabled')
+			$tr2.find('.recover').removeClass('layui-btn-disabled')
+			layer.msg('拉黑');
+
+	    } else if (layEvent === 'user-recover'){
+			var $tr0 = $(obj.tr[0])
+			$tr0.find('.recover').addClass('layui-btn-disabled')
+			$tr0.find('.black').removeClass('layui-btn-disabled')
+			var $tr2 = $(obj.tr[2])
+			$tr2.find('.recover').addClass('layui-btn-disabled')
+			$tr2.find('.black').removeClass('layui-btn-disabled')
+			layer.msg('恢复');
+
+	    } else if (layEvent === 'user-detail') {
+	    	layer.open({
+		        type: 1,
+		        skin: '详细页面', //加上边框
+		        shadeClose: true,
+		      	shade: 0.8,
+		        area: ['380px', '90%'], //宽高
+		        anim: 2,
+		        content: 'html'
+		    });
+	    } else if (layEvent === 'user-del') {
+
+	    } else if (layEvent === 'corner-black') {
+			var $tr0 = $(obj.tr[0])
+			$tr0.find('.black').addClass('layui-btn-disabled')
+			$tr0.find('.recover').removeClass('layui-btn-disabled')
+			var $tr2 = $(obj.tr[2])
+			$tr2.find('.black').addClass('layui-btn-disabled')
+			$tr2.find('.recover').removeClass('layui-btn-disabled')
+			layer.msg('拉黑');
+
+	    } else if (layEvent === 'corner-recover'){
+			var $tr0 = $(obj.tr[0])
+			$tr0.find('.recover').addClass('layui-btn-disabled')
+			$tr0.find('.black').removeClass('layui-btn-disabled')
+			var $tr2 = $(obj.tr[2])
+			$tr2.find('.recover').addClass('layui-btn-disabled')
+			$tr2.find('.black').removeClass('layui-btn-disabled')
+			layer.msg('恢复');
+
+	    } else if (layEvent === 'corner-detail') {
+	    	layer.open({
+		        type: 1,
+		        skin: '详细页面', //加上边框
+		        shadeClose: true,
+		      	shade: 0.8,
+		        area: ['380px', '90%'], //宽高
+		        anim: 2,
+		        content: 'html'
+		    });
+	    } else if (layEvent === 'corner-del') {
+
+	    }
+	});
+
+	//常量设置
+	table.render({
+		elem: '#test'
+		,cols: [[
+		  {field:'id', title: 'ID', width:80, sort: true, fixed: true},
+		  {field:'btn', fixed: 'right', width:200, align:'center', toolbar: '#barDemo'}
+		]]
+		,height:600
+		,page:true
+		,limits:[10,15,20,30,60]
+		,limit: 20
+		,id:'idTest'
+		,request: {
+		  pageName: 'page' //页码的参数名称，默认：page
+		  ,limitName: 'size' //每页数据量的参数名，默认：limit
+		}
+		,response:{
+		   statusName: 'status' //数据状态的字段名称，默认：code
+		  ,statusCode: 200 //成功的状态码，默认：0
+		  ,msgName: 'msg' //状态信息的字段名称，默认：msg 
+		  ,countName: 'total' //数据总数的字段名称，默认：count
+		  ,dataName: 'rows' //数据列表的字段名称，默认：data
+		}
+	})
+  
+  //分页
+  laypage.render({
+    elem: 'pageDemo' //分页容器的id
+    ,count: 100 //总页数
+    ,skin: '#1E9FFF' //自定义选中色值
+    //,skip: true //开启跳页
+    ,jump: function(obj, first){
+      if(!first){
+        layer.msg('第'+ obj.curr +'页');
+      }
+    }
+  });
+
+  $('#userControl').on('click', active.userLoad)
+  $('#articleControl').on('click', active.articleLoad)
+  $('#cornerControl').on('click', active.cornerLoad)
+
+  $('#articleControl').click();
+
+  //监听工具条
+  
+  // //执行一个轮播实例
+  // carousel.render({
+  //   elem: '#test1'
+  //   ,width: '100%' //设置容器宽度
+  //   ,height: 200
+  //   ,arrow: 'none' //不显示箭头
+  //   ,anim: 'fade' //切换动画方式
+  // });
+  
+  //将日期直接嵌套在指定容器中
+  // var dateIns = laydate.render({
+  //   elem: '#laydateDemo'
+  //   ,position: 'static'
+  //   ,calendar: true //是否开启公历重要节日
+  //   ,mark: { //标记重要日子
+  //     '0-9-1': '开学'
+  //     ,'2017-9-15': ''
+  //     ,'2017-9-16': ''
+  //   } 
+  //   ,done: function(value, date, endDate){
+  //     if(date.year == 2017 && date.month == 9 && date.date == 15){
+  //       dateIns.hint('明天不上班');
+  //     }
+  //   }
+  //   ,change: function(value, date, endDate){
+  //     layer.msg(value)
+  //   }
+  // });
+  
+  // //上传
+  // upload.render({
+  //   elem: '#uploadDemo'
+  //   ,url: '' //上传接口
+  //   ,done: function(res){
+  //     console.log(res)
+  //   }
+  // });
+});
+</script>
+</body>
+</html>

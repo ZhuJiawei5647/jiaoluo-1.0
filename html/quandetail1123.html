@@ -1,0 +1,276 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>圈子详情</title>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" >
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<script type="text/javascript" src="../js/art_xny_1.js?time='+(new Date()).getTime()+'"><\/script>')
+		document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+	</script>
+	<style type="text/css">
+	.qz-nav{
+		width: 100%;
+		height: 100%;
+		position: relative;
+	}
+	.qz-nav-title{
+		height: 30px;
+		line-height: 30px;
+		border-bottom: 1px solid #d3d3d3;
+		position: relative;
+	}
+	.qz-nav-list{
+		display: flex;
+		height: 100%;
+	}
+	.qz-nav-list li{
+		flex: 1;
+		text-align: center;
+		font-size: 0.95rem;
+	}
+	.qz-nav-list li.active{
+		background-color: green;
+		color: white;
+	}
+	.qz-nav-content{
+		position: absolute;
+		top: 31px;
+		left: 0;
+		right: -20px;
+		bottom: 0;
+		padding-right: 20px;
+		overflow-y: scroll;
+	}
+	.qz-nav-item{
+		display: none;
+	}
+	/*圈子详情*/
+	.qz-list{
+		height: 100%;
+		width: 100%;
+		padding-right: 20px;
+	}
+	.qz-footer .qz-btn-box{
+		width: 100%;
+		height: 100%;
+	}
+	.qz-footer .qz-button{
+		border-radius: 0;
+	}
+	.qz-advice-unread, .qz-advice-read{
+		padding: 5px 20px;
+		font-size: 0.95rem;
+		line-height: 30px;
+		position: relative;
+		border-bottom: 1px solid #ccc;
+	}
+	.qz-advice-read p{
+		opacity: 0.5;
+	}
+	.qz-right{
+		float: right;
+	}
+	.qz-point{
+		position: absolute;
+	    top: 18px;
+	    left: 8px;
+	    width: 0px;
+	    height: 0px;
+	    border-radius: 20px;
+	    background: #f00;
+	    border: 2px solid #f00;
+	}
+	
+	</style>
+</head>
+<body>
+	<header class="qz-header"><h1>圈子</h1><div class="qz-btn-box"></div></header>
+	<div class="qz-body">
+		<div class="qz-nav">
+			<header class="qz-nav-title">
+				<ul class="qz-nav-list">
+				</ul>
+			</header>
+			<div class="qz-nav-content">
+				<div class="qz-nav-item" style="display: block;">
+					<div class="qz-user">
+						<img class="author-image" src=""><span class="qz-username author-name"></span><i class="qz-icon">圈主</i>
+					</div>
+					<div class="qz-block">
+						<ul class="member"></ul>
+					</div>
+				</div>
+				<div class="qz-nav-item">
+					<div class="qz-block">
+						<ul class="article"></ul>
+					</div>
+				</div>
+				<div class="qz-nav-item">
+					<ul class="announce"></ul>
+				</div>
+				<div class="qz-nav-item">
+					<ul class="message"></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer class="qz-footer"><div class="qz-btn-box"><button class="qz-button qz-button-disabled add-art" disabled>创建文章</button></div></footer>
+</body>
+<script type="text/x-jquery-tmpl" id="nav">
+	<li class="active">成员<span class="qz-icon-blue">{{= memberscount}}</span></li>
+	<li>文章<span class="qz-icon-blue">{{= articlescount}}</span></li>
+	{{if userin==1}}
+		<li>公告<span class="qz-icon">{{= unreadAno}}</span></li>
+		<li>消息<span class="qz-icon">{{= unreadRem}}</span></li>
+	{{/if}}
+</script>
+<script type="text/x-jquery-tmpl" id="btn">
+	{{if userin==1}}
+		<span onclick="quit({{= taglibid}})" class="qz-button">退出</span>
+	{{else}}
+		<span onclick="join({{= taglibid}})" class="qz-button">加入</span>
+	{{/if}}
+</script>
+<script type="text/x-jquery-tmpl" id="member">
+	{{each(i,user) members}}
+		{{if author.userid==user.userid}}
+		{{else}}
+		<li><div class="qz-user"><img src="{{= util.userHeadImage(user.userheadimageurl)}}"><span class="qz-username">{{= user.username}}</span></div></li>
+		{{/if}}
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="article">
+	{{each(i,article) articles}}
+		<li>{{html xny.createLi(article).html()}}</li>
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="announce">
+	{{each(i,anno) unreadNotify}}
+		<li class="qz-advice-unread">
+			<div class="qz-right">
+				<span class="qz-msg-item">{{= util.changeTime(anno.created)}}</span>
+			</div>
+			<p>{{= anno.content}}</p>
+			<span class="qz-point"></span>
+		</li>
+	{{/each}}
+	{{each(i,anno) readNotify}}
+		<li class="qz-advice-read">
+			<div class="qz-right">
+				<span class="qz-msg-item">{{= util.changeTime(anno.created)}}</span>
+			</div>
+			<p>{{= anno.content}}</p>
+		</li>
+	{{/each}}
+</script>
+<script type="text/javascript">
+var id = util.GetQueryString('id')
+	,xny = new XNY();
+
+$(function () {
+	init()
+	$('.add-art').on('click', function(){
+		$(location).attr('href', '/page/publish?taglibid=' + id)
+	})
+})
+
+function init() {
+	load('/taglib/getTagInfo?taglibid=' + id , function (data) {
+		if (data.status !== 200) util.href('quan')
+		var data = data.data
+		xny.data.detail = data;
+		if (data.userin == 1) $('.add-art').attr('disabled', false).removeClass('qz-button-disabled')
+		$('.qz-header h1').text(data.taglib);
+		$('.mc').text(data.memberscount);
+		$('.ac').text(data.articlescount);
+		$('.date').text(util.changeTime(data.created));
+		$('.author-name').text(data.author.username);
+		$('.author-image').attr('src', util.userHeadImage(data.author.userheadimageurl))
+		$('#btn').tmpl(data).appendTo('.qz-header .qz-btn-box');
+		$('#member').tmpl(data).appendTo('.member');
+		$('#nav').tmpl(data).appendTo('.qz-nav-list');
+
+		$('.qz-nav li').each(function (i, el) {
+			$(this).on('click', function () {
+				$('.qz-nav-item').hide();
+				$('.qz-nav-item').eq(i).show();
+				$(el).siblings('li.active').removeClass('active')
+				$(el).addClass('active')
+			})
+		})
+		$('.qz-nav li').eq(1).one('click', createArticlePage)
+		$('.qz-nav li').eq(2).one('click', createAnnouncePage)
+		$('.qz-nav li').eq(3).one('click', createMessagePage)
+		/* $('#article').tmpl(data).appendTo('.article'); */
+	})
+}
+
+function createArticlePage(){
+	Loc.getCenter(function (point) {
+		load('/taglib/taglib/article?taglibid='+id+
+				'&page=1'+
+				'&size=10'+
+				'&lat='+point.lat+
+				'&lon='+point.lng, function(data){
+			$('#article').tmpl({articles:data.data}).appendTo('.article');
+		})
+	})
+}
+
+function createAnnouncePage(){
+	load('/taglib/taglib/getannounce?taglibid='+id, function(data){
+		$('#announce').tmpl(data.data).appendTo('.announce')
+	})
+}
+
+function createMessagePage(){
+	load('/taglib/taglib/getremind?taglibid='+id, function(data){
+		$('#announce').tmpl(data.data).appendTo('.message')
+	})
+}
+
+function join(id){
+	//console.log('join')
+	 $.get('/taglib/join?taglibid='+ id, function(data){ 
+		 if(data.status==200){
+			util.href('')
+		 }
+		 alert(data.msg)
+	 }) 
+}
+
+function quit(id){
+	// console.log('quite')
+	$.get('/taglib/quit?taglibid='+ id, function(data){ 
+		 if(data.status==200){
+			util.href('')
+		 }
+		 alert(data.msg)
+	 }) 
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			success(data)
+		})
+	}
+}
+</script>
+</html>

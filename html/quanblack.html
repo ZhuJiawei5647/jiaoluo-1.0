@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>黑名单</title>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" >
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+		document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+	</script>
+	<style type="text/css">
+	body{
+		background-color: #f2f2f2;
+		height:100vh;
+	}
+	.xny-header{
+		background-color: #fff;
+		border-bottom: 1px solid #ddd;
+	}
+	/*圈子详情*/
+	.member .qz-user{
+		height: 40px;
+		line-height: 40px;
+		vertical-align: middle;
+	}
+	.member .qz-user .qz-icon{
+		height: 40px;
+		line-height: 40px;
+		vertical-align: middle;
+	}
+	.member{
+		padding: 10px 0 0 20px;
+		background-color: #fff;
+	}
+	.member li{
+		position: relative;
+		background-color: #fff;
+		border-bottom: 1px solid #f2f2f2;
+	}
+	.member li .xny-icon{
+		position: absolute;
+		top: 0;
+		right: 16px;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		background: url(../images/shanren.png) center center no-repeat;
+		background-size: 30px 30px;
+	}
+	</style>
+</head>
+<body>
+	<header class="xny-header"><h1>黑名单管理</h1></header>
+	<div class="xny-body">
+		<ul class="member"></ul>
+	</div>
+</body>
+<script type="text/x-jquery-tmpl" id="member">
+	{{each(i,user) members}}
+		<li>
+			<div class="qz-user"><img src="{{= util.userHeadImage(user.userheadimageurl)}}"><span class="qz-username">{{= user.username}}</span></div>
+			<div class="xny-icon" data-id="{{= user.userid}}" onclick="adduser(this)"></div>
+		</li>
+	{{/each}}
+</script>
+<script type="text/javascript">
+var id = util.GetQueryString('taglibid')
+	,xny = new XNY()
+
+$(function () {
+	init()
+})
+
+function init() {
+	load('/taglib/refriend/list?taglibid=' + id +'&page=1&size=50', function (data) {
+		if (data.status !== 200) util.href('quan')
+		var data = data.data
+		console.log(data)
+		$('#member').tmpl({members:data}).appendTo('.member');
+	})
+}
+
+function adduser(self) {
+	var userid = $(self).data('id');
+	console.log(userid)
+	$.get('/taglib/refriend?userid='+userid+'&taglibid='+id,function (data) {
+		xny.alert({content: data.msg})
+		if (data.status == 200) {
+			$(self).parents('li').remove();
+		}
+	})
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			console.log(data)
+			success(data)
+		})
+	}
+}
+</script>
+</html>

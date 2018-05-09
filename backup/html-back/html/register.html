@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>注册</title>
+    <link rel="stylesheet" href="../css/weui.min.css"/>
+    <link rel="stylesheet" href="../css/example.css"/>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <style>
+
+
+    </style>
+</head>
+<body ontouchstart>
+    <div style="margin: auto ;padding-top: 100px" >
+    <div class="weui-cell weui-cell_vcode" style="padding-bottom: 20px">
+        <div class="weui-cell__hd">
+            <label class="weui-label">用 户 名</label>
+        </div>
+        <div class="weui-cell__bd">
+            <input id="username"class="weui-input"  placeholder="请输入用户名"/>
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_vcode" style="padding-bottom: 20px;padding-top: 20px">
+        <div class="weui-cell__hd">
+            <label class="weui-label"> 密  码 </label>
+        </div>
+        <div class="weui-cell__bd">
+            <input  id="password" class="weui-input"  placeholder="请输入密码"/>
+
+        </div>
+    </div>
+        <div class="weui-cell weui-cell_vcode" style="padding-bottom: 20px;padding-top: 20px">
+            <div class="weui-cell__hd">
+                <label class="weui-label">密码确认</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input id="confirm" class="weui-input" placeholder="请输入确认密码"/>
+            </div>
+        </div>
+    <div id="regist" class="page__bd page__bd_spacing" style="padding-bottom: 20px">
+        <label  class="weui-btn weui-btn_plain-primary">注册</label>
+        </div>
+    </div>
+
+    <div class="page__bd page__bd_spacing " style="padding-top: 20px" id="result" >
+
+    </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $('#regist').on('click', function() {
+        var username= document.getElementById('username').value;
+        var password=document.getElementById('password').value;
+        var confirm=document.getElementById('confirm').value;
+        if(username==''||password==''){
+            $('#result').html("  <label  class='weui-btn weui-btn_warn' >用户名密码不为空</label>")
+            return;
+        }
+        if(confirm!=password){
+            $('#result').html("  <label  class='weui-btn weui-btn_warn' >前后密码不一致</label>")
+            return;
+        }
+
+        $.get('/user/useradd?username='+username+'&password='+password+'&userfrom=3', function(data) {
+           
+            if(data.data==('normal user insert ok!')){
+            	
+            	$('#result').html("<label  class='weui-btn weui-btn_warn'>注册成功</label>")
+            	 $(location).attr('href', 'login');
+            	 
+            }else{
+                $('#result').html("<label  class='weui-btn weui-btn_warn'>用户名已经存在</label>")
+            }
+    });
+
+    });
+
+</script>
+</html>

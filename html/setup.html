@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>用户设置</title>
+	<link rel="stylesheet" href="../css/jquery.Jcrop.min.css">
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="../js/exif.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
+    <script type="text/javascript">
+    document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time="' + (new Date()).getTime() + '">')
+    document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time="' + (new Date()).getTime() + '><\/script>')
+    document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getDate()+'"><\/script>')
+	</script>
+    <style type="text/css">
+    body {
+        height: 100vh;
+        overflow: hidden;
+        background-color: #f2f2f2;
+    }
+
+    .sex {
+        margin: 18px 20px;
+    }
+
+    .sex li {
+        position: relative;
+        padding-left: 30px;
+        line-height: 40px;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+    .sex li span {
+        position: absolute;
+        top: 50%;
+        right: 25px;
+        width: 14px;
+        height: 14px;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        margin-top: -7px;
+        border-radius: 50%;
+        border: 2px solid #aaa;
+    }
+
+    .sex li input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        z-index: 10;
+    }
+
+    .sex li input:checked+span {
+        border: none;
+        background-color: #3bb287;
+    }
+    /*setup*/
+
+    .set-header {
+        padding: 0 22px;
+        font-size: 16px;
+        line-height: 54px;
+        background-color: #fff;
+    }
+
+    .set-header img {
+        float: right;
+        width: 40px;
+        height: 40px;
+        margin: 7px 0;
+    }
+
+    .set-item {
+        padding: 0 22px;
+        line-height: 40px;
+        background-color: #fff;
+        border-top: 1px solid #f2f2f2;
+        position: relative;
+    }
+
+    .set-item-right {
+        float: right;
+        color: #808080;
+        height: 40px;
+    }
+
+    .set-item-right span {
+        display: inline-block;
+        max-width: 180px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        vertical-align: top;
+    }
+
+    .set-item-right input {
+        text-align: right;
+        padding-right: 20px;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .set-item-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background: url(../images/kejian1.png) center center no-repeat;
+        background-size: 20px 20px;
+    }
+
+    .xny-footer.xny-btn-box .xny-button {
+        font-size: 16px;
+        line-height: 40px;
+        background-color: #e53a40;
+        border-radius: 0;
+    }
+
+	/*imgcut*/
+	.xny-page.imgcut .xny-header{
+	}
+	.imgcut .img{
+		width: 100%;
+	}
+	.imgcut .img img{
+		width: 100%;
+	}
+    </style>
+</head>
+
+<body>
+    <section class="xny-body">
+        <header class="set-header">
+            <span>头像</span>
+			<input type="file" onChange="previewImage(this)" style="display: none;" id="previewImg">
+            <img class="userimg" src="../images/userhead.png" onclick="$('#previewImg').click();">
+        </header>
+        <div class="set-item username">
+            <span>昵称</span>
+            <div class="set-item-right"><span></span></div>
+        </div>
+        <div class="set-item usersex">
+            <span>性别</span>
+            <div class="set-item-right"><span></span></div>
+        </div>
+        <div class="set-item userpw">
+            <span>密码</span>
+            <div class="set-item-right">
+                <input class="password" type="password" value="" disabled>
+            </div>
+            <div class="set-item-icon see" data-cansee="false"></div>
+        </div>
+        <div class="set-item userqm">
+            <span>个性签名</span>
+            <div class="set-item-right"><span style="font-size: 14px;">签名是一种态度签名是一种态度</span></div>
+        </div>
+    </section>
+    <footer class="xny-footer xny-btn-box">
+        <div class="xny-button quit">退出登录</div>
+    </footer>
+</body>
+<script type="text/x-jquery-tmpl" id="sex">
+    <ul class="sex">
+        <li>
+            男
+            <input type="radio" value="男" name="sex" {{= value=='男' ? 'checked' : ''}}>
+            <span></span>
+        </li>
+        <li>
+            女
+            <input type="radio" value="女" name="sex" {{= value=='女' ? 'checked' : ''}}>
+            <span></span>
+        </li>
+    </ul>
+</script>
+<script type="text/x-jquery-tmpl" id="imagepage">
+	<div class="xny-page imgcut">
+		<header class="xny-header"><div class="xny-button cancel">取消</div><div class="xny-button confirm">确定</div><h1>截图</h1></header>
+		<div class="xny-body">
+			<div class="img"><img src=""></div>
+		</div>
+	</div>
+</script>
+<script type="text/javascript">
+var xny = new XNY();
+$(function() {
+	$.get('/user/getuserinfo?time='+ (new Date()).getTime(), function(data) {
+		if (data.status != 201) {
+			user = data.data;
+			$('.userimg').attr('src', util.userHeadImage(user.imageurl))
+			$('.username .set-item-right span').text(user.username)
+			$('.usersex .set-item-right span').text()
+			$('.userpw .set-item-right span').text()
+			$('.userqm .set-item-right span').text()
+		} else {
+			$(location).attr('href', 'login');
+		}
+	});
+
+	$('.see').on('click', function(event) {
+		event.stopPropagation();
+		if ($(this).data('cansee')) {
+			$(this).css('background-image', 'url(../images/kejian1.png)')
+			$('.password').attr('type', 'password')
+			$(this).data('cansee', false)
+		} else {
+			$(this).css('background-image', 'url(../images/kejian2.png)')
+			$('.password').attr('type', 'text')
+			$(this).data('cansee', true)
+		}
+	})
+	$('.username').on('click', function() {
+		util.href('setupname')
+	})
+	$('.usersex').on('click', function() {
+		var value = $('.usersex .set-item-right span').text(),
+			wd = xny.createWd({
+				hasbg: true,
+				bgopcity: 0.2,
+				title: '性别',
+				position: 'center',
+				size: ['250px', '160px'],
+				content: $('#sex').tmpl({
+					value: value
+				})
+			})
+		$('.sex').on('click', function() {
+			value = $(this).find('input[type="radio"]:checked').val();
+			console.log(value)
+			setTimeout(function() {
+				// $.get('', function (data) {
+				// 	if (data.status == 200) {
+				$('.usersex .set-item-right span').text(value)
+				wd.close();
+				// 	}
+				// })
+			}, 400)
+		})
+	})
+	$('.userpw').on('click', function() {
+		util.href('setuppw')
+	})
+	$('.userqm').on('click', function() {
+		util.href('setupqm')
+	})
+	$('.quit').on('click', function() {
+		$.get('/user/logout', function(data){
+			if(data.status === 200){
+				util.href('login')
+			}
+		})
+	})
+})
+
+function previewImage(file) {
+	var reader = new FileReader();
+	reader.readAsDataURL(file.files[0])
+	file.value = '';
+	var lastdate = (new Date()).getTime()
+
+	reader.onload = function(evt) {
+		console.log((new Date()).getTime() - lastdate)
+		var $page = $('#imagepage').tmpl()
+		$('body').append($page)
+		$('.imgcut .img img').load(function() {
+			console.log((new Date()).getTime() - lastdate)
+			var img = this,
+				jcrop_api = jcrop(img);
+			$page.find('.cancel').on('click', function(event) {
+				event.preventDefault();
+				jcrop_api.destroy()
+				$page.remove()
+			});
+			$page.find('.confirm').on('click', function(event) {
+				event.preventDefault();
+				jcrop_api.destroy()
+				$page.remove()
+				imgchange(img, function(img) {
+					var base64 = getBase64(img, jcrop_api);
+					$('.userimg').attr('src', base64)
+						// console.log(base64)
+					upload(base64, function(data) {
+						//alert("上传成功" + data);
+						var obj = JSON.parse(data)
+						$.get('/user/modify/userimg?userimg='+obj.url, function(data){
+							if(data.status == 200){
+								xny.alert({content: '修改成功'})
+							
+							$('.userimg').attr('src',obj.url)
+							}else xny.alert({content: data.msg})
+						})
+					})
+				})
+			});
+		});
+		$('.imgcut .img img').attr('src', evt.target.result)
+	}
+}
+
+function getBase64(img, jcrop_api) {
+	var cvs = document.createElement('canvas'),
+		ctx = cvs.getContext("2d"),
+		width = jcrop_api.getWidgetSize()[0],
+		height = jcrop_api.getWidgetSize()[1],
+		option = jcrop_api.tellSelect()
+
+	cvs.width = width;
+	cvs.height = height;
+	ctx.drawImage(img, 0, 0, width, height);
+
+	//把选中框里的图片内容存起来
+	var imageData = ctx.getImageData(option.x, option.y, option.w, option.h);
+	cvs.width = option.w;
+	cvs.height = option.h;
+	//然后再画上去
+	ctx.putImageData(imageData, 0, 0);
+	return ctx.canvas.toDataURL();
+}
+
+function jcrop(img) {
+	var $img = $(img)
+	var height = $img.height();
+	var width = $img.width();
+	var c = height <= width ? height / 2 * 0.8 : width / 2 * 0.66;
+	var jcrop_api = null;
+	$img.Jcrop({
+		bgFade: true,
+		bgOpacity: .2,
+		allowSelect: false,
+		allowResize: true,
+		trackDocument: false,
+		touchSupport: true,
+        aspectRatio: 1,
+		// createBorders: [width / 2 - c*1.5, height / 2 - c, width / 2 + c*1.5, height / 2 + c],
+		setSelect: [width / 2 - c * 1.5, height / 2 - c, width / 2 + c * 1.5, height / 2 + c]
+	}, function() {
+		jcrop_api = this;
+	});
+	return jcrop_api;
+}
+
+function upload(base64, fun) {
+	console.log(base64)
+	$.ajax({
+		type: "POST",
+		url: "/pic/upload0",
+		data: {
+			file: base64
+		},
+		success: function(data) {
+			fun(data)
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			$('.progress-box').addClass('hide')
+			xny.alert({content: "上传失败，请检查网络后重试"});
+		}
+	});
+}
+
+function imgchange(img, fun) {
+	if (navigator.userAgent.match(/iphone/i)) {}
+	var canvas = document.createElement("canvas");
+	var rotateshow;
+	EXIF.getData(img, function() {
+		EXIF.getAllTags(img);
+		Orientation = EXIF.getTag(img, 'Orientation');
+		console.log(Orientation)
+		switch (Orientation) {
+			case 6:
+				rotateshow = rotateImg(img, 'left', canvas);
+				break;
+			case 8:
+				rotateshow = rotateImg(img, 'right', canvas);
+				break;
+			case 3:
+				rotateImg(img, 'right', canvas);
+				rotateshow = rotateImg(img, 'right', canvas);
+				break;
+			default:
+				rotateshow = img.src;
+		}
+		var img2 = new Image();
+		img2.onload = function() {
+			fun(img)
+		}
+		img2.src = rotateshow;
+	});
+}
+
+function rotateImg(img, direction, canvas) {
+	var min_step = 0;
+	var max_step = 3;
+	//var img = document.getElementById(pid);
+	if (img == null) return;
+	//img的高度和宽度不能在img元素隐藏后获取，否则会出错
+	var height = img.height;
+	var width = img.width;
+	//var step = img.getAttribute('step');
+	var step = 2;
+	if (step == null) {
+		step = min_step;
+	}
+	if (direction == 'right') {
+		step++;
+		//旋转到原位置，即超过最大值
+		step > max_step && (step = min_step);
+	} else {
+		step--;
+		step < min_step && (step = max_step);
+	}
+	var degree = step * 90 * Math.PI / 180;
+	var ctx = canvas.getContext('2d');
+	switch (step) {
+		case 0:
+			canvas.width = width;
+			canvas.height = height;
+			ctx.drawImage(img, 0, 0);
+			break;
+		case 1:
+			canvas.width = height;
+			canvas.height = width;
+			ctx.rotate(degree);
+			ctx.drawImage(img, 0, -height);
+			break;
+		case 2:
+			canvas.width = width;
+			canvas.height = height;
+			ctx.rotate(degree);
+			ctx.drawImage(img, -width, -height);
+			break;
+		case 3:
+			canvas.width = height;
+			canvas.height = width;
+			ctx.rotate(degree);
+			ctx.drawImage(img, -width, 0);
+			break;
+	}
+	return canvas.toDataURL();
+}
+</script>
+
+</html>

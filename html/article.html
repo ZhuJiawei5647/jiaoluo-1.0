@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>发布</title>
+<!-- <link rel="stylesheet" type="text/css" href="../css/art_complete.css"> -->
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/tab.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<style type="text/css">
+body,html{
+	background-color: #f2f2f2;
+}
+body{
+	height: 100vh;
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none;
+}
+.main-page{
+	height: 100vh;
+}
+
+.xny-body{
+	height:100vh;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+}
+.xny-header ul{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	display: flex;
+	background-color: #fff;
+	z-index: 1000;
+}
+.xny-header li{
+	flex: 1;
+}
+.xny-header li a{
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	line-height: 40px;
+	text-align: center;
+	color: #808080;
+	overflow: hidden;
+}
+.xny-header li.active a{
+	color: #000;
+	border-bottom: 2px solid #00b0ff;
+}
+.hide{
+	display: none;
+}
+.article-create{
+	position:fixed;
+	bottom:80px;
+	right:20px;
+	z-index:1001;
+}
+.article-create img{
+	width:70px;
+}
+.article-list li{
+	margin-bottom: 10px;
+}
+.more{
+	margin-bottom:100px;
+	text-align:center;
+	line-height:30px;
+}
+</style>
+</head>
+<body>
+		<header class="xny-header">
+			<ul>
+				<li id="publish"><a>已发布</a></li>
+				<li id="keep"><a>草稿箱</a></li>
+				<li id="hide"><a>不公开</a></li>
+			</ul>
+		</header>
+	<section class="xny-body">
+		<section id="publish-item" class='hide'>
+			<div class="article-create"><img alt="" src="../images/zhu_fabu.png"></div>
+			<ul class="article-list"></ul>
+			<div class="more pubmore">加载更多</div>
+		</section>
+		<section id="keep-item" class="hide">
+			<ul class="article-list"></ul>
+			<div class="more keepmore">加载更多</div>
+		</section>
+		<section id="hide-item" class="hide">
+			<ul class="article-list"></ul>
+			<div class="more hidemore">加载更多</div>
+		</section>
+	</section>
+</body>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+var xny = new XNY();
+!(function($) {
+	var active, showpage
+	var tab = util.GetQueryString('tab')
+	var pubpage = 1,keeppage = 1,hidepage = 1;
+	console.log(tab)
+	if (tab && tab != 1) {
+		console.log(tab)
+		switch (tab) {
+			case '2':
+				console.log('tab')
+				active = $('#keep')
+				showpage = $('#keep-item')
+				keeppage++
+				createHtml('/article/inter/user/article?status=1&page=1&size=' + data.getSize.articleSize, $('#keep-item ul'),function(length){
+					if(length < data.getSize.articleSize) $('.keepmore').text(data.loadmore[1])
+				},true)
+				break;
+			case '3':
+				active = $('#hide')
+				showpage = $('#hide-item')
+				hidepage++
+				createHtml('/article/inter/user/article?status=3&page=1&size=' + data.getSize.articleSize, $('#hide-item ul'),function(length){
+					if(length < data.getSize.articleSize) $('.hidemore').text(data.loadmore[1])
+				})
+				break;
+			default:
+				active = $('#publish')
+				showpage = $('#publish-item')
+				pubpage++
+				createHtml('/article/inter/user/article?status=2&page=1&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+					if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+				})
+				break;
+		}
+	} else {
+		active = $('#publish')
+		showpage = $('#publish-item')
+		pubpage++
+		createHtml('/article/inter/user/article?status=2&page=1&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+		})
+	}
+	active.addClass('active')
+	showpage.removeClass('hide')
+	$('.article-create').on('click', function(event) {
+		$(location).attr('href', 'publish');
+	})
+	$('#publish').one('click', function(event) {
+		if(pubpage > 1) return;
+		createHtml('/article/inter/user/article?status=2&page=1&size=' + data.getSize.articleSize, $('#publish-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+		})
+	});
+	$('#keep').one('click', function(event) {
+		if(keeppage > 1) return;
+		createHtml('/article/inter/user/article?status=1&page=1&size=' + data.getSize.articleSize, $('#keep-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.keepmore').text(data.loadmore[1])
+		},true)
+	});
+	$('#hide').one('click', function(event) {
+		if(hidepage > 1) return;
+		createHtml('/article/inter/user/article?status=3&page=1&size=' + data.getSize.articleSize, $('#hide-item ul'),function(length){
+			if(length < data.getSize.articleSize) $('.hidemore').text(data.loadmore[1])
+		})
+	});
+	$('.pubmore').on('click', function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/article/inter/user/article?status=2&page='+ pubpage +'&size=' + data.getSize.articleSize, $('#publish-item .article-list'),function(length){
+			if(length < data.getSize.articleSize) $('.pubmore').text(data.loadmore[1])
+		})
+		pubpage++;
+	})
+	$('.keepmore').on('click', function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/article/inter/user/article?status=1&page='+ keeppage +'&size=' + data.getSize.articleSize, $('#keep-item .article-list'),function(length){
+			if(length < data.getSize.articleSize) $('.keepmore').text(data.loadmore[1])
+		})
+		keeppage++;
+	})
+	$('.hidemore').on('click', function(event){
+		if($(this).text() == data.loadmore[1]) return
+		createHtml('/article/inter/user/article?status=3&page='+ hidepage +'&size=' + data.getSize.articleSize, $('#hide-item .article-list'),function(length){
+			if(length < data.getSize.articleSize) $('.hidemore').text(data.loadmore[1])
+		})
+		hidepage++;
+	})
+	$('#publish').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#publish-item').removeClass('hide')
+		showpage = $('#publish-item')
+	});
+	$('#keep').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#keep-item').removeClass('hide')
+		showpage = $('#keep-item')
+	});
+	$('#hide').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#hide-item').removeClass('hide')
+		showpage = $('#hide-item')
+	});
+
+	function createHtml(ul, sel, fun, iskeep) {
+		xny.getData(ul, function(arr) {
+			for (var i = 0; i < arr.length; i++) {
+				(function() {
+					console.log(arr.length)
+					if(iskeep){
+						var li = $('<li>').append(xny.createItem(arr[i]));
+						!(function(){
+							var k = i;
+							li.on('click',function(){
+								$(location).attr('href','publish?id='+arr[k].articleid)
+							})
+						})()
+					}else{
+						var li = $('<li>').append(xny.createItem(arr[i]));
+					}
+					sel.append(li)
+				})()
+			};
+			fun(arr.length)
+		})
+	}
+})(jQuery)
+</script>
+</html>

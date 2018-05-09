@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>圈子</title>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+	<script type="text/javascript" src="../js/tab.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+
+
+	<style type="text/css">
+	body{
+		overflow-y: scroll;
+		background-color: #f2f2f2;
+	}
+	/*quan-item*/
+	.qz-quan-item{
+		background-color: white;
+		border: 1px solid #ddd;
+	}
+	.qz-title{
+		line-height: 30px;
+		border-bottom: 1px solid #ddd;
+	}
+	.qz-title .qz-name{
+		margin: 0 10px;
+	}
+	.qz-title button{
+		float: right;
+		margin: 3px 10px;
+		background: green;
+		font-size: 0.9rem;
+		color: white;
+		padding: 0 10px;
+		line-height: 24px;
+		border-radius: 5px;
+	}
+	.xny-header ul{
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 40px;
+		display: flex;
+		background-color: #fff;
+		z-index: 1000;
+	}
+	.xny-header li{
+		flex: 1;
+	}
+	.xny-header li a{
+		display: block;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		line-height: 40px;
+		text-align: center;
+		color: #808080;
+		overflow: hidden;
+	}
+	.xny-header li.active a{
+		color: #000;
+		border-bottom: 2px solid #00b0ff;
+	}
+	.qz-create-item{
+		position: relative;
+		margin: 20px 0;
+		background-color: #fff;
+	}
+	.qz-create-item p{
+		padding-left: 22px;
+		line-height: 40px;
+		font-size: 16px;
+		vertical-align: middle;
+	}
+	.qz-create{
+		position: absolute;
+		top: 0px;
+		right: 20px;
+		width: 40px;
+		height: 40px;
+		background: url(../images/chuangjian.png) center center no-repeat;
+		background-size: 20px 20px;
+	}
+	
+	
+	.my-qz>li{
+		background-color: #fff;
+		margin-bottom: 20px;
+	}
+	.qz-slider{
+		position: relative;
+		border-bottom: 1px solid #ccc;
+	}
+	.qz-slider-title{
+		overflow: hidden;
+	}
+	.qz-slider-title .xny-item-left{
+		float: left;
+	}
+	.qz-slider-title h3{
+		font-size: 16px;
+		line-height: 40px;
+		height: 40px;
+		padding-left: 40px;
+	}
+	.qz-slider-title .qz-slider-icon{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 40px;
+		height: 40px;
+		background: url(../images/you.png) center center no-repeat;
+		background-size: 20px 20px;
+	}
+	.qz-slider-title .qz-icon{
+		position: absolute;
+		top: 0;
+		right: 20px;
+		width: 40px;
+		height: 40px;
+		background: url(../images/xiaoxi.png) center center no-repeat;
+		background-size: 20px 20px;
+	}
+	.qz-slider-title .qz-icon span{
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		width: 16px;
+		height: 16px;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		text-align: center;
+		vertical-align: top;
+		border-radius: 8px;
+		background-color: red;
+		color: white;
+	}
+	.qz-slider-title .qz-icon span i{
+		font-style: normal;
+		font-size:12px; 
+		line-height: 16px;
+		vertical-align: top;
+		letter-spacing: -2px;
+		padding-right: 2px;
+	}
+	.qz-slider-content{
+		padding: 8px 12px;
+		overflow: hidden;
+	}
+	.qz-slider.animated .qz-slider-icon{
+		animation:up 0.2s;
+		-webkit-animation: up 0.2s;
+		animation-fill-mode: forwards;
+		-webkit-animation-fill-mode: forwards;
+	}
+	.qz-slider.animated.down .qz-slider-icon{
+		animation:down 0.2s;
+		-webkit-animation: down 0.2s;
+		animation-fill-mode: forwards;
+		-webkit-animation-fill-mode: forwards;
+	}
+	@keyframes down{
+		0%{
+			-webkit-transform: rotate(0);
+			-ms-transform: rotate(0);
+			transform: rotate(0);
+		}
+		100%{
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+	}
+	@-webkit-keyframes down{
+		0%{
+			-webkit-transform: rotate(0);
+			-ms-transform: rotate(0);
+			transform: rotate(0);
+		}
+		100%{
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+	}
+	@keyframes up{
+		0%{
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+		100%{
+			-webkit-transform: rotate(0);
+			-ms-transform: rotate(0);
+			transform: rotate(0);
+		}
+	}
+	@-webkit-keyframes up{
+		0%{
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+		100%{
+			-webkit-transform: rotate(0);
+			-ms-transform: rotate(0);
+			transform: rotate(0);
+		}
+	}
+	.qz-quan-item{
+		padding-left: 28px;
+		background-color: #e0e0e0;
+		border-radius: 8px;
+	}
+	.qz-quan-item .row{
+		line-height: 30px;
+		border-bottom: 1px solid #fff;
+	}
+	.qz-announce{
+		font-size: 14px;
+	}
+	.xny-item .xny-msg{
+		padding-left:10px;
+		margin-top: 10px;
+	}
+	.xny-item .xny-msg .xny-msg-item{
+		font-size: 14px;
+	}
+	
+	
+	
+	.qz-quan-item2{
+		padding: 0 60px 0 10px;
+		position: relative;
+		border-top: 1px solid #ddd;
+		background-color: #fff;
+	}
+	.qz-quan-item2 .row{
+		line-height: 30px;
+	}
+	.qz-quan-item2 .qz-item-title{
+		line-height: 40px;
+	}
+	.qz-quan-item2 .qz-item-title a{
+		display: inline-block;
+		margin: 3px 0;
+		padding: 0 5px;
+		height: 34px;
+		line-height: 34px;
+		text-align: center;
+		vertical-align: top;
+		border-radius: 5px;
+		color: #000;
+	}
+	.qz-quan-item2 .qz-item-title a.quanzi{
+		width: 120px;
+		background-color: #00b0ff;
+	}
+	.qz-quan-item2 .qz-item-title a.join{
+		float: right;
+		width: 34px;
+		height: 34px;
+		background: url(../images/quanadd.png) center center no-repeat;
+		background-size: 30px 30px;
+	}
+	.qz-quan-item2 .qz-item-right{
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 60px;
+		height: 40px;
+		line-height: 40px;
+		text-align: center;
+		font-size: 12px;
+	}
+	.xny-h2{
+		padding: 0;
+		margin: 0;
+		margin-top: 20px;
+		font-size: 16px;
+		font-weight: normal;
+		line-height: 44px;
+		padding-left: 20px;
+		background-color:#fff;
+	}
+	.more{
+		line-height:40px;
+		text-align:center;
+		background-color:#e0e0e0;
+		margin-bottom:20px;
+	}
+	</style>
+</head>
+<body>
+	<section class="main-pages">
+		<header class="xny-header">
+			<ul>
+				<li class="active"><a href="###">我的</a></li>
+				<li><a href="###">发现</a></li>
+			</ul>
+		</header>
+		<section class="xny-body">
+			<div class="qz-create-item">
+				<p>创建圈子</p>
+				<button class="qz-create"></button>
+			</div>
+			<ul class="my-qz">
+			</ul>
+		</section>
+		<section class="xny-body" style="display: none;">
+			<h2 class="xny-h2">周边圈子</h2>
+			<ul class="oth-qz"></ul>
+			<div class="more-box"></div>
+		</section>
+	</section>
+    <footer class="footer"></footer>
+</body>
+<script type="text/x-jquery-tmpl" id="qzitem">
+	{{each(i,taglib) taglibs}}
+	<div class="qz-quan-item2">
+		<div class="qz-item-title"><a class="quanzi" href="quandetail?id={{= taglibid}}">{{= taglib}}</a><a class="join" onclick="join({{= taglibid}})"></a></div>
+		<div class="row qz-user"><img src="{{= util.userHeadImage(author.userheadimageurl)}}"><span class="qz-username">{{= author.username}}</span></div>	
+		<div class="row" style="border: none;"><span class="xny-msg-item">成员数：{{= memberscount}}</span><span class="xny-msg-item">文章数：{{= articlescount}}</span><span class="xny-msg-item">{{= util.changeTime(created)}}</span></div>
+		<div class="qz-item-right">{{= distance/1000}}km</div>
+	</div>
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="listItem">
+	<li class="qz-list-item">
+		<div class="qz-slider">
+			<div class="qz-slider-title"><div class="xny-item-left" onclick="slide(this)"><i class="qz-slider-icon"></i><h3>{{= taglib.taglib}}</h3></div><div class="qz-icon" onclick="util.href('quandetail?id={{= taglib.taglibid}}&tab=3')"><span><i>{{= unreadAno + unreadRem}}</i></span></div></div>
+			<div class="qz-slider-content" style="display: none;">
+				<div onclick="util.href('/page/quandetail?id={{= taglib.taglibid}}')" class="qz-quan-item" style="color: #ccc">
+					<div class="row qz-user"><img src="{{= util.userHeadImage(taglib.author.userheadimageurl)}}"><span class="qz-username">{{= taglib.author.username}}</span><i class="qz-icon">圈主</i></div>
+					<div class="row qz-announce">群公告：{{= lastAnno}}</div>					
+					<div class="row" style="border: none;"><span class="xny-msg-item">成员数：{{= taglib.memberscount}}</span><span class="xny-msg-item">文章数：{{= taglib.articlescount}}</span><span class="xny-msg-item">{{= util.changeTime(created)}}</span></div>
+				</div>
+			</div>
+		</div>
+		<div class="xny-item">
+			<div class="xny-msg"><span class="xny-msg-item">最新文章</span><span class="xny-msg-item" style="float:right">{{= taglib.article?util.getDate(taglib.article.created):''}}</span></div>
+			{{html taglib.article? xny.createItem(taglib.article).find('.xny-cor').remove().end().find('.xny-icon-list').css('border-bottom','none').end().html() : '<p style="font-size:0.9rem; padding: 5px 10px;">还未创建文章</p>'}}
+		</div>
+	</li>
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+var xny = new XNY()
+	,tab = new Tab('.footer', 4)
+$(function () {
+	init()
+
+	$('.xny-header ul li').each(function (i,el) {
+		$(this).on('click',function () {
+			console.log(i)
+			$(this).addClass('active').siblings('li').removeClass('active');
+			$('.xny-body').hide().eq(i).show();
+		})
+	})
+	
+	$('.qz-create-item').on('click', function(){
+		util.href('/page/quancreate')
+	})
+})
+
+function init() {
+	
+	load('/taglib/getUserTagList', function (data) {
+		for (var i = 0; i < data.data.length; i++) {
+			$(function (data) {
+				$('#listItem').tmpl(data).appendTo('.my-qz');
+			}(data.data[i]))
+		}
+	})
+	
+	Loc.getCenter(function (point) {
+		var more = xny.createMore('.more-box',{
+			url: '/taglib/getNewTagList'
+			,page: 1
+			,size: 10
+			,where: {
+				lat: point.lat
+				,lon: point.lng
+			}
+			,list: 'data'
+			,done: function (data) {
+				$('#qzitem').tmpl({taglibs:data.data}).appendTo('.oth-qz')
+			}
+		})
+	})
+}
+
+function slide(el) {
+	console.log(123)
+	var $slider = $(el).parents('.qz-slider')
+	$slider.addClass('animated')
+	$slider.toggleClass('down')
+	$slider.find('.qz-slider-content').slideToggle(200);
+}
+
+function join(id){
+	 $.get('/taglib/join?taglibid='+ id, function(data){ 
+		 if(data.status==200){
+			util.href('quandetail?id='+id)
+		 }
+		 xny.alert({content: data.msg})
+	 }) 
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			success(data)
+		})
+	}
+}
+</script>
+</html>

@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>发布</title>
+<link rel="stylesheet" type="text/css" href="../css/complete.css">
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<style type="text/css">
+body,html{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	font-size: 0.9rem
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+}
+.header ul{
+	border-bottom:1px solid #ddd;
+}
+.header ul li{
+	font-size: 1rem;
+	text-align: center;
+	line-height: 3rem;
+}
+.header ul li.active{
+	color:#fc554c;
+}
+.hide{
+	display: none;
+}
+.article-create{
+	display: block;
+	margin: 5px 10px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 1.2rem;
+	text-align:center;
+	border-radius: 10px;
+	color:white;
+	background: #3cc51f;
+}
+.article-list{
+	padding-bottom: 40px;
+}
+</style>
+</head>
+<body>
+	<header class="header">
+		<ul class="flex-row">
+			<li id="publish" class="flex-grow">已发布</li>
+			<li id="keep" class="flex-grow">草稿箱</li>
+			<li id="hide" class="flex-grow">已隐藏</li>
+		</ul>
+	</header>
+	<section id="publish-item" class='hide'>
+		<div class="article-create">创建</div>
+		<ul class="article-list"></ul>
+	</section>
+	<section id="keep-item" class="hide">
+		<ul class="article-list"></ul>
+	</section>
+	<section id="hide-item" class="hide">
+		<ul class="article-list"></ul>
+	</section>
+    <section class="footer">
+        <ul>
+            <li id="shouye">
+                <img src="../images/cindex.png"><br>
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/zuobiao.png"><br>
+                附近
+            </li>
+            <li id="article" class="active">
+                <img src="../images/csend.png"><br>
+                发布
+            </li>
+            <li id="mine">
+                <img src="../images/yonghu.png"><br>
+                我的
+            </li>
+        </ul>
+    </section>
+</body>
+<script type="text/javascript" src="../js/xny.js"></script>
+<script type="text/javascript">
+!(function($) {
+	var active, showpage
+	var tab = util.GetQueryString('tab')
+	var xny = new XNY();
+	console.log(tab)
+	if (tab && tab != 1) {
+		console.log(tab)
+		switch (tab) {
+			case '2':
+				active = $('#keep')
+				showpage = $('#keep-item')
+				createHtml('/article/inter/user/article?status=1&page=1&size=10', $('#keep-item ul'), function(id) {
+					$(location).attr('href', 'detail?id=' + id)
+				})
+				break;
+			case '3':
+				active = $('#hide')
+				showpage = $('#hide-item')
+				createHtml('/article/inter/user/article?status=3&page=1&size=10', $('#hide-item ul'), function(id) {
+					$(location).attr('href', 'detail?id=' + id)
+				})
+				break;
+			default:
+				active = $('#publish')
+				showpage = $('#publish-item')
+				createHtml('/article/inter/user/article?status=2&page=1&size=10', $('#publish-item ul'), function(id) {
+					$(location).attr('href', 'detail?id=' + id)
+				})
+				break;
+		}
+	} else {
+		active = $('#publish')
+		showpage = $('#publish-item')
+		createHtml('/article/inter/user/article?status=2&page=1&size=10', $('#publish-item ul'), function(id) {
+			$(location).attr('href', 'detail?id=' + id)
+		})
+	}
+	active.addClass('active')
+	showpage.removeClass('hide')
+	$('.article-create').on('click', function(event) {
+		$(location).attr('href', 'publish');
+	})
+	$('#publish').one('click', function(event) {
+		createHtml('/article/inter/user/article?status=2&page=1&size=10', $('#publish-item ul'), function(id) {
+			$(location).attr('href', 'detail?id=' + id)
+		})
+	});
+	$('#keep').one('click', function(event) {
+		createHtml('/article/inter/user/article?status=1&page=1&size=10', $('#keep-item ul'), function(id) {
+			$(location).attr('href', 'detail?id=' + id)
+		})
+	});
+	$('#hide').one('click', function(event) {
+		createHtml('/article/inter/user/article?status=3&page=1&size=10', $('#hide-item ul'), function(id) {
+			$(location).attr('href', 'detail?id=' + id)
+		})
+	});
+	$('#publish').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#publish-item').removeClass('hide')
+		showpage = $('#publish-item')
+	});
+	$('#keep').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#keep-item').removeClass('hide')
+		showpage = $('#keep-item')
+	});
+	$('#hide').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#hide-item').removeClass('hide')
+		showpage = $('#hide-item')
+	});
+
+	function createHtml(ul, sel, fun) {
+		sel.children('li').remove();
+		xny.getData(ul, function(arr) {
+			var ele = xny.createLi().css({
+				'margin': '10px 0',
+				'border-bottom': '1px solid #ddd',
+				'padding-bottom': '10px'
+			});
+			for (var i = 0; i < arr.length; i++) {
+				(function() {
+					console.log(arr.length)
+					var li = ele.clone()
+					sel.append(li)
+					xny.updateText(li, arr[i])
+					li.data('i', i)
+					li.on('click', function(event) {
+						event.preventDefault();
+						fun(arr[$(this).data('i')].articleid)
+					});
+				})()
+			};
+		})
+
+	}
+})(jQuery)
+</script>
+</html>

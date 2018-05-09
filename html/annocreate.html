@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>发布圈子公告</title>
+	<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css">
+	<script type="text/javascript" src="../js/xny_form.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<style type="text/css">
+		.page{
+			position: absolute;
+			height: 100vh;
+			width: 100%;
+			background: url(../images/quanbackground.png) 0 0 no-repeat;
+			background-size: 100% 100%;
+		}
+		.page form{
+			margin-top: 35%;
+		}
+		.qz-form-item{
+			margin: 10px 60px;
+			height: 40px;
+			border-radius: 4px;
+			background-color: rgba(255,255,255,0.3);
+			position: relative;
+		}
+		:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+		    color: #c7c7c7; opacity:1; 
+		}
+
+		::-moz-placeholder { /* Mozilla Firefox 19+ */
+		    color: #c7c7c7;opacity:1;
+		}
+
+		input:-ms-input-placeholder{
+		    color: #c7c7c7;opacity:1;
+		}
+
+		input::-webkit-input-placeholder{
+		    color: #c7c7c7;opacity:1;
+		}
+
+		textarea:-ms-input-placeholder{
+		    color: #c7c7c7;opacity:1;
+		}
+
+		textarea::-webkit-input-placeholder{
+		    color: #c7c7c7;opacity:1;
+		}
+		.qz-form-item input{
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			height: 100%;
+			width: 100%;
+			padding: 5px 10px;
+			font-size: 14px;
+			line-height: 30px;
+			color: #fff;
+		}
+		.qz-form-textarea{
+			margin: 10px 60px;
+			height: 150px;
+			border-radius: 6px;
+			background-color: rgba(255,255,255,0.3);
+		}
+		.qz-form-textarea textarea{
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			height: 100%;
+			width: 100%;
+			padding: 5px 10px;
+			font-size: 14px;
+			line-height: 22px;
+			color: #fff;
+		}
+		.qz-form-submit{
+			margin: 60px 30px;
+			height: 40px;
+		}
+		.qz-form-submit button{
+			width: 100%;
+			height: 100%;
+			border-radius: 20px;
+			font-size: 16px;
+			color: #fff;
+			background-color: #a0a0a0;
+		}
+	</style>
+</head>
+<body>
+	<div class="page">
+		<form class="qz-form" onsubmit="return false;">
+			<div class="qz-form-item"><input type="text" name="title" placeholder="名称"></div>
+			<div class="qz-form-textarea">
+				<textarea placeholder="公告" name='content'></textarea>
+			</div>
+			<div class="qz-form-submit"><button>创建</button></div>
+		</form>
+	</div>
+</body>
+<script type="text/javascript">
+	var id = util.GetQueryString('taglibid')
+	var form = new Form();
+	form.submit('.qz-form-submit button', function (data) {
+		console.log(id)
+		console.log(data)
+		data.taglibid = id;
+		 $.post('/taglib/taglib/setannounce', data, function (data) {
+			xny.alert({content: data.msg})
+			if(data.status==200){
+				$(location).attr('href','quandetail?taglibid=' + id);
+			}
+		 })
+	})
+</script>
+</html>

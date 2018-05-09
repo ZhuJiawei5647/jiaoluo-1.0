@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+
+$.get('/user/modify/token',function(data){
+	var token = data.data
+	$(location).attr('href', 'http://job.bgtree.cn/page/navdanmu?token='+token.token+'&userid='+token.id);
+})
+</script>
+</html>

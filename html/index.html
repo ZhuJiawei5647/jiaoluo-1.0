@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>首页</title>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+	<script type="text/javascript">
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getMinutes()+'"><\/script>')
+	</script>
+	
+	<script type="text/javascript">
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getMinutes()+'"><\/script>')
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="../css/jquery.hiSlider.min.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.hiSlider.min.js"></script>
+	<script type="text/javascript" src="../js/tab.js"></script>
+	<style type="text/css">
+	html{
+		width: 100%;
+		overflow-x: hidden;
+	}
+	body{
+		width:100%;
+		overflow: hidden;
+		background-color: #f2f2f2;
+	}
+	.header{
+	    width: 100%
+	}
+	.hiSlider-item img{
+	    width: 100%
+	}
+	#more{
+	    padding: 0;
+	    text-align: center;
+	    padding: 10px 0
+	}
+	</style>
+</head>
+<body>
+	<section class="main-pages">
+	    <header class="header">
+	        <ul class="hiSlider">
+	            <!-- <li class="hiSlider-item">
+	                <img src="http://120.26.47.238/www/image/2017/server/banner_04.jpg">
+	            </li> -->
+	            <li class="hiSlider-item" onclick="util.href('/page/detail?id=212')">
+	                <img src="http://120.26.47.238/www/image/2017/server/banner_New1.jpg">
+	            </li>
+	            <li class="hiSlider-item">
+	                <img src="http://120.26.47.238/www/image/2017/server/banner_New02.jpg">
+	            </li>
+	        </ul>
+	    </header>
+	    <ul class="list"></ul>
+	    <div id="more">加载更多</div>
+	    <div style="width:300px;margin:0 auto; padding:20px 0;">
+	        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010602006784" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="../images/backup.png" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">浙公网安备 33010602006784号</p></a>
+	    </div>
+	</section>
+	<footer class="footer"></footer>
+</body>
+<script type="text/javascript">
+var tab = new Tab('footer', 1)
+	,xny = new XNY()
+    ,page = 1
+    ,size = xny.data.config.size.indexSize
+    ,loadmore = xny.data.config.loadmore;
+
+$(function () {
+	$('.hiSlider').hiSlider({
+	    isFlexible: true,
+	    isSupportTouch: true,
+	    isShowPage: false,
+	    isShowTitle: false,
+	    isAuto: true,
+	    isShowControls: false
+	});
+	init('/article/index/list?page=' + page + '&size=' + size);
+    $('#more').on('click', function(event) {
+        event.preventDefault();
+        if($(this).text() == loadmore[1]) return
+        page++
+        init('/article/index/list?page=' + page + '&size=' + size);
+    });
+})
+
+function init(url) {
+    xny.getData(url, function(arr) {
+		for (var i = 0; i < arr.length; i++) {
+			var li = $('<li>').css('padding-top', '10px').append(xny.createItem(arr[i]))
+			$('.list').append(li)
+		}
+	    if(arr.length < size){
+	    	$('#more').text(loadmore[1])
+	    }
+    })
+	// var arr = xny.getData2()
+	// for (var i = 0; i < arr.length; i++) {
+	// 	var li = $('<li>').css('padding-top', '10px').append(xny.createItem(arr[i]))
+	// 	$('.list').append(li)
+	// }
+ //    if(arr.length < size){
+ //    	$('#more').text(loadmore[1])
+ //    }
+}
+</script>
+</html>

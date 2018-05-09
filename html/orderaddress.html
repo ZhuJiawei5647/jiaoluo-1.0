@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>新增收货地址</title>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getTime()+'">')
+	</script>
+	<style>
+		.address-list {
+			overflow: hidden;
+		}
+		.address-item {
+			position: relative;
+			overflow: hidden;
+			margin: 2px 0;
+			padding-left: 10px;
+			height: 40px;
+			background-color: #fff;
+		}
+		.address-item-left {
+			float: left;
+			width: 60px;
+			height: 40px;
+			line-height: 40px;
+			font-size: 13px;
+		}
+		.address-item-right {
+			position: absolute;
+			top: 0;
+			left: 80px;
+			right: 10px;
+			bottom: 0;
+		}
+		.address-item-right input {
+			width: 100%;
+			height: 100%;
+			font-size: 13px;
+			line-height: 40px;
+		}
+		.address-save {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 80%;
+			margin: 10px 10%;
+			height: 44px;
+			font-size: 18px;
+			line-height: 44px;
+			color: #fff;
+			background-color: #e03636;
+			border-radius: 22px;
+		}
+		.address-check-item {
+			float: left;
+			width: 33%;
+			height: 40px;
+			line-height: 40px;
+			font-size: 13px;
+			text-align: left;
+		}
+	</style>
+</head>
+<body style="height: 100vh; width: 100%; background-color: #f2f2f2;">
+	<form onsubmit="return false;">
+		<ul class="address-list">
+			<li class="address-item">
+				<label class="address-item-left">收货人</label>
+				<div class="address-item-right">
+					<input type="text" name="receiveusername" placeholder="请输入姓名">
+				</div>
+			</li>
+			<li class="address-item">
+				<label class="address-item-left">联系电话</label>
+				<div class="address-item-right">
+					<input type="text" name="receivecontact" placeholder="手机或固定电话">
+				</div>
+			</li>
+			<li class="address-item">
+				<label class="address-item-left">收货地区</label>
+				<div class="address-item-right">
+					<button class="address-check-item">选择省份</button>
+					<button class="address-check-item">选择城市</button>
+					<button class="address-check-item">选择地区</button>
+				</div>
+			</li>
+			<li class="address-item">
+				<label class="address-item-left">详细地址</label>
+				<div class="address-item-right">
+					<input type="text" name="receiveaddress" placeholder="街道门牌信息">
+				</div>
+			</li>
+			<li class="address-item">
+				<label class="address-item-left">邮政编码</label>
+				<div class="address-item-right">
+					<input type="text" name="postcode" placeholder="邮政编码（选填）">
+				</div>
+			</li>
+		</ul>
+		<button class="address-save">保存</button>
+	</form>
+</body>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/xny_form.js"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+	var xny = new XNY();
+	$(document).ready(function () {
+		var	provid = 0,
+			cityid = 0,
+			areaid = 0;
+		$('.address-check-item').eq(0).on('click', function (event) {
+			var selelm = event.target;
+			var list = [];
+			$.get('/region/get/province', function (data) {
+				var list = []
+				data.data.forEach(function (prov) {
+					list.push({
+						text: prov.shortName,
+						value: prov.id
+					})
+				})
+				xny.createSelector({
+					title: '省份',
+					list: list,
+					checkedValue: provid
+				}, function (value, text) {
+					if (value) {
+						if (value === provid) return; 
+						$(selelm).text(text).next().text('选择城市').next().text('选择地区')
+						provid = value;
+						cityid = 0;
+						areaid = 0;
+					}
+				})
+			})
+			
+		})
+		$('.address-check-item').eq(1).on('click', function (event) {
+			var selelm = event.target;
+			if (provid === 0) {
+				var list = [{
+					text: '请先选择所在省份'
+				}]
+				createSelector(list)
+			} else {
+				$.get('/region/get/city?regionid=' + provid, function (data) {
+					var list = []
+					data.data.forEach(function (city) {
+						list.push({
+							text: city.shortName,
+							value: city.id
+						})
+					})
+					createSelector(list)
+				})
+			}
+			function createSelector(list) {
+				xny.createSelector({
+					title: '城市',
+					list: list,
+					checkedValue: cityid
+				}, function (value, text) {
+					if (value) {
+						if (value === cityid) return; 
+						$(selelm).text(text).next().text('选择地区');
+						cityid = value;
+						areaid = 0;
+					}
+				})
+			}
+		})
+		$('.address-check-item').eq(2).on('click', function (event) {
+			var selelm = event.target;
+			if (cityid === 0) {
+				var list = [{
+					text: '请先选择所在城市'
+				}]
+				createSelector(list)
+			} else {
+				$.get('/region/get/area?cityid=' + cityid, function (data) {
+					var list = [];
+					data.data.forEach(function (area) {
+						list.push({
+							text: area.shortName,
+							value: area.id
+						})
+					})
+					createSelector(list)
+				})
+			}
+			function createSelector(list) {
+				xny.createSelector({
+					title: '地区',
+					list: list,
+					checkedValue: areaid
+				}, function (value, text) {
+					if (value) {
+						if (value === areaid) return; 
+						$(selelm).text(text);
+						areaid = value;
+					}
+				})
+			}
+			
+		})
+
+    	var form = new Form();
+    	form.submit('.address-save', {}, function (data) {
+    		var receiveregion = '';
+    		$('.address-check-item').each(function (i, elm) {
+    			receiveregion += $(elm).text() + '-';
+    		})
+    		data.receiveregionid = areaid;
+    		data.receiveregion = receiveregion.slice(0, receiveregion.length - 1)
+	    	$.get('/letteraddress/add/newaddress', data, function (data) {
+	    		xny.alert({content: data.msg})
+	    		console.log(data.data)
+	    	})
+    	})
+	})
+</script>
+</html>

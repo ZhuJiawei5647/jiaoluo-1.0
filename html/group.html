@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>群组</title>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<style type="text/css">
+		body,html,ul,li{
+			padding: 0;
+			margin: 0;
+		}
+		li{
+			list-style: none;
+		}
+		.unselect{
+		    -webkit-user-select:none;
+		    -moz-user-select:none;
+		    -o-user-select:none;
+		    -ms-user-select:none;
+		    user-select:none;
+		}
+		.gr-btn{
+			display: block;
+			width: 140px;
+			margin: 20px auto;
+			font-size: 1rem;
+			line-height: 2rem;
+			text-align: center;
+			text-decoration: none;
+			color: white;
+			background-color: #2e8B57;
+			box-shadow: 0 0 3px 1px #aaa inset;
+			border-radius: 8px;
+			cursor: pointer;
+		}
+		.gr-btn:active{
+			opacity: 0.9;
+		}
+		.gr-top{
+			background-color: #00bfff;
+			color: #fff;
+			line-height: 2.5rem;
+			text-align: center;
+			font-size: 1rem;
+			position: relative;
+		}
+		.gr-top-btn{
+			position: absolute;
+			top: 8px;
+			right: 14px;
+			padding: 5px 10px;
+			font-size: 0.9rem;
+			line-height: 1rem;
+			text-align: center;
+			background-color: #1e90ff;
+			border-radius: 5px;
+			cursor: pointer;
+			/*box-shadow: 0 0 0 1px #87cefa inset;*/
+		}
+		.gr-msg{
+			color: #888;
+			background-color: #eee;
+			font-size: 0.9rem;
+			line-height: 1.4rem;
+			padding-left: 20px;
+		}
+		.gr-msg-right{
+			float: right;
+			margin-right: 10px;
+		}
+		.gr-item{
+			padding: 5px;
+			margin: 5px 10px;
+			font-size: 0.95rem;
+			line-height: 2rem;
+			text-indent: 3rem;
+			background-color: #f9f9f9;
+			box-shadow: 1px 1px 2px 1px #ccc;
+			border-radius: 5px;
+			position: relative;
+		}
+		.gr-item img{
+			position: absolute;
+			top: 6px;
+			left: 10px;
+			width: 30px;
+			border-radius: 50%;
+		}
+		.gr-item span.icon{
+			/* position: absolute;
+			top: 8px;
+			right: 10px; */
+			float:right;
+			margin-top:4px;
+			margin-right:10px;
+			font-size: 0.7rem;
+			line-height: 0.9rem;
+			text-indent: 0;
+			padding: 5px;
+			background-color: #ff6347;
+			border-radius: 5px;
+			color: white;
+		}
+		.gr-panel{
+			position: fixed;
+			width: 100%;
+			height: 100vh;
+			top: 0;
+			left: 0;
+			background-color: #fff;
+			z-index: 1000;
+		}
+		.gr-panel-top{
+			height: 36px;
+			line-height: 36px;
+			text-align: center;
+			border-bottom: 1px solid #228b22;
+			position: relative;
+		}
+		.gr-panel-close{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 36px;
+			height: 36px;
+			background: url(../images/guanbi1.png) 3px 3px no-repeat;
+			background-size: 30px 30px;
+		}
+		.gr-flr{
+			overflow: hidden;
+			margin: 20px;
+			padding: 0 20px;
+			line-height: 30px;
+		}
+		.gr-fl{
+			float: left;
+			width: 30%;
+		}
+		.gr-fr{
+			float: right;
+			width: 70%;
+		}
+		.gr-fl label{
+			display: inline-block;
+			width: 100%;
+			text-align: center;
+			vertical-align: middle;
+		}
+		.gr-fr input{
+			width: 100%;
+			box-sizing: border-box;
+			webkit-box-sizing: border-box;
+			moz-box-sizing: border-box;
+			padding: 0 10px;
+			line-height: 30px;
+			border: 1px solid #ddd;
+			border-radius: 5px; 
+			vertical-align: middle;
+		}
+		.gr-confirm{
+			float: right;
+			margin: 0 40px;
+			padding: 5px 10px;
+			color: #fff;
+			background-color: #2e8B57;
+			border-radius: 5px;
+		}
+		.hide{
+			display: none;
+		}
+		@-webkit-keyframes fadeInUp {
+		  0% {
+		    opacity: 0;
+		    -webkit-transform: translateY(100px);
+		    transform: translateY(100px);
+		  }
+
+		  100% {
+		    opacity: 1;
+		    -webkit-transform: translateY(0);
+		    transform: translateY(0);
+		  }
+		}
+
+		@keyframes fadeInUp {
+		  0% {
+		    opacity: 0;
+		    -webkit-transform: translateY(100px);
+		    -ms-transform: translateY(100px);
+		    transform: translateY(100px);
+		  }
+
+		  100% {
+		    opacity: 1;
+		    -webkit-transform: translateY(0);
+		    -ms-transform: translateY(0);
+		    transform: translateY(0);
+		  }
+		}
+
+		.fadeInUp {
+			-webkit-animation-duration: 0.2s;
+			animation-duration: 0.2s;
+			-webkit-animation-fill-mode: both;
+			animation-fill-mode: both;
+			-webkit-animation-name: fadeInUp;
+			animation-name: fadeInUp;
+		}
+	</style>
+</head>
+<body>
+	<div class="gr-page unselect">
+		<header class="gr-top">
+			<span class="gr-name">群组</span>
+			<span class="gr-top-btn">解散群组</span>
+		</header>
+		<div class="gr-msg">人数：<span class="gr-pnum"></span>&nbsp;&nbsp;范围：<span class="gr-dnum"></span> <span class="gr-date gr-msg-right"></span></div>
+		<ul class="gr-members">
+		</ul>
+	</div>
+	<div class="gr-panel gr-create-panel hide">
+		<header class="gr-panel-top"><div class="gr-panel-close"></div><span>创建群组</span></header>
+		<div class="gr-flr">
+			<div class="gr-fl"><label>群组名称</label></div>
+			<div class="gr-fr"><input class="gr-create-name" type="text" name=""></div>
+		</div>
+		<div class="gr-flr">
+			<div class="gr-fl"><label>范围</label></div>
+			<div class="gr-fr"><input class="gr-create-distance" type="text" name=""></div>
+		</div>
+		<div class="gr-confirm">创建</div>
+	</div>
+	<div class="gr-panel gr-join-panel hide">
+		<header class="gr-panel-top"><div class="gr-panel-close"></div><span>加入群组</span></header>
+		<div class="gr-flr">
+			<div class="gr-fl"><label>群组名称</label></div>
+			<div class="gr-fr"><input class="gr-join-name" type="text" name=""></div>
+		</div>
+		<div class="gr-confirm">加入</div>
+	</div>
+</body>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+$.get('/user/getuserinfo', function(data) {
+	var userid = data.data.id;
+if(data.status==200){
+ $.get('/user/modify/taglib/get',function (data) {
+	 if(data.status == 200){
+		 var tag = data.data;
+			$('.gr-date').text('创建时间    ' + util.changeTime(tag.created))
+			$('.gr-dnum').text(tag.distance+'km')
+			$('.gr-name').text(tag.tag)
+			if(tag.self){
+				$('.gr-members').append($('<li>').text(tag.username).addClass('gr-item').append($('<img>').attr('src', util.userHeadImage(tag.userheadimageurl))).append($('<span>').addClass('icon').text('群主')).append($('<span>').addClass('icon').text('我').css('background-color','blue')).css('margin', '20px 10px'))
+				$('.gr-top-btn').on('click', function(){
+					$.get('/user/modify/taglib/dis?tag='+tag.tag, function(data){
+						util.alert(data.msg, function(){
+							$(location).attr('href','group')
+						})
+					})
+				})
+			} else {
+				$('.gr-members').append($('<li>').text(tag.username).addClass('gr-item').append($('<img>').attr('src', util.userHeadImage(tag.userheadimageurl))).append($('<span>').addClass('icon').text('群主')).css('margin', '20px 10px'))
+				$('.gr-top-btn').text('退出群组')
+				$('.gr-top-btn').on('click', function(){
+					$.get('/user/modify/taglib/out?tag='+tag.tag, function(data){
+
+						util.alert(data.msg, function(){
+							$(location).attr('href','group')
+						})
+					})
+				})
+			}
+			
+			$.get('/user/modify/taglib/get/user?tagid='+tag.tagid+'&page=1&size=10', function(data){
+				var arr = data.data
+				$('.gr-pnum').text(arr.length)
+				for (var i = 0; i < arr.length; i++) {
+					if(arr[i].userid == tag.userid) continue;
+					if(arr[i].userid == userid){
+						$('.gr-members').append($('<li>').text(arr[i].username).addClass('gr-item').append($('<img>').attr('src', util.userHeadImage(arr[i].userheadimageurl))).append($('<span>').addClass('icon').text('我').css('background-color','blue')))
+					} else {
+						$('.gr-members').append($('<li>').text(arr[i].username).addClass('gr-item').append($('<img>').attr('src', util.userHeadImage(arr[i].userheadimageurl))))
+					}
+					
+				}
+			})
+	 } else if(data.status == 232){
+		$('.gr-page').html('');
+		$('.gr-page').append($('<a>').text('新建群组').addClass('gr-btn gr-create')).append($('<a>').text('加入群组').addClass('gr-btn gr-join'))
+		$('.gr-create').on('click', function () {
+			$('.gr-create-panel').show().addClass('fadeInUp')
+		})
+		$('.gr-join').on('click', function () {
+			$('.gr-join-panel').show().addClass('fadeInUp')
+		})
+		$('.gr-create-panel .gr-confirm').on('click', function () {
+			var createdName = $('.gr-create-name').val(),
+				createdDistance = $('.gr-create-distance').val();
+			$.get('/user/modify/taglib/new?tag='+ createdName + '&distance=' + createdDistance, function (data) {
+				util.alert(data.msg, function(){
+					$(location).attr('href','group')
+				})
+			})
+		})
+		$('.gr-join-panel .gr-confirm').on('click', function () {
+			var joinName = $('.gr-join-name').val();
+			$.get('/user/modify/taglib/add?tag=' + joinName, function (data) {
+				util.alert(data.msg, function(){
+					$(location).attr('href','group')
+				})
+			})
+		})
+		$('.gr-panel-close').on('click', function () {
+			$('.gr-panel').hide()
+		})
+	 }
+	
+ })
+}
+})
+</script>
+</html>

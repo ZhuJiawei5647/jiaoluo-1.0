@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>公告</title>
+	<style type="text/css">
+	body,html,h1,h2{
+		padding: 0;
+		margin: 0;
+		font-weight: normal;
+	}
+	.anno-header{
+		text-align: center;
+		background-color: #f9f9f9;
+	}
+	.anno-header span{
+		font-size: 1.05rem;
+		line-height: 2rem;
+		color: #9ACD32;
+	}
+	.anno-h1{
+		margin-top: 10px;
+		padding: 0 40px;
+		background:url('../images/laba1.png') 5px center no-repeat;
+		background-size: 30px 30px;
+	}
+	.anno-h1 span{
+		display: inline-block;
+		width: 100%;
+		font-size: 1.05rem;
+		color: #333;
+		text-indent: 0.4rem;
+		line-height: 2rem;
+		border-bottom: 1px solid #ddd;
+	}
+	.anno-h1 span:before{
+	}
+	.anno-h2{
+		font-size: 0.95rem;
+		line-height: 1.6rem;
+	}
+	.anno-content{
+		font-size: 0.95rem;
+		padding: 0 20px;
+	}
+	.anno-content p{
+		padding: 1px 0;
+		color: #666;
+	}
+	</style>
+</head>
+<body>
+	<!-- <header class="anno-header">
+		<span>公告</span>
+	</header> -->
+	<h1 class="anno-h1"><span>公告信息</span></h1>
+	<section class="anno-content">
+		<!-- <h2 class="anno-h2"></h2> -->
+		<!-- <p></p> -->
+	</section>
+</body>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript">
+	var announceid = util.GetQueryString('announceid')
+	$.get('/notify/readnotify?notifyid=' + announceid,function (data) {
+			var data = data.data;
+			$('.anno-h1 span').text(data.targettype)
+			var conarr = data.content.split('$*$')
+			for(var i = 0; i < conarr.length; i++){
+				$('.anno-content').append($('<p>').text(conarr[i]))
+			}
+		})
+	
+</script>
+</html>

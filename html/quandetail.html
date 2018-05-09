@@ -1,0 +1,424 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>圈子详情</title>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" >
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+		document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+		document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getTime()+'"><\/script>')
+	</script>
+	<style type="text/css">
+	body{
+		background-color: #f2f2f2;
+		height: 100vh;
+	}
+	.xny-header{
+		background-color: #fff;
+	}
+	.xny-header .xny-btn-box{
+		position: absolute;
+		top: 5px;
+		right: 20px;
+		width: 60px;
+		height: 30px;
+		line-height: 30px;
+	}
+	.xny-header .xny-btn-box .xny-button{
+		background-color: transparent;
+		color: red;
+	}
+
+	.qz-nav{
+		margin-top: 15px;
+		width: 100%;
+		height: calc(100% - 15px);
+		position: relative;
+	}
+	.qz-nav-title{
+		height: 40px;
+		line-height: 40px;
+		background-color: #fff;
+		border-bottom: 1px solid #d3d3d3;
+		position: relative;
+	}
+	.qz-nav-list{
+		display: flex;
+		height: 100%;
+	}
+	.qz-nav-list li{
+		flex: 1;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		line-height: 40px;
+		text-align: center;
+		color: #808080;
+		overflow: hidden;
+	}
+	.qz-nav-list li.active{
+		color: #000;
+		border-bottom: 2px solid #00b0ff;
+	}
+	.qz-nav-content{
+		position: absolute;
+		top: 41px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 0;
+		overflow-y: scroll;
+	}
+	.qz-nav-item{
+		display: none;
+	}
+	/*圈子详情*/
+	.qz-nav-item .qz-user{
+		height: 40px;
+		line-height: 40px;
+		vertical-align: middle;
+	}
+	.qz-nav-item .qz-user .qz-icon{
+		height: 40px;
+		line-height: 40px;
+		vertical-align: middle;
+	}
+	.xny-item{
+		background-color: #fff;
+	}
+	.xny-msg-box{
+		overflow: hidden;
+		padding: 7px 20px 7px 40px;
+		border-bottom: 1px solid #f2f2f2;
+		position: relative;
+	}
+	.xny-msg-box.anno{
+		background: url(../images/gonggao--weidu.png) 18px 13px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box.anno.read{
+		background: url(../images/gonggao--yidu.png) 18px 13px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box.info{
+		background: url(../images/xiaoxiicon-weidu.png) 18px 8px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box.info.read{
+		background: url(../images/xiaoxi-yidu.png) 18px 8px no-repeat;
+		background-size: 15px 15px;
+		background-color: #fff;
+	}
+	.xny-msg-box h4{
+		padding: 0;
+		margin: 0;
+		font-size: 16px;
+		font-weight: normal;
+		line-height: 26px;
+	}
+	.xny-msg-box p{
+		font-size: 14px;
+	    overflow : hidden;
+	    text-overflow: ellipsis;
+	    display: -webkit-box;
+	    -webkit-line-clamp: 2;
+	    -webkit-box-orient: vertical;
+	}
+	.xny-msg-box .xny-msg-item{
+		position: absolute;
+		top: 0;
+		right: 0;
+		line-height: 26px;
+		margin: 5px 20px;
+	}
+	.member li{
+		position: relative;
+		background-color: #fff;
+		border-bottom: 1px solid #f2f2f2;
+	}
+	.member li .xny-icon{
+		position: absolute;
+		top: 0;
+		right: 16px;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		background: url(../images/shanren.png) center center no-repeat;
+		background-size: 30px 30px;
+	}
+	.artcreate{
+		position: absolute;
+		bottom: 30px;
+		left: calc(50% - 40px);
+		width: 80px;
+		height: 80px;
+		border-radius: 40px;
+		background-color: #E53A40;
+		font-size: 16px;
+		font-family: 'Helvetica Neue',Helvetica,'PingFang SC','微软雅黑',Tahoma,Arial,sans-serif;
+		text-align: center;
+		line-height: 80px;
+		/*font-weight: bold;*/
+		color: #fff;
+	}
+	.membermng,.annocreate{
+		position: absolute;
+		bottom: 40px;
+		right: 0;
+		width: 120px;
+		height: 60px;
+		border-top-left-radius: 30px;
+		border-bottom-left-radius: 30px;
+		background-color: #fff;
+		font-size: 16px;
+		font-family: 'Helvetica Neue',Helvetica,'PingFang SC','微软雅黑',Tahoma,Arial,sans-serif;
+		text-indent: 30px;
+		line-height: 60px;
+		/*font-weight: bold;*/
+		color: red;
+	}
+	</style>
+</head>
+<body>
+	<header class="xny-header"><h1></h1><div class="xny-btn-box"></div></header>
+	<div class="xny-body">
+		<div class="qz-nav">
+			<header class="qz-nav-title">
+				<ul class="qz-nav-list">
+				</ul>
+			</header>
+			<div class="qz-nav-content">
+				<div class="qz-nav-item" style="display: block;">
+					<div style="padding: 10px 0 0 30px;background-color: #fff;">
+						<div class="qz-user" style="border-bottom: 1px solid #f2f2f2">
+							<img class="author-image" src=""><span class="qz-username author-name"></span><i class="qz-icon">圈主</i>
+						</div>
+						<ul class="member"></ul>
+					</div>
+					<div class="membermng" style="display: none;">黑名单管理</div>
+				</div>
+				<div class="qz-nav-item">
+					<ul class="article"></ul>
+				</div>
+				<div class="qz-nav-item">
+					<ul class="announce"></ul>
+					<div class="annocreate" style="display: none;">编辑公告</div>
+				</div>
+				<div class="qz-nav-item">
+					<ul class="message"></ul>
+				</div>
+			</div>
+		</div>
+		<div class="artcreate" style="display: none;">创建文章</div>
+	</div>
+</body>
+<script type="text/x-jquery-tmpl" id="nav">
+	<li class="active">成员({{= memberscount}})<!-- <span class="qz-icon-blue"></span> --></li>
+	<li>文章({{= articlescount}})<!-- <span class="qz-icon-blue"></span> --></li>
+	{{if userin==1}}
+		<li>公告({{= unreadAno}})<!-- <span class="qz-icon"></span> --></li>
+		<li>消息({{= unreadRem}})<!-- <span class="qz-icon"></span> --></li>
+	{{/if}}
+</script>
+<script type="text/x-jquery-tmpl" id="btn">
+	{{if userin==1}}
+		<span onclick="quit({{= taglibid}})" class="xny-button">退出</span>
+	{{else}}
+		<span onclick="join({{= taglibid}})" class="xny-button">加入</span>
+	{{/if}}
+</script>
+<script type="text/x-jquery-tmpl" id="member">
+	{{each(i,user) members}}
+		<!-- {{= console.log(user.userid)}} -->
+		{{if author.userid==user.userid}}
+		{{else}}
+		<li>
+			<div class="qz-user"><img src="{{= util.userHeadImage(user.userheadimageurl)}}"><span class="qz-username">{{= user.username}}</span></div>
+			{{if quanzhu}}
+				<div class="xny-icon" data-id="{{= user.userid}}" onclick="deluser(this)"></div>
+			{{/if}}
+		</li>
+		{{/if}}
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="article">
+	{{each(i,article) articles}}
+		<li class="xny-item">{{html xny.createItem(article).html()}}</li>
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="announce">
+	{{each(i,anno) unreadNotify}}
+		<li class="xny-msg-box {{= type}}" onclick="{{= type=='anno'?'util.href(\'announce_detail?announceid=' + notifyid + '\')':'remindInfo(' + notifyid + ')'}}">
+			<h4>{{= anno.targettype}}</h4>
+			<p>{{= anno.content}}</p>
+			<span class="xny-msg-item"">{{= util.changeTime(anno.created)}}</span>
+		</li>
+	{{/each}}
+	{{each(i,anno) readNotify}}
+		<li class="xny-msg-box {{= type}} read" onclick="{{= type=='anno'?'util.href(\'announce_detail?announceid=' + notifyid + '\')':'remindInfo(' + notifyid + ')'}}">
+			<h4>{{= anno.targettype}}</h4>
+			<p>{{= anno.content}}</p>
+			<span class="xny-msg-item"">{{= util.changeTime(anno.created)}}</span>
+		</li>
+	{{/each}}
+</script>
+<script type="text/javascript">
+var id = util.GetQueryString('id')
+	,xny = new XNY()
+	,data1 = {"status":200,"msg":"OK","data":{"taglibid":127,"available":true,"taglib":"上班族","userid":40,"author":{"userid":40,"username":"许呆","userheadimageurl":"http://120.26.47.238/www/image/head/2017/08/30/1504075517365793.png","sex":true,"created":1498713981000,"ofSelf":true,"likeAuthor":false},"distance":200,"created":1502380800000,"cornerid":215,"corner":{"cornerid":215,"userid":116,"name":"杭州市江干区","placename":"工业园","placeaddress":"杭州市江干区","placelatitude":30.283837,"placelongitude":120.361108,"placecity":"杭州市","befavor":0,"pass":0,"dashang":0,"created":1507795405000,"updated":1507795405000,"sort":0,"distance":0.0,"likeCorner":false,"count":0,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}},"memberscount":5,"articlescount":4,"userin":1,"quanzhu":false,"members":[{"userid":46,"username":"快乐小子","userheadimageurl":"http://q.qlogo.cn/qqapp/101407135/400925CC0CAB15D3109AF5F0CE5ECD2E/100","sex":false,"created":1499302157000,"ofSelf":false,"likeAuthor":false},{"userid":210,"username":"黑眼圈","userheadimageurl":"http://120.26.47.238/www/image/2017/11/01/1509521234262762","sex":false,"created":1509521226000,"ofSelf":false,"likeAuthor":false},{"userid":33,"username":"猪尻尾","userheadimageurl":"http://120.26.47.238/www/image/head/2017/08/31/1504148001434473.png","sex":false,"created":1496216025000,"ofSelf":false,"likeAuthor":false},{"userid":54,"username":"JobsAI","userheadimageurl":"http://120.26.47.238/www/image/2017/08/02/1501671775681603.png","sex":false,"created":1501671072000,"ofSelf":false,"likeAuthor":false},{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}],"articles":null,"loguserid":46,"userdistance":0.0,"unreadAno":0,"unreadRem":4,"lastAnnounce":null}}
+	,data2 = {"status":200,"msg":"OK","data":[{"articleid":213,"cornerid":227,"userid":116,"title":"寸草心","imageurl":"http://47.100.82.191/www/image/2017/11/19/1511102857770926.png","status":2,"favor":1,"boring":0,"comments":0,"readtime":13,"artbegin":"慈母手中线 游子身上衣$*$谁言寸草心 报得三春晖","created":1511102896000,"updated":1511102896000,"content":null,"likeArticle":false,"taglib":null,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"corner":{"cornerid":227,"userid":116,"name":"角落","placename":"龙湖·滟澜园","placeaddress":"浙江省杭州市江干区华景街383号","placelatitude":30.317926,"placelongitude":120.3337,"placecity":"杭州市","befavor":0,"pass":0,"dashang":0,"created":1511102896000,"updated":1511102896000,"sort":0,"distance":0.0,"likeCorner":false,"count":0,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}}},{"articleid":211,"cornerid":225,"userid":116,"title":"占领大海","imageurl":"","status":2,"favor":1,"boring":0,"comments":0,"readtime":13,"artbegin":"占领角落","created":1510927242000,"updated":1510927242000,"content":null,"likeArticle":false,"taglib":null,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"corner":{"cornerid":225,"userid":116,"name":"角落","placename":"龙湖时代金沙天街","placeaddress":"杭州市江干区金沙大道560号","placelatitude":30.316055,"placelongitude":120.333961,"placecity":"杭州市","befavor":1,"pass":0,"dashang":0,"created":1510927242000,"updated":1510927242000,"sort":0,"distance":0.0,"likeCorner":false,"count":0,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}}},{"articleid":209,"cornerid":223,"userid":116,"title":"李如伯","imageurl":"http://120.26.47.238/www/image/2017/11/10/1510295022333976.png","status":2,"favor":2,"boring":0,"comments":5,"readtime":73,"artbegin":"春来杀气心犹壮 此去妖氛骨未寒 $*$谈笑敢言非胜","created":1510295074000,"updated":1510295074000,"content":null,"likeArticle":false,"taglib":null,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"corner":{"cornerid":223,"userid":116,"name":"忆征鞍","placename":"杭州养正中学","placeaddress":"19B号大街与22号大街交叉口东北200米","placelatitude":30.280609,"placelongitude":120.374951,"placecity":"杭州市","befavor":0,"pass":0,"dashang":0,"created":1510295074000,"updated":1510295074000,"sort":0,"distance":0.0,"likeCorner":false,"count":0,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}}},{"articleid":205,"cornerid":219,"userid":116,"title":"明天的你","imageurl":"http://120.26.47.238/www/image/2017/11/02/1509584816519734.png","status":2,"favor":2,"boring":0,"comments":1,"readtime":44,"artbegin":"明天的你是否会想起今天的你","created":1509584837000,"updated":1509584837000,"content":null,"likeArticle":false,"taglib":null,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"corner":{"cornerid":219,"userid":116,"name":"$*$","placename":"硕维科技","placeaddress":"下沙经济技术开发区20号大街566号","placelatitude":30.283268,"placelongitude":120.358107,"placecity":"杭州市","befavor":0,"pass":0,"dashang":0,"created":1509584837000,"updated":1509584837000,"sort":0,"distance":0.0,"likeCorner":false,"count":0,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}}}]}
+	,data4 = {"status":200,"msg":"OK","data":{"unread":4,"unreadcomment":0,"unreadstore":0,"unreadnewarticle":0,"unreadNotify":[{"id":268,"messagetype":5,"targettype":null,"userid":46,"notifyid":247,"content":"Eson退出了圈子","created":1511158531000,"read":false},{"id":269,"messagetype":5,"targettype":null,"userid":46,"notifyid":243,"content":"doctor-yang杨创作了新文章《寸草心》","created":1511102896000,"read":false},{"id":270,"messagetype":5,"targettype":null,"userid":46,"notifyid":235,"content":"doctor-yang杨创作了新文章《占领大海》的卡了根据阿里就是了飞机阿拉克算了可使肌肤ask萨都剌","created":1510927242000,"read":false},{"id":209,"messagetype":5,"targettype":null,"userid":46,"notifyid":218,"content":"快乐小子加入了圈子","created":1510813586000,"read":false}],"readNotify":[]}};
+
+$(function () {
+	init()
+})
+
+function init() {
+	load('/taglib/getTagInfo?taglibid=' + id , function (data) {
+		if (data.status !== 200) util.href('quan')
+		var data = data.data
+		xny.data.detail = data;
+		if (data.userin == 1) $('.add-art').attr('disabled', false).removeClass('qz-button-disabled')
+		$('.xny-header h1').text(data.taglib);
+		$('.mc').text(data.memberscount);
+		$('.ac').text(data.articlescount);
+		$('.date').text(util.changeTime(data.created));
+		$('.author-name').text(data.author.username);
+		$('.author-image').attr('src', util.userHeadImage(data.author.userheadimageurl))
+		$('#btn').tmpl(data).appendTo('.xny-header .xny-btn-box');
+		$('#member').tmpl(data).appendTo('.member');
+		$('#nav').tmpl(data).appendTo('.qz-nav-list');
+		
+		if(data.userin == 1){
+			$('.artcreate').show().on('click', function(){
+				$(location).attr('href', '/page/publish?taglibid=' + id)
+			})
+		}
+
+		if (data.quanzhu) {
+			$('.membermng').show().on('click',function () {
+				$(location).attr('href', 'quanblack?taglibid=' + id)
+			})
+			
+			$('.annocreate').show().on('click',function () {
+				$(location).attr('href', 'annocreate?taglibid=' + id)
+			})
+		}
+
+		$('.qz-nav-list li').each(function (i, el) {
+			$(this).on('click', function () {
+				$('.qz-nav-item').hide();
+				$('.qz-nav-item').eq(i).show();
+				$(el).siblings('li.active').removeClass('active')
+				$(el).addClass('active')
+			})
+			switch(i){
+				case 1:$(this).one('click',createArticlePage);break;
+				case 2:$(this).one('click',function(){
+						createAnnouncePage();
+					});break;
+				case 3:$(this).one('click',createMessagePage);break;
+			}
+		})
+	})
+}
+
+function createArticlePage(){
+	Loc.getCenter(function (point) {
+		load('/taglib/taglib/article?taglibid='+id+
+				'&page=1'+
+				'&size=10'+
+				'&lat='+point.lat+
+				'&lon='+point.lng, function(data){
+			$('#article').tmpl({articles:data.data}).appendTo('.article');
+		})
+	})
+}
+
+function createAnnouncePage(){
+	load('/taglib/taglib/getannounce?taglibid='+id, function(data){
+		var data = data.data;
+		data.type = 'anno'
+		$('#announce').tmpl(data).appendTo('.announce')
+	})
+}
+
+function createMessagePage(){
+	load('/taglib/taglib/getremind?taglibid='+id, function(data){
+		var data = data.data;
+		data.type = 'info'
+		$('#announce').tmpl(data).appendTo('.message')
+	})
+}
+
+function join(id){
+	//console.log('join')
+	 $.get('/taglib/join?taglibid='+ id, function(data){ 
+		 if(data.status==200){
+			util.href('')
+		 }
+		 xny.alert({content: data.msg})
+	 }) 
+}
+
+function quit(id){
+	// console.log('quite')
+	$.get('/taglib/quit?taglibid='+ id, function(data){ 
+		 if(data.status==200){
+			util.href('')
+		 }
+		 alert(data.msg)
+	 }) 
+}
+
+function deluser(self) {
+	var userid = $(self).data('id');
+	console.log(userid)
+	$.get('/taglib/defriend?userid='+ userid +'&taglibid='+ id,function (data) {
+		alert(data.msg)
+		if(data.status == 200){
+			$(self).parents('li').remove();
+		}
+	})
+}
+
+function remindInfo(id){
+	$.get('/notify/readnotify?notifyid='+id,function(data){
+		var data = data.data
+		if(data.action=='新文章'){
+			util.href('detail?id=' + data.sender)
+		}else {
+			util.href('author?id=' + data.sender)
+		}
+	})
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			success(data)
+		})
+	}
+}
+</script>
+</html>

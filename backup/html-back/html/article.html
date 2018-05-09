@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>发布</title>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<style type="text/css">
+body,html{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	font-size: 0.9rem
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+}
+.header ul{
+	border-bottom:1px solid #ddd;
+}
+.header ul li{
+	font-size: 1rem;
+	text-align: center;
+	line-height: 3rem;
+}
+.header ul li.active{
+	color:orange;
+}
+.hide{
+	display: none;
+}
+.article-create{
+	display: block;
+	margin: 5px 10px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 1.2rem;
+	text-align:center;
+	border-radius: 10px;
+	color:white;
+	background: #3cc51f;
+}
+.article-list{
+	padding-bottom: 40px;
+}
+.icon{
+    width: 40px
+}
+.icon img{
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+}
+.icon span{
+    vertical-align: middle;
+}
+#connername,#address,#title,#content{
+    padding-left: 30px;
+    margin: 0;
+}
+#connername{
+    font-size: 1.1rem;
+    background: url(../images/zuobiao.png) 7px center no-repeat;
+    background-size: 16px;
+}
+#title{
+    font-size: 1.1rem;
+    background: url(../images/icon_24.png) 7px center no-repeat;
+    background-size: 16px;
+}
+#content{
+    text-indent: 0.9rem;
+    width: 80%
+}
+
+/*footer*/
+.footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border:1px solid #ddd;
+    background-color: #4d3849;
+    color: white;
+    font-size: 1rem;
+    line-height: 3rem;
+}
+.footer ul{
+    font-size: 1rem;
+    height: 100%
+}
+.footer li{
+    height: 100%;
+    text-align: center;
+    border-right: 1px solid #ddd
+}
+.flex-row li{
+    flex-grow:1;
+}
+.tab img{
+    width: 20px;
+    height: 20px;
+    vertical-align: text-bottom;
+}
+</style>
+</head>
+<body>
+	<header class="header">
+		<ul class="flex-row">
+			<li id="publish" class="flex-grow">已发布</li>
+			<li id="keep" class="flex-grow">草稿箱</li>
+			<li id="hide" class="flex-grow">已隐藏</li>
+		</ul>
+	</header>
+	<section id="publish-item" class='hide'>
+		<div class="article-create">创建</div>
+		<ul class="article-list"></ul>
+	</section>
+	<section id="keep-item" class="hide">
+		<ul class="article-list"></ul>
+	</section>
+	<section id="hide-item" class="hide">
+		<ul class="article-list"></ul>
+	</section>
+    <section class="footer">
+        <ul class="tab flex-row">
+            <li id="shouye">
+                <img src="../images/cindex.png">
+                首页
+            </li>
+            <li id="nearby">
+                <img src="../images/zuobiao.png">
+                附近
+            </li>
+            <li id="article">
+                <img src="../images/csend_1.png">
+                发布
+            </li>
+            <li id="mine">
+                <img src="../images/xihuan1.png">
+                我的
+            </li>
+        </ul>
+    </section>
+</body>
+<script type="text/javascript" src="../js/xny.js"></script>
+<script type="text/javascript">
+!(function ($) {
+	var active,showpage
+	var tab = GetQueryString('tab')
+	console.log(tab)
+	if(tab && tab!=1){
+		console.log(tab)
+		switch(tab){
+			case '2':
+				active = $('#keep')
+				showpage = $('#keep-item')
+				
+				createHtml('/article/inter/user/article?status=1&page=1&size=10',$('#keep-item ul'),function(id){
+					$(location).attr('href', 'detail?id='+id)
+				})
+				break;
+			case '3':
+				active = $('#hide')
+				showpage = $('#hide-item')
+				createHtml('/article/inter/user/article?status=3&page=1&size=10',$('#hide-item ul'),function(id){
+					$(location).attr('href', 'detail?id='+id)
+				})
+				break;
+			default:
+				active = $('#publish')
+				showpage = $('#publish-item')
+				createHtml('/article/inter/user/article?status=2&page=1&size=10',$('#publish-item ul'),function(id){
+					$(location).attr('href', 'detail?id='+id)
+				})
+				break;
+		}
+	}else {
+		active = $('#publish')
+		showpage = $('#publish-item')
+		createHtml('/article/inter/user/article?status=2&page=1&size=10',$('#publish-item ul'),function(id){
+			$(location).attr('href', 'detail?id='+id)
+		})
+	}
+	active.addClass('active')
+	showpage.removeClass('hide')
+	$('.article-create').on('click', function(event){
+		$(location).attr('href', 'publish');
+	})
+	$('#publish').one('click', function(event) {
+		createHtml('/article/inter/user/article?status=2&page=1&size=10',$('#publish-item ul'),function(id){
+			$(location).attr('href', 'detail?id='+id)
+		})
+	});
+	$('#keep').one('click', function(event) {
+		createHtml('/article/inter/user/article?status=1&page=1&size=10',$('#keep-item ul'),function(id){
+			$(location).attr('href', 'detail?id='+id)
+		})
+	});
+	$('#hide').one('click', function(event) {
+		createHtml('/article/inter/user/article?status=3&page=1&size=10',$('#hide-item ul'),function(id){
+			$(location).attr('href', 'detail?id='+id)
+		})
+	});
+	$('#publish').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#publish-item').removeClass('hide')
+		showpage = $('#publish-item')
+	});
+	$('#keep').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#keep-item').removeClass('hide')
+		showpage = $('#keep-item')
+	});
+	$('#hide').on('click', function(event) {
+		event.preventDefault();
+		active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		showpage.addClass('hide')
+		$('#hide-item').removeClass('hide')
+		showpage = $('#hide-item')
+	});
+	function createHtml(ul,sel,fun){
+		sel.children('li').remove();
+		getData(ul,function(arr){
+			var ele = $('<li>').css({
+				'margin': '10px 0',
+				'border-bottom': '1px solid #ddd',
+				'padding-bottom': '10px'
+			});
+			
+	        ele.html('<div class="flex-row">'+
+	                '<div class="flex-left">'+
+	                '<p id="connername">曲院风荷</p>'+
+	                '<p id="address">曲院风荷</p>'+
+	                '</div>'+
+	                '<!--<div class="flex-row icon-box">'+
+	                '<div class="icon">'+
+	                '<img src="../images/cfoot.png">'+
+	                '<span id="pass"> 1</span>'+
+	                '</div>'+
+	                '<div class="icon">'+
+	                '<img src="../images/clikeit.png">'+
+	                '<span id="befavor"> 1</span>'+
+	                '</div>'+
+	                '</div>-->'+
+	                '</div>'+
+	                '<div class="flex-row" style="margin-top:5px">'+
+	                '<div>'+
+	                '<p id="title">角落记事</p>'+
+	                '<p id="content">+拉开捡垃圾法拉利乐扣乐扣累计ox快乐我就让我减肥就黑我</p>'+
+	                '</div>'+
+	                '<!--<div class="icon">'+
+	                '<img src="../images/xinxi.png">'+
+	                '<span id="comments"> 0</span>'+
+	                '</div>-->'+
+	                '</div>')
+				for (var i = 0; i < arr.length; i++) {
+					(function(){
+						console.log(arr.length)
+						var li = ele.clone()
+						sel.append(li)
+		                li.find('#connername').text(arr[i].connername)
+		                li.find('#address').text(arr[i].address)
+		                li.find('#title').text(arr[i].title)
+		                li.find('#content').text(arr[i].content)
+		                li.data('i', i)
+		                li.on('click', function(event) {
+		                	event.preventDefault();
+		                	fun(arr[$(this).data('i')].articleid)
+		                });
+					})()
+				};
+		})
+		
+	}
+	function getData2 (ul){
+        var arr = []
+        for (var i = 0; i < 6; i++) {
+        	var obj = {}
+            obj.title = '标题' + i
+            obj.content = '大口径风扇考虑考虑更健康十分谨慎考虑房价深刻解放了快速'
+            obj.connername = '浙江省政府'
+            obj.articleid = 1
+            arr.push(obj)
+        };
+        return arr
+    }
+	function getData(ul,fun){
+		var array = []
+		$.get(ul, function(data) {
+				 if(data.status==201){
+						if(data.msg!=''){
+							 $(location).attr('href', '/page/gotoPeopleIndex?state=/page/article');
+							// $(location).attr('href', 'login?redirect=article');
+						}
+		            }
+			
+			var arr = data.data
+            for (var i = 0; i < arr.length; i++) {
+                var obj = {}
+                obj.articleid = arr[i].articleid
+                obj.title = arr[i].title
+                obj.content = arr[i].artbegin
+                obj.connername = arr[i].conner.name
+                obj.address = arr[i].conner.placeaddress
+                obj.boring = arr[i].article_boring
+                obj.boringNum = arr[i].boring
+                obj.favor = arr[i].article_favor
+                obj.favorNum = arr[i].favor
+                obj.befavor = arr[i].conner_favor
+                obj.befavorNum = arr[i].conner.befavor
+                obj.pass = arr[i].conner.pass
+                obj.coments = arr[i].coments
+                array.push(obj)
+            };
+            fun(array);
+		});
+	}
+})(jQuery)
+
+function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        var context = "";
+        if (r != null)
+             context = r[2];
+        reg = null;
+        r = null;
+        return context == null || context == "" || context == "undefined" ? "" : context;
+    }
+</script>
+</html>

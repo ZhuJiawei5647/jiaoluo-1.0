@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>系统公告</title>
+	<link rel="stylesheet" type="text/css" href="../css/art_complete.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<style type="text/css">
+		html,body{
+			padding: 0;
+			margin: 0;
+		}
+		ul,li{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		.flex-row{
+			display: flex;
+		}
+		.flex-grow{
+			flex-grow:1;
+		}
+		.header ul{
+			border-bottom:1px solid #ddd;
+		}
+		.header ul li{
+			position: relative;
+			font-size: 1.1rem;
+			text-align: center;
+		}
+		.header ul li a{
+			display: inline-block;
+			width: 80px;
+			line-height: 3rem;
+			color: black;
+			text-decoration: none;
+		}
+		.header ul li.active a{
+			color:#fc554c;
+			border-bottom: 2px solid #fc554c;
+			margin-bottom: -1px;
+		}
+		.header ul li span.numicon{
+			position: absolute;
+			top: 15px;
+			right: 5px;
+			padding: 0 5px;
+			border-radius: 10px;
+			font-size: 0.8rem;
+			line-height: 0.9rem;
+			background-color: red;
+			color: white;
+		}
+		.hide{
+			display: none;
+		}
+		/*.msg-head{
+			margin: 0;
+			padding: 0;
+			padding-top: 8px;
+			font-size: 1.05rem;
+			font-weight: normal;
+			line-height: 2rem;
+			text-indent: 20px;
+			border-bottom: 2px solid #008000;
+		}*/
+		.panel{
+			position:relative;
+		}
+		.advice-list{
+			padding: 0 5px;
+		}
+		.advice-list li{
+			overflow: hidden;
+			position: relative;
+			cursor: pointer;
+			border-bottom: 1px solid #ddd;
+		}
+		.advice-list p{
+			margin: 0;
+			padding: 10px 20px 0;
+			font-size: 1rem;
+			line-height: 1.2rem;
+			overflow: hidden;
+		    white-space: nowrap;
+		    text-overflow: ellipsis;
+		}
+		.advice-list span.t{
+			float: right;
+			font-size: 0.9rem;
+			color: #aaa;
+			margin: 0 20px;
+		}
+		.advice-list span.point{
+			position: absolute;
+			top: 15px;
+			left: 5px;
+			width: 0px;
+			height: 0px;
+			border-radius: 20px; 
+			background:#f00;
+			border:2px solid #f00;
+		}
+		.advice-list li.read p{
+			color: #aaa;
+		}
+		.more{
+			margin-bottom:100px;
+			text-align:center;
+			line-height:30px;
+		}
+	</style>
+</head>
+<body>
+	<header class="header">
+		<img alt="" src="../images/Announce_bar.png" style="width:100%">
+		<!-- <ul class="flex-row">
+			<li id="item1" data-si="panel1" class="item flex-grow"><a href="">公告</a></li>
+			<li id="item2" data-si="panel2" class="item flex-grow"><a href="">关注</a></li>
+			<li id="item3" data-si="panel3" class="item flex-grow"><a href="">新文章</a></li>
+		</ul> -->
+	</header>
+	<section id="panel1" class='panel'>
+		<ul class="advice-list advice-ans-list"></ul>
+		<!-- <div class="more pubmore">加载更多</div> -->
+	</section>
+	<!-- <section id="panel2" class="panel hide">
+		<ul class="advice-list advice-care-list"></ul>
+		<div class="more keepmore">加载更多</div>
+	</section>
+	<section id="panel3" class="panel hide">
+		<ul class="advice-list advice-art-list"></ul>
+		<div class="more hidemore">加载更多</div>
+	</section> -->
+	<!-- <h2 class="msg-head">消息通知</h1>
+	<ul class="advice-list">
+	</ul> -->
+</body>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/data.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+	var constant = data;
+	/* var active, showpage;
+	$('.item').on('click', function(event) {
+		event.preventDefault();
+		if (active) active.removeClass('active')
+		$(this).addClass('active')
+		active = $(this)
+		if (showpage) showpage.addClass('hide')
+		var $panel = $('#' + $(this).data('si'))
+		$panel.removeClass('hide')
+		showpage = $panel;
+	}); */
+/* 	$('#item2').one('click', function () {
+		 $.get('/notify/getAnnounce', function (data) {
+			 $('#item1').append($('<span>').addClass('numicon').text(data.data.unreadcomment))
+				$('#item2').append($('<span>').addClass('numicon').text(data.data.unreadstore))
+				$('#item3').append($('<span>').addClass('numicon').text(data.data.unreadnewarticle))
+			 createList(data.data, $('.advice-care-list'))
+		 })
+	})
+	$('#item3').one('click', function () {
+		 $.get('/notify/getnotify?type=3', function (data) {
+			 $('#item1').append($('<span>').addClass('numicon').text(data.data.unreadcomment))
+				$('#item2').append($('<span>').addClass('numicon').text(data.data.unreadstore))
+				$('#item3').append($('<span>').addClass('numicon').text(data.data.unreadnewarticle))
+			 createList(data.data, $('.advice-art-list'))
+		 })
+	}) */
+	 $.get('/notify/getannounce',function (data) {
+		/* var data = {"status":200,"msg":"OK","data":{"unread":18,"unreadcomment":6,"unreadstore":7,"unreadnewarticle":5,"unreadNotify":[{"id":130,"messagetype":2,"userid":51,"notifyid":15,"content":"ZEKE评论了你的文章<<石灰吟>>","created":1506482367000,"read":false},{"id":128,"messagetype":2,"userid":51,"notifyid":13,"content":"Eson回复了你的评论","created":1506482240000,"read":false},{"id":126,"messagetype":2,"userid":51,"notifyid":10,"content":"Eson评论了你的文章<<石灰吟>>","created":1506481919000,"read":false},{"id":122,"messagetype":2,"userid":51,"notifyid":6,"content":"Eson评论了你的文章<<测试>>","created":1506326191000,"read":false},{"id":120,"messagetype":2,"userid":51,"notifyid":4,"content":"Eson评论了你的文章<<测试>>","created":1506323926000,"read":false},{"id":121,"messagetype":2,"userid":51,"notifyid":1,"content":"æ¶æ¯æåï¼","created":1506318802000,"read":false}],"readNotify":[{"id":123,"messagetype":2,"userid":51,"notifyid":7,"content":"Eson回复了你的评论","created":1506326202000,"read":true}]}}
+		$('#item1').append($('<span>').addClass('numicon').text(data.data.unreadcomment))
+		$('#item2').append($('<span>').addClass('numicon').text(data.data.unreadstore))
+		$('#item3').append($('<span>').addClass('numicon').text(data.data.unreadnewarticle))
+ */	/* $('#item1').append($('<span>').addClass('numicon').text(data.data.unread)) */
+	 	createList(data.data, $('.advice-ans-list'))
+		/* $('#item1').click(); */
+	 })
+	function createList(data, $el) {
+		var list = data.unreadNotify.concat(data.readNotify);
+		if (!list || list.length == 0) {$el.parent().append($('<div>').text('你还未收到任何消息').css({
+			'position': 'absolute',
+			'top': '40vh',
+			'left': '0',
+			'width': '100%',
+			'font-size': '1.1rem',
+			'text-align': 'center',
+			'color': '#aaa'
+		}))}
+		else {
+			for (var i = 0; i < list.length; i++) {
+				var li = $('<li>')
+				var p = $('<p>').text(list[i].targettype)
+				var time = $('<span>').addClass('t').text(util.changeTime(list[i].created))
+				var point = $('<span>').addClass('point')
+				li.append(p)
+				li.append(time)
+				if (!list[i].read) {
+					li.append(point)
+				}else {
+					li.addClass('read')
+				}
+				!(function (i) {
+					li.on('click', function () {
+						// console.log(i)
+						$(this).find('.point').remove();
+						$(this).addClass('read')
+						 $.get('/notify/readnotify?notifyid='+list[i].notifyid, function (data) {
+							console.log(list[i].notifyid)
+							 if(data.status==200){
+								console.log(data.data.targettype+":"+data.data.action)
+								console.log(constant.Article)
+								
+									if(data.data.messagetype==1){
+										$(location).attr('href', 'announce_detail?announceid=' +  data.data.id);
+									}
+									
+								
+							}
+						 })
+					})
+				})(i)
+				$el.append(li)
+			}
+		}
+		$el.next().on('click',function () {
+			// console.log(123)
+		})
+	}
+</script>
+</html>

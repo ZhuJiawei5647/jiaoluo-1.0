@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>我的名片</title>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.qrcode.min.js"></script>
+	<script type="text/javascript" src="../js/util.js"></script>
+	<style type="text/css">
+		body,html{
+			margin: 0;
+			padding: 0;
+			background-color:#7AC2D4;
+		}
+		.title{
+			margin:0;
+			padding:20px;
+			font-size: 18px;
+			font-weight: normal;
+			text-align: center;
+		}
+		.loading{
+			position:absolute;
+			top:20vh;
+			left:0;
+			width:100%;
+			text-align:center;
+			z-index:-1;
+			font-size:1.2rem;
+			color:green;
+			
+		}
+	</style>
+</head>
+<body>
+	<!-- <h1 class="title">来<span class="name"></span>启程探秘</h1> -->
+	<!-- <div class="loading"></div> -->
+	<div class="img-box" style="margin:0 20px;">
+		<img id="img" src="../images/loading.gif" style="width:100%">
+	</div>
+	<div id="imgurl"></div>
+	<script type="text/javascript">
+		//var userid = util.GetQueryString('userid');
+		// var username = decodeURI(util.GetQueryString('username'));
+		// var userimg = util.GetQueryString('userimg');
+		// $('.name').text(cornername)
+		// var callbackurl = decodeURIComponent(util.GetQueryString('url'));
+		var callbackurl = '/disciple/author/disciple?userid=123';
+		//var userid = 1;
+		//$.get('/pic/user/getusercard?userid='+userid,function(data) {
+			//$('.loading').append($('<p>').text('进入转换'))
+			// convertImgToBase64(util.userHeadImage(userimg),function(userimgdata){
+				//$('.loading').append($('<p>').text('生成名片主题完成...'))
+				convertImgToBase64("../images/cai_beijing.jpg",function(bgimgdata){
+					//$('.loading').append($('<p>').text('生成名片头完成...'))					
+					convertImgToBase64("../images/secret.png",function(liwuimgdata){
+						//$('.loading').append($('<p>').text('整合名片完成'))
+						// var userimg = new Image();
+						var bgimg = new Image();
+						bgimg.src = bgimgdata;
+						var liwuimg = new Image();
+						liwuimg.src = liwuimgdata;
+						var codesrc = $("<div>").qrcode(callbackurl).hide().find('canvas').get(0).toDataURL('image/jpg');
+						var codeimg = new Image();
+						codeimg.src = codesrc;
+						// clipimg(userimgdata, function(dataURL) {
+							// userimg.onload = function () {
+								var canvas = document.createElement('CANVAS')
+								canvas.width = 400;
+								canvas.height = 400;
+								var width = canvas.width;
+								var height = canvas.height;
+								var ctx = canvas.getContext("2d")
+
+
+								ctx.save();
+								
+								ctx.drawImage(bgimg, 0, 0, width, height);
+
+							 	// ctx.drawImage(userimg, width * 0.05, height * 0.05, width * 0.15, width * 0.15);
+
+								//var fontsize = Math.floor(width/20);
+
+								ctx.restore();
+								ctx.textAlign = 'left';
+								ctx.font = 22 + 'px Arial';
+								ctx.fillStyle = 'black';
+								ctx.fillText(username, width * 0.21, height * 0.12);
+								ctx.font = 18 + 'px Arial';
+								ctx.fillStyle = 'orange';
+								
+								// var str = '请求组队'
+								// var arr = []
+								// while(str.length > 16){
+								// 	arr.push(str.slice(0,16))
+								// 	str = str.slice(16)
+								// }
+								// arr.push(str)
+								// for(var i = 0; i < arr.length; i++){
+								// 	ctx.fillText(arr[i], width * 0.21, height * (0.18 + i * 0.05));
+								// }
+								
+								ctx.textAlign = 'center';
+								ctx.font = 22 + 'px Arial';
+								ctx.fillStyle = 'blue';
+								ctx.fillText('角落探索', width * 0.5, height * 0.9);
+								ctx.font = 16 + 'px Arial';
+								ctx.fillStyle = 'black';
+								ctx.fillText('长按>>保存>>转发', width * 0.5, height * 0.97)
+								ctx.save();
+
+								/* var c = width * 0.02;
+								ctx.fillStyle = 'white';
+								ctx.beginPath()
+								ctx.rect(width * 0.37 - c, height * 0.25 - c, width * 0.26 + 2 * c, width * 0.26 + 2 * c);
+								ctx.closePath()
+								ctx.fill();
+								ctx.stroke(); */
+							
+								ctx.drawImage(codeimg, width * 0.2, height * 0.25, width * 0.6, width * 0.6);
+								
+								ctx.beginPath();
+								ctx.arc(width * 0.5 , height * 0.25 + width * 0.3, width * 0.09, 0, Math.PI*2,true);
+								ctx.fillStyle = 'white';
+								ctx.closePath()
+								ctx.fill();
+								
+								ctx.drawImage(liwuimg, width * 0.44, height * 0.25 + width * 0.24, width * 0.12, width * 0.12)
+								ctx.restore();
+								$(canvas).hide();
+							 	var src = canvas.toDataURL("image/png")
+							 	$('#img').attr('src', src)
+							// }
+							// userimg.src = dataURL;
+							// console.log(codesrc)
+						// })
+					})
+				})
+			// })
+		//})
+		function convertImgToBase64(url, callback, outputFormat){
+			
+		    var canvas = document.createElement('CANVAS'),
+		        ctx = canvas.getContext('2d');
+		     loadImage(url,function(){
+		    	 canvas.height = this.height;
+		        canvas.width = this.width;
+				//$('.img-box').append($('<p>').text('777'))
+				$('.loading').append($('<p>').text('转换中'))
+		        ctx.drawImage(this,0,0);
+		        // console.log(canvas)
+		        var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+		        // console.log(dataURL)
+		        canvas = null; 
+		        callback.call(this, dataURL);
+		     })
+		}
+
+		function loadImage(url, callback) {
+			var img = $('<img>').attr({
+				'crossOrigin':'Anonymous',
+				'src':url
+				})
+				img.load(function(){
+					callback.call(this)
+				})
+			};
+			
+		function clipimg(baseurl, fun){
+			var canvas = document.createElement('CANVAS'),
+				ctx = canvas.getContext('2d'),
+				img = new Image;
+			img.onload = function() {
+				console.log(img.height)
+				console.log(img.width)
+				var c = img.height<img.width ? img.width : img.height;
+				console.log(c)
+				canvas.height = c;
+				canvas.width = c;
+
+				var r = c/2;
+				ctx.beginPath();
+				ctx.arc(r, r, r, 0, Math.PI*2,true);
+				ctx.clip();
+
+				ctx.fillStyle = 'white';
+				ctx.beginPath()
+				ctx.rect(0, 0, c, c);
+				ctx.closePath()
+				ctx.fill();
+
+				ctx.drawImage(img, 0, 0);
+				ctx.closePath();
+
+				var dataURL = canvas.toDataURL('image/png');
+				console.log(dataURL);
+				fun(dataURL);
+			}
+			img.src = baseurl;
+		}
+	</script>
+</body>
+</html>

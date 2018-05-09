@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>昵称设置</title>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
+    <script type="text/javascript" src="../js/xny_form.js"></script>
+    <script type="text/javascript">
+    document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time="' + (new Date()).getTime() + '">')
+    document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time="' + (new Date()).getTime() + '><\/script>')
+    </script>
+    <style type="text/css">
+    body {
+        background-color: #f2f2f2;
+    }
+
+    .set-form-item {
+        height: 40px;
+        line-height: 40px;
+        background-color: #fff;
+        padding: 0 22px;
+    }
+
+    .set-form-item input {
+        font-size: 16px;
+        height: 40px;
+        line-height: 40px;
+        width: 100%;
+    }
+
+    .set-form .xny-btn-box {
+        float: right;
+        width: 112px;
+        height: 40px;
+        margin: 20px 12px;
+        font-size: 16px;
+        line-height: 40px;
+    }
+
+    .set-form .xny-btn-box .xny-button {
+        background-color: #3BB287
+    }
+    </style>
+</head>
+
+<body>
+    <form class="set-form">
+        <div class="set-form-item">
+            <input type="" name="qianming" placeholder="签名">
+        </div>
+        <div class="xny-btn-box">
+            <div class="xny-button">确定</div>
+        </div>
+    </form>
+</body>
+<script type="text/javascript">
+var form = new Form();
+form.submit('.xny-btn-box', function(data) {
+    console.log(data)
+    // $.get('/user/modify/username?username='+data.qianming, function(data){
+    // if (data.status == 200) {
+        if (history.replaceState) {          
+            history.replaceState(null, null, 'user');
+        }
+        util.href('setup')
+    // }
+    // })
+})
+</script>
+
+</html>

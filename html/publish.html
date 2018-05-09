@@ -1,0 +1,572 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>创建文章</title>
+	<link rel="stylesheet" href="../css/jquery.Jcrop.min.css">
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/exif.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="../js/xny_form.js"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getTime()+'">')
+		document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+		document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getDate()+'"><\/script>')
+	</script>
+	<style type="text/css">
+	body{
+		background-color: #f2f2f2;
+	}
+	/* form */
+	.xny-form-item{
+		display: block;
+		width: 100%;
+		position: relative;
+		overflow: hidden;
+		padding: 8px 0;
+		border-top: 1px solid #ddd;
+		background-color: #fff;
+	}
+	.xny-item-img{
+		width: 55px;
+		text-align: center;
+	}
+	.xny-item-img img{
+		width: 30px;
+		height: 30px;
+	}
+	.xny-form-item .xny-label{
+		float: left;
+		width: 100px;
+		font-size: 16px;
+		line-height: 30px;
+		text-align: left;
+		overflow: hidden;
+	}
+	.xny-form-item .xny-label{
+		vertical-align: top;
+	}
+	.xny-form-item .xny-label .xny-item-img{
+		display: inline-block;
+		height: 30px;
+		line-height: 30px;
+		vertical-align: top;
+	}
+	.xny-form-item .xny-input-block{
+		margin-left: 100px;
+		line-height: 30px;
+		font-size: 16px;
+		position: relative;
+	}
+	.xny-input-block input{
+		width: 90%;
+		height: 30px;
+		padding: 0 5px;
+		font-size: 16px;
+		line-height: 30px;
+	}
+
+	/* cornerpage */
+	.xny-header .cancel{
+		position: absolute;
+		top: 8px;
+		left: 20px;
+		height: 24px;
+		line-height: 24px;
+		color: white;
+		background-color: green;
+		padding: 0 5px;
+		border-radius: 3px;
+	}
+	.xny-header .confirm{
+		position: absolute;
+		top: 8px;
+		right: 20px;
+		height: 24px;
+		line-height: 24px;
+		color: white;
+		background-color: green;
+		padding: 0 5px;
+		border-radius: 3px;
+	}
+	#map{
+		width: 100%;
+		height: 200px;
+	}
+	.locallist{
+		width: 100%;
+		height: calc(100% - 200px);
+		overflow-y: scroll;
+	}
+	.locallist li{
+		padding: 10px;
+		padding-right: 40px;
+		border-bottom: 1px solid #ccc;
+		background-color: #e3e3e3;
+	}
+	.locallist li.active{
+		background: url(../images/select.png) 95% 10px no-repeat;
+		background-size: 40px;
+		background-color: #fff;
+	}
+	.qz-openpage .qz-btn-box-left{
+		top: 8px;
+		left: 20px;
+		right: none;
+	}
+
+	/*  */
+	.textarea-box{
+		width: 100%;
+		height: 180px;
+		background-color:#fff;
+	}
+	textarea{
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		padding: 5px 10px;
+		font-size: 16px;
+		line-height: 24px;
+	}
+
+	.img-box{
+		padding: 5px 10px;
+		background-color:#fff;
+	}
+	.img-box img{
+		display: inline-block;
+		width: 120px;
+		height: 80px;
+		background: url(../images/camera.png) center center no-repeat;
+		background-size: 70px;
+	}
+
+	.radio-box{
+		display: block;
+		position: relative;
+		margin: 0 5px;
+		float: left;
+	}
+	.radio-box input{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		margin: 0;
+		opacity: 0;
+		z-index: 10;
+	}
+	.radio-box span{
+		display: inline-block;
+		padding: 0 5px;
+		height: 20px;
+		margin: 4px 0;
+		color: #aaa;
+		font-size: 0.9rem;
+		line-height: 20px;
+		text-align: center;
+		border: 1px solid #aaa;
+		border-radius: 3px;
+	}
+	.radio-box span.default{
+		border-color: green;
+		color: green;
+	}
+	.radio-box input:checked+span{
+		border-color: #fe0000;
+		color: #fe0000;
+	}
+
+	.btn-container{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 40px;
+		z-index: 10000;
+	}
+	.btn-list{
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+	}
+	.btn-list li.xny-btn-box{
+		float: left;
+		border-radius: 0;
+		line-height: 40px;
+		height: 40px;
+	}
+	.btn-list li.xny-btn-box .xny-button{
+		font-size: 18px;
+		border-radius: 0;
+	}
+
+	/*imgcut*/
+	.xny-page.imgcut .xny-header{
+	}
+	.imgcut .img{
+		width: 100%;
+	}
+	.imgcut .img img{
+		width: 100%;
+	}
+
+	</style>
+</head>
+<body>
+	<div class="xny-body">
+		<form class="" onsubmit="return false;" style="height:100vh;">
+			<div class="textarea-box">
+				<textarea id="content" name="content" placeholder="镌刻你的故事"></textarea>
+			</div>
+			<div class="img-box">
+				<input type="text" id="imageurl" name="imageurl" style="display: none;">
+				<input type="file" onChange="previewImage(this)" style="display: none;" id="previewImg">
+				<img id="imghead" src="" alt="" onclick="console.log($('#previewImg')),$('#previewImg').click();">
+			</div>
+			<div class="xny-form-item" style="margin-bottom: 20px;">
+				<div class="xny-label"><div class="xny-item-img"><img src="../images/biaoti.png"></div><label>标题</label></div>
+				<div class="xny-input-block"><input class="" name="title" type="text" placeholder="角落故事（默认）"></div>
+			</div>
+			<div class="xny-form-item">
+				<div class="xny-label" style="width: 55px"><div class="xny-item-img"><img src="../images/dizhi2.png"></div></div>
+				<div class="xny-input-block" style="margin-left: 55px">
+					<input style="display: none;" name="placecity" type="text">
+					<input style="display: none;" name="placename" type="text" placeholder="角落所在的位置">
+					<input style="display: none;" name="placeaddress" type="text">
+					<input style="display: none;" name="placelongitude" type="text">
+					<input style="display: none;" name="placelatitude" type="text">
+					<div class="" id="address" >角落所在的位置</div>
+				</div>
+			</div>
+			<div class="xny-form-item">
+				<div class="xny-label"><div class="xny-item-img"><img src="../images/jiaoluo.png"></div><label>圈子</label></div>
+				<div class="xny-input-block radio-container"></div>
+			</div>
+			<div class="btn-container">
+				<ul class="btn-list">
+					<li class="xny-btn-box" style="width: 30%;">
+						<button class="xny-button save" style="background-color: #7e7e7e;">草稿</button>
+					</li>
+					<li class="xny-btn-box" style="width: 70%;">
+						<button class="xny-button publish" style="background-color: #4aacc5; color: #000;">发布</button>
+					</li>
+				</ul>
+			</div>
+		</form>
+	</div>
+	<footer class="xny-footer"></footer>
+</body>
+<script type="text/x-jquery-tmpl" id="radioBox">
+	<div class="radio-box"">
+		<input type="radio" name="taglibid" value="0" {{= isChecked( id, taglibs)}}>
+		<span>附近</span>
+	</div>
+	{{each(i, taglib) taglibs}}
+		<div class="radio-box"">
+			<input type="radio" name="taglibid" value="{{= taglibid}}" {{= taglibid == id ? 'checked' : ''}}>
+			<span>{{= taglib}}</span>
+		</div>
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="imagepage">
+	<div class="xny-page imgcut">
+		<header class="xny-header"><div class="xny-button cancel">取消</div><div class="xny-button confirm">确定</div><h1>截图</h1></header>
+		<div class="xny-body">
+			<div class="img"><img src=""></div>
+		</div>
+	</div>
+</script>
+<script type="text/javascript">
+var id = util.GetQueryString('id')
+	,cornerid = util.GetQueryString('connerid')
+	,taglibid = util.GetQueryString('taglibid')
+	,xny = new XNY()
+$(function () {
+	init()
+	var form = new Form();
+	form.submit('.publish', {city:'杭州', title:'$*$'} , function (data) {
+		var obj = data;
+		console.log(obj)
+		POST('/article/inter/distribute', obj, function (data) {
+			if(data.status == 208){
+				if(confirm('本月发布次数不足,是否保存到草稿箱')){
+					POST('/article/inter/save', obj, function(){
+						$(location).attr('href', '/page/invite');
+					})
+				}
+			}
+			if (data.status == 200 && data.msg=="发布成功") {
+				$(location).attr('href', 'article?tab=1');
+			}
+			else{xny.alert(data.msg)}
+		})
+	})
+	form.submit('.save', {city:'杭州', title:'$*$'}, function (data) {
+		var obj = data;
+		console.log(obj)
+		POST('/article/inter/save', obj, function (data) { 
+			if ((data.status == 200 && data.msg=="保存成功")) {
+				$(location).attr('href', 'article?tab=2');
+			} 
+		})
+	})
+}())
+
+function init() {
+	$.get('/taglib/getUserTagListName', function (data) {
+		$('#radioBox').tmpl({taglibs:data.data, id:taglibid}).appendTo('.radio-container');
+	})
+
+	if (cornerid) {
+		$('#address').text(decodeURI(util.GetQueryString('connerplacename')))
+	}else if(id){
+		getProtect(id)
+	} else {
+		var loc = new Loc('#address', function (data) {
+			$('#address').text(data.placename)
+			Form.assignmentall('form', data)
+		})
+	}
+}
+
+function getProtect(id,fun) {
+	$.get('/article/inter/articleInfo?articleid=' + id, function(data) {
+		/*optional stuff to do after success */
+		var article = data.data;
+		Form.assignmentall('form', article.corner)
+		Form.assignmentall('form', article)
+		$('#address').text(article.corner.placename)
+		if (util.articleImage(article.imageurl)) {
+			$('#imghead').attr('src', article.imageurl)
+		}
+	});
+}
+function isChecked(id, tglbarr) {
+	if(taglibid && tglbarr.length > 0){
+		for (var i = 0; i < tglbarr.length; i++) {
+			if(tglbarr[i].taglibid == id) return ''
+		}
+	}
+	return 'checked'
+}
+function POST(url, obj, fun) {
+	if (id) {
+		obj.articleid = id
+	}else if(cornerid){
+		obj.cornerid = cornerid
+	}
+	$.post(url, obj, function(data, textStatus, xhr) {
+		if (data.status == 201) {
+			
+				$(location).attr('href', 'login?redirect=index');
+			
+		}
+		fun(data)
+		console.log(data)
+	});
+}
+
+function previewImage(file) {
+	util.previewJcropImage(xny, file, 1.5, function(data, base64){
+		console.log("上传成功")
+		var obj = JSON.parse(data)
+		imghead.src = base64
+		$('#imageurl').val(obj.url)
+	})
+}
+
+/* function previewImage(file) {
+	var reader = new FileReader();
+	reader.readAsDataURL(file.files[0])
+	var lastdate = (new Date()).getTime()
+
+	reader.onload = function(evt) {
+		console.log((new Date()).getTime() - lastdate)
+		var $page = $('#imagepage').tmpl()
+		$('body').append($page)
+		$('.imgcut .img img').load(function() {
+			console.log((new Date()).getTime() - lastdate)
+			var img = this
+				,jcrop_api = jcrop(img);
+			$page.find('.cancel').on('click', function(event) {
+				event.preventDefault();
+				jcrop_api.destroy()
+				$page.remove()
+			});
+			$page.find('.confirm').on('click', function(event) {
+				event.preventDefault();
+				jcrop_api.destroy()
+				$page.remove()
+				imgchange(img, function (img) {
+					var headimg = document.getElementById('imghead')
+						,base64 = getBase64(img,jcrop_api);
+					imghead.src = base64
+					// console.log(base64)
+					upload(base64,function (data) {
+						//alert("上传成功" + data);
+						console.log("上传成功")
+						var obj = JSON.parse(data)
+						img.src = obj.url
+						$('#imageurl').val(obj.url)
+						$('.progress-box').addClass('hide')
+					})
+				})
+				
+			});
+		});
+		$('.imgcut .img img').attr('src',evt.target.result)
+	}
+}
+
+function getBase64(img,jcrop_api) {
+	var cvs = document.createElement('canvas')
+		,ctx = cvs.getContext("2d")
+		,width = jcrop_api.getWidgetSize()[0]
+		,height = jcrop_api.getWidgetSize()[1]
+		,option = jcrop_api.tellSelect()
+
+	cvs.width = width;
+	cvs.height = height;
+	ctx.drawImage(img, 0, 0, width, height);
+
+	//把选中框里的图片内容存起来
+	var imageData = ctx.getImageData(option.x, option.y, option.w, option.h);
+	cvs.width = option.w;
+	cvs.height = option.h;
+	//然后再画上去
+	ctx.putImageData(imageData, 0, 0);
+	return ctx.canvas.toDataURL();
+}
+
+function jcrop(img){
+	var $img = $(img)
+	var height = $img.height();
+	var width = $img.width();
+	var c = height <= width ? height / 2 * 0.8 : width / 2 * 0.66;
+	var jcrop_api = null;
+	$img.Jcrop({
+		bgFade: true,
+		bgOpacity: .2,
+		allowSelect: false,
+		allowResize: false,
+		trackDocument: false,
+		touchSupport: true,
+		// createBorders: [width / 2 - c*1.5, height / 2 - c, width / 2 + c*1.5, height / 2 + c],
+		setSelect: [width / 2 - c*1.5, height / 2 - c, width / 2 + c*1.5, height / 2 + c]
+	}, function() {
+		jcrop_api = this;
+	});
+	return jcrop_api;
+}
+
+function upload(base64, fun) {
+	console.log(base64)
+	$.ajax({
+		type: "POST",
+		url: "/pic/upload0",
+		data: {
+			file: base64
+		},
+		success: function(data) {
+			xny.alert({content: '上传成功'})
+			fun(data)
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			$('.progress-box').addClass('hide')
+			xny.alert({content: "上传失败，请检查网络后重试"});
+		}
+	});
+}
+
+function imgchange(img,fun) {
+	if (navigator.userAgent.match(/iphone/i)) {}
+    var canvas = document.createElement("canvas");
+    var rotateshow;
+    EXIF.getData(img, function(){
+        EXIF.getAllTags(img);
+        Orientation = EXIF.getTag(img,'Orientation');
+        console.log(Orientation)
+        switch (Orientation){
+            case 6:
+                rotateshow = rotateImg(img,'left',canvas);
+                break;
+            case 8:
+                rotateshow = rotateImg(img,'right',canvas);
+                break;
+            case 3:
+                rotateImg(img,'right',canvas);
+                rotateshow = rotateImg(img,'right',canvas);
+                break;
+            default:
+                rotateshow = img.src;
+        }
+        var img2 = new Image();
+        img2.onload = function () {
+        	fun(img)
+        }
+        img2.src = rotateshow; 
+    });
+}
+
+function rotateImg(img, direction, canvas) {
+    var min_step = 0;
+    var max_step = 3;
+    //var img = document.getElementById(pid);
+    if (img == null)return;
+    //img的高度和宽度不能在img元素隐藏后获取，否则会出错
+    var height = img.height;
+    var width = img.width;
+    //var step = img.getAttribute('step');
+    var step = 2;
+    if (step == null) {
+        step = min_step;
+    }
+    if (direction == 'right') {
+        step++;
+        //旋转到原位置，即超过最大值
+        step > max_step && (step = min_step);
+    } else {
+        step--;
+        step < min_step && (step = max_step);
+    }
+    var degree = step * 90 * Math.PI / 180;
+    var ctx = canvas.getContext('2d');
+    switch (step) {
+        case 0:
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0);
+            break;
+        case 1:
+            canvas.width = height;
+            canvas.height = width;
+            ctx.rotate(degree);
+            ctx.drawImage(img, 0, -height);
+            break;
+        case 2:
+            canvas.width = width;
+            canvas.height = height;
+            ctx.rotate(degree);
+            ctx.drawImage(img, -width, -height);
+            break;
+        case 3:
+            canvas.width = height;
+            canvas.height = width;
+            ctx.rotate(degree);
+            ctx.drawImage(img, -width, 0);
+            break;
+    }
+    return canvas.toDataURL();
+} */
+</script>
+</html>

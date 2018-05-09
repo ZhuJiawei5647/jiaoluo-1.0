@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>详细信息</title>
+<script type="text/javascript" src="../js/util.js"></script>
+<link rel="stylesheet" href="../css/layui.css">
+<style type="text/css">
+body,html{
+    font-family: Verdana,"华文细黑";
+    padding: 10px;
+}
+h1{
+	font-size: 1.1rem;
+	font-weight: normal;
+}
+h2{
+	font-size: 1.1rem;
+	font-weight: normal;
+}
+input,button,textarea{
+	background: none;
+	outline: none;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+.dt-title{
+	font-size: 1.1rem;
+}
+</style>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- <a class="layui-btn layui-btn-mini dt-title-change" style="float: right; margin: 14px;" lay-event="recover">修改</a> -->
+		<blockquote class="layui-elem-quote dt-title">角落记事</blockquote>
+	</div>
+	<hr class="layui-bg-green">
+	<div class="layui-row">
+		<div class="layui-col-xs4" style="text-align: center;">
+			<i class="layui-icon" style="font-size:1.2rem">&#xe63a;</i>
+			<span class="dt-comment">5</span>
+		</div>
+		<div class="layui-col-xs4" style="text-align: center;">
+			<i class="layui-icon" style="font-size:1.2rem">&#xe6af;</i>
+			<span class="dt-favor">4</span>
+		</div>
+		<div class="layui-col-xs4" style="text-align: center;">
+			<i class="layui-icon" style="font-size:1.2rem">&#xe69c;</i>
+			<span class="dt-boring">3</span>
+		</div>
+	</div>
+	<hr class="layui-bg-green">
+		<fieldset class="layui-elem-field layui-field-title">
+		<a class="layui-btn layui-btn-mini dt-content-change" style="float: right; margin: -24px 14px 0 0" lay-event="recover">修改</a>
+		<legend>内容</legend>
+		<div class="layui-field-box">
+			<blockquote class="layui-elem-quote layui-quote-nm dt-content"></blockquote>
+		</div>
+	</fieldset>
+	<fieldset class="layui-elem-field">
+		<legend>作者</legend>
+		<div class="layui-field-box dt-author">
+		</div>
+	</fieldset>
+	<fieldset class="layui-elem-field">
+		<legend>时间</legend>
+		<div class="layui-field-box dt-time">
+		</div>
+	</fieldset>
+	<fieldset class="layui-elem-field">
+		<legend>地点</legend>
+		<div class="layui-field-box dt-corner">
+		</div>
+	</fieldset>
+	<fieldset class="layui-elem-field">
+		<legend>状态</legend>
+		<div class="layui-field-box dt-status">
+		</div>
+	</fieldset>
+	<fieldset class="layui-elem-field">
+		<legend>图片</legend>
+		<div class="layui-field-box dt-img">
+		</div>
+	</fieldset>
+
+</body>
+<script src="../js/layui.js"></script>
+<script type="text/javascript">
+var data = {"id":202,"aurthorid":15,"title":"角落记事","status":2,"placeid":186,"placelatitude":30.260374,"placelongitude":120.218475,"imageurl":"http://120.26.47.238/www/image/2017/09/27/1506483894415035.png","favor":0,"boring":0,"comments":0,"readtime":0,"artbegin":"跟风测试","created":1506483930000,"updated":1506483930000,"content":null}
+var id = util.GetQueryString('id')
+layui.use(['laydate', 'laypage', 'layer', 'table', 'element','jquery'], function(){
+	var laydate = layui.laydate //日期
+	,laypage = layui.laypage //分页
+	layer = layui.layer //弹层
+	,table = layui.table //表格
+	,element = layui.element
+	,$ = layui.$; //元素操作
+	// var index = parent.layer.getFrameIndex(window.name);
+
+	/* $('.dt-title-change').on('click', function () {
+		layer.prompt({title: '修改文章标题', formType: 3}, function(text, index){
+			parent.layer.close(index);
+		});
+	}) */
+	
+	 $.get('/article/articleInfo?articleId='+id, function (data) {
+		 var data = data.data;
+
+		$('.dt-content-change').on('click', function () {
+			layer.prompt({title: '修改文章内容',value: data.content? ReplaceAll(data.content,'$*$',"\r\n") : '', formType: 2}, function(text, index){
+				data.content = text.replace(/\r/ig,"").replace(/\n/ig,"$*$");
+				console.log(data.content);
+				$.get('/admin-manager/modify/content/article?articleid='+ id +'&content='+ data.content, function(data){
+					 var conarr = text.split('/r/n')
+					for(var i = 0; i < conarr.length; i++){
+						$('.dt-content').append($('<p>').text(conarr[i]).css('padding-bottom','10px'))
+					}
+					layer.close(index);
+				})
+			});
+		})
+		$('.dt-title').text(data.title)
+		$('.dt-author').text(data.username)
+		$('.dt-corner').text(data.conner.name)
+		$('.dt-comment').text(data.comments)
+		$('.dt-favor').text(data.favor)
+		$('.dt-boring').text(data.boring)
+		$('.dt-time').text(util.changeTime(data.created))
+		switch(data.status){
+			case 1:
+				$('.dt-status').text('草稿');
+				break;
+			case 2:
+				$('.dt-status').text('发布');
+				break;
+			case 3:
+				$('.dt-status').text('隐藏');
+				break;
+		}
+		$('.dt-img').append($('<img>').attr('src', data.imageurl).css('width', '100%'))
+		var conarr = data.content.split('$*$')
+		for(var i = 0; i < conarr.length; i++){
+			$('.dt-content').append($('<p>').text(conarr[i]).css('padding-bottom','10px'))
+		}
+	 })
+})
+
+function ReplaceAll(str, sptr, sptr1){
+    while (str.indexOf(sptr) >= 0){
+       str = str.replace(sptr, sptr1);
+    }
+    return str;
+}
+</script>
+</html>

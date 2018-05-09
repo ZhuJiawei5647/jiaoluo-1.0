@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>圈子详情</title>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/quan.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+	<style type="text/css">
+	/*圈子list*/
+	.qz-block{
+		background-color: white;
+	}
+	.qz-title{
+		line-height: 30px;
+		border-bottom: 1px solid #ddd;
+	}
+	.qz-title .qz-name{
+		margin: 0 10px;
+	}
+	.qz-title button{
+		float: right;
+		margin: 3px 10px;
+		background: green;
+		font-size: 0.9rem;
+		color: white;
+		padding: 0 10px;
+		line-height: 24px;
+		border-radius: 5px;
+	}
+	.qz-loadmore-box{
+		text-align: center;
+	}
+	.qz-loadmore{
+		display: inline-block;
+		width: 100px;
+		height: 30px;
+		line-height: 30px;
+		border: 1px solid #aaa;
+		color: #aaa;
+	}
+	</style>
+</head>
+<body>
+	<header class="qz-header"><h1>最新圈子</h1></header>
+	<ul class="qz-list">
+		<li>
+		</li>
+	</ul>
+	<div class="qz-loadmore-box"><div class="qz-loadmore">加载更多</div></div>
+</body>
+<script type="text/x-jquery-tmpl" id="qzItem">
+	{{each(i, q) qzs}}
+		{{if q.taglibid == 0}}
+		{{else}}
+		<li>
+			<div class="qz-block">
+				<div class="qz-title"><span class="qz-name">{{= q.taglib}}({{= q.userdistance}}km)</span><button onclick="join({{= q.taglibid}})">申请加入</button></div>
+				<div class="qz-user"><img src="{{= util.userHeadImage(q.author.userheadimageurl)}}"><span class="qz-username">{{= q.author.username}}</span><i class="qz-icon">圈主</i></div>
+				<div class="qz-msg"><span class="qz-msg-item">成员数：{{= q.memberscount}}</span><span class="qz-msg-item">文章数：{{= q.articlescount}}</span><span class="qz-msg-item">{{= util.changeTime(q.created)}}</span></div>
+			</div>
+		</li>
+		{{/if}}
+	{{/each}}
+</script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/corner.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+
+<script type="text/javascript">
+main();
+
+function main() {
+	init()
+}
+
+function init() {
+	Loc.getCenter(function (point) {
+		var loadarr = [
+			{
+				url: '/taglib/getNewTagList?page=1&size=5&lat='+point.lat+'&lon='+point.lng
+				,success: function (data) {
+					$('#qzItem').tmpl({qzs:data}).appendTo('.qz-list');
+				}
+			}
+		]
+		load(loadarr)
+	})
+}
+
+function load(arr) {
+	for (var i = 0; i < arr.length; i++) {
+		$(function (obj) {
+			$.get(obj.url, function (data) {
+				obj.success(data.data)
+			})
+		}(arr[i]))
+	}
+}
+
+function join(id){
+	//console.log('join')
+	 $.get('/taglib/join?taglibid='+ id, function(data){ 
+		 xny.alert({content: data.msg})
+		 if(data.status==200){
+			 $(location).attr('href', '')
+		 }
+		 
+	 }) 
+}
+</script>
+</html>

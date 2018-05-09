@@ -1,0 +1,659 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>详情</title>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getMinutes()+'">')
+	</script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+	<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=Qa49HdpGc5RW1zpUZ6CiS4tWSF5NAGCX&s=1"></script>
+	<script type="text/javascript" src="../js/corner.js"></script>
+	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript" >
+		document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getMinutes()+'"><\/script>')
+		document.write('<script type="text/javascript" src="../js/util.js?time='+(new Date()).getMinutes()+'"><\/script>')
+	</script>
+	<style type="text/css">
+	body{
+		height: 100vh;
+		background-color: #f2f2f2;
+	}
+	.xny-h2{
+		font-size: 18px;
+		line-height: 30px;
+		background-color: #fff;
+		text-indent: 10px;
+	}
+	.xny-footer{
+		height: 40px;
+	}
+	.xny-publish{
+		position: fixed;
+		left: 0px;
+		bottom: 0px;
+		width: 100%;
+		min-height: 40px;
+		line-height: 40px;
+		background-color: #e0e0e0;
+	}
+	.xny-publish .xny-input-box{
+		position: relative;
+		width: calc(100% - 80px);
+		margin: 2px 10px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		background-color: white;
+		overflow: hidden;
+	}
+	.xny-publish .xny-input-box .xny-input{
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: calc(100% + 20px);
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		/*padding: 3px 5px;*/
+		font-size: 14px;
+		line-height: 20px;
+		padding: 7px 5px;
+		padding-right: 25px;
+		vertical-align: middle;
+		white-space: wrap;
+	}
+	.xny-publish .xny-input-box .xny-input-wei{
+		margin: 0;
+		padding: 0;
+		min-height: 34px;
+		max-height: 74px;
+		box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		font-size: 14px;
+		line-height: 20px;
+		padding: 7px 5px;
+		vertical-align: middle;
+	    white-space:pre-wrap;
+	    white-space:-moz-pre-wrap;
+	    white-space:-pre-wrap;
+	    white-space:-o-pre-wrap;
+	    word-wrap:break-word;
+	    word-break: break-all;
+	    visibility: hidden;
+	}
+	/*.xny-publish .xny-input-box .xny-input-wei span{
+		display: block;
+		font-size: 14px;
+		line-height: 20px;
+	}*/
+	.xny-publish .xny-btn-box{
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		height: 34px;
+		width: 50px;
+		padding: 3px 10px;
+		line-height: 34px;
+		border-radius: 5px;
+	}
+	.xny-publish .xny-btn-box .xny-button{
+		color: #fff;
+		background-color: #34dbfe;
+	}
+
+	/* header */
+	.header{
+		overflow: hidden;
+		position: relative;
+		background: url(../images/webwxgetmsgimg.jpg); 
+		/* background-image: -moz-linear-gradient(top, #FFbbdd, #FF88aa);
+		background-image: -webkit-linear-gradient(top, #FFbbdd, #FF88aa);   */
+		background-size: 100% 100%;
+	}
+	.header .xny-item{
+		overflow: hidden;
+		position: relative;
+		background: url(../images/webwxgetmsgimg.jpg); 
+		/* background-image: -moz-linear-gradient(top, #FFbbdd, #FF88aa);
+		background-image: -webkit-linear-gradient(top, #FFbbdd, #FF88aa); */
+		background-size: 100% 100%;
+	}
+	.header .xny-user-img img{
+		background-color: white;
+	}
+	.header .xny-art{
+		height: auto;
+		border: none;
+	}
+	.header .xny-art-title{
+		color: #2650ae;
+	}
+	.header .xny-cor-content{
+		line-height: 24px;
+	}
+	.header .xny-cor-content img{
+		height: 18px;
+	}
+	.header .xny-cor-content .xny-cor-name{
+		line-height: 24px;
+	}
+	.button-box{
+		position: absolute;
+		top: 15px;
+		right: 15px;
+	}
+	.hide-box{
+		position: absolute;
+		top: 5px;
+		right: 10px;
+	}
+	.button-box button{
+		height: 40px;
+		line-height: 40px;
+		font-size : 1rem;
+		padding: 0 10px;
+	}
+
+	/* content */
+	.content {
+		margin: 10px 0;
+		padding: 0 40px;
+	}
+	.content>img{
+		width: 100%;
+	}
+	.content p{
+		margin: 10px 0;
+		text-align: left;
+		text-indent: 28px;
+		font-size: 18px;
+		line-height: 20px;
+	}
+	.xny-icon-list{
+		background-color: #fff;
+	}
+	.favor-box .xny-icon img, .like-box .xny-icon img{
+		height: 22px;
+	}
+
+	/* comment */
+	.comment{
+
+	}
+	.comment-header{
+		overflow: hidden;
+		line-height: 32px;
+		background-color: #fff;
+	}
+	.comment-header .like-box{
+		float: right;
+	}
+	.comment-header .xny-icon span{
+		margin: 0 10px;
+	}
+	.comment-title{
+		font-size: 14px;
+		line-height: 32px;
+	}
+	.comment-title img{
+		height: 16px;
+		margin: 0 12px -3px 12px;
+	}
+	.comment-title .comment-title-msg{
+		font-size: 12px;
+		color: #4c4c4c;
+	}
+	.comment-title .comment-title-msg i{
+		font-style: normal;
+	}
+	/* comment-item */
+	.comment-item{
+		padding-bottom: 10px;
+	}
+	.comment-item .xny-user-img{
+		padding: 11px;
+	}
+	.comment-item .xny-user-img img{
+		width: 40px;
+		height: 40px;
+	}
+	.comment-item .xny-art{
+		border:none;
+		height: auto;
+		padding-right: 2px;
+		line-height: 36px;
+	}
+	.comment-item .xny-art .xny-art-title{
+		color: #2650ae;
+	}
+	.comment-item .zan-box .xny-icon{
+		float: right;
+	}
+	.comment-item .zan-box .xny-icon span{
+		margin-right: 5px;
+	}
+	.comment-item .zan-box .xny-icon img{
+		height: 14px;
+		margin-top: -5px;
+	}
+	.comment-item .xny-art-title{
+		font-size: 14px;
+		line-height: 36px;
+	}
+	.comment-item .xny-comment{
+
+	}
+	.comment-item .xny-comment .xny-comment-content{
+		font-size: 14px;
+		line-height: 18px;
+	}
+	.comment-item .xny-reply{
+		margin-top: 10px;
+		width: 200px;
+		padding: 5px 14px;
+		background-color: #f6e4e5;
+	}
+	.comment-item .xny-reply li{
+		font-size: 14px;
+		line-height: 20px;
+	}
+	.comment-item .xny-reply .xny-reply-username{
+		color: #2650ae;
+	}
+	.more{
+		text-align: center;
+		line-height: 40px;
+		font-size: 14px;
+	}
+	.zhan{
+		text-align: center;
+		background-color: #fff;
+	}
+	.zhan span{
+		font-size: 16px;
+		display: inline-block;
+		line-height: 30px;
+	}
+	</style>
+</head>
+<body>
+	<section class="xny-body">
+		<header class="header">
+			<div class="xny-item">
+				<div class="xny-user-img">
+					<img src="../images/userhead.png">
+				</div>
+				<div class="xny-item-body">
+					<div class="xny-art">
+						<span class="xny-art-title"></span>
+					</div>
+					<div class="">
+						<div class="xny-cor-content">
+							<img src="../images/dizhi.png"><span class="xny-cor-name"></span><span class="xny-cor-address"></span>
+						</div>
+						<div class="xny-msg"><span class="xny-msg-item time"></span><span class="xny-msg-item distance"></span></div>
+					</div>
+				</div>
+				<div class="button-box"><button></button></div>
+				<div class="hide-box"></div>
+			</div>
+		</header>
+		<section class="content"></section>
+		<div class="zhan"></div>
+		<ul class="xny-icon-list">
+			<li class="favor-box">
+				<div class="xny-icon">
+					<img src="../images/foot.png">
+					<span class="cainum"></span>
+				</div>
+			</li>
+			<li class="like-box"></li>
+		</ul>
+		<section class="comment" id="comment">
+			<header class="comment-header">
+				<h2 class="comment-title">
+					<img src="../images/pinglun2.png">最新评论(<span class="comnum"></span>条)
+				</h2>
+			</header>
+			<ul class="comment-list"></ul>
+			<div class="more-box"></div>
+		</section>
+	</section>
+	<footer class="xny-footer">
+	</footer>
+</body>
+<script type="text/x-jquery-tmpl" id="content">
+	{{if util.articleImage(imgurl)}}
+		<img src="{{= imgurl}}">
+	{{/if}}
+	{{each(i,p) pgs}}
+		<p>{{= p}}</p>
+	{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="comments">
+{{each(i,comment) comments}}
+	<li>
+		<div class="xny-item comment-item">
+			<div class="xny-user-img">
+				<img src="{{= util.userHeadImage(comment.user.userheadimageurl)}}">
+			</div>
+			<div class="xny-item-body">
+				<div class="xny-art">
+					<div class="zan-box">{{html xny.createZan(comment).prop('outerHTML')}}</div>
+					<span class="xny-art-title">{{= comment.user.username}}</span>
+				</div>
+				<div class="xny-comment" data-id="{{= comment.commentid}}" data-num="{{= comment.commentAns.length}}" onclick="ansInit(this)">
+					<p class="xny-comment-content">{{= comment.content}}</p>
+					<div class="xny-msg">
+						<div class="xny-msg-item">回复{{= comment.commentAns.length}}</div>
+						<div class="xny-msg-item" style="float: right;">{{= util.changeTime(comment.created)}}</div>
+					</div>
+					{{if comment.commentAns && comment.commentAns.length > 0}}
+						<ul class="xny-reply">
+							{{each(i,reply) comment.commentAns.slice(0, 3)}}
+								<li><span class="xny-reply-username">{{= reply.forUser.username}}:</span>{{= reply.anscomment}}</li>
+							{{/each}}
+							{{if comment.commentAns.length > 3}}
+								<li>查看更多回复</li>
+							{{/if}}
+						</ul>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</li>
+{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="ans">
+{{each(i,ans) anss}}
+	<li>
+		<div class="xny-item comment-item">
+			<div class="xny-user-img">
+				<img src="{{= util.userHeadImage(ans.forUser.userheadimageurl)}}">
+			</div>
+			<div class="xny-item-body">
+				<div class="xny-art">
+					<span class="xny-art-title">{{= ans.forUser.username}}</span>
+				</div>
+				<div class="xny-comment">
+					<p class="xny-comment-content">{{= ans.anscomment}}</p>
+					<div class="xny-msg">
+						<div class="xny-msg-item">{{= util.changeTime(ans.created)}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</li>
+{{/each}}
+</script>
+<script type="text/x-jquery-tmpl" id="anspage">
+	<section class="xny-body">
+		<div class="anstop">{{html com}}</div>
+		<h2 class="xny-h2">回复</h2>
+		<ul class="ans-list"></ul>
+		<div class="ans-more-box"></div>
+	</section>
+	<footer class="xny-footer">
+	</footer>
+</script>
+<script type="text/javascript">
+function share(article){
+	console.log($(location).attr('href'))
+	var href = $(location).attr('href')
+		$.get('/page/ticket?url='+href,function(data){
+			console.log(data)
+			if(data.status == 200){
+				wx.config({
+				    debug: false, //调试阶段建议开启
+				    appId: data.data.appid,//APPID
+				    timestamp: data.data.timestamp,//上面main方法中拿到的时间戳timestamp
+				    nonceStr: data.data.nonceStr,//上面main方法中拿到的随机数nonceStr
+				    signature: data.data.signature,//上面main方法中拿到的签名signature
+				    jsApiList: [
+				           //所有要调用的 API 都要加到这个列表中
+				          "onMenuShareTimeline",//分享朋友圈接口
+	                    "onMenuShareAppMessage",//分享给朋友接口
+				          "onMenuShareQQ",
+				          "onMenuShareWeibo"
+				    ]
+				});
+			}
+		})
+		var imgUrl = article.imgurl? article.imgurl : article.author.userheadimageurl; 
+		var lineLink = location.href; 
+		var descContent = article.title;
+		var shareTitle =  article.author.username+':'+article.artbegin; 
+		var appid = 'wx1c87df25d29ed27b'; 
+		//alert(imgUrl+":"+lineLink+":"+descContent+":"+shareTitle)
+		$('.button-box button').on('click', shareFriend)
+				
+		function shareFriend() { 
+		WeixinJSBridge.invoke('sendAppMessage',{ 
+		"appid": appid, 
+		"img_url": imgUrl, 
+		"img_width": "640", 
+		"img_height": "640", 
+		"link": lineLink, 
+		"desc": shareTitle, 
+		"title": descContent 
+		}, function(res) { 
+		_report('send_msg', res.err_msg); 
+		}) 
+		} 
+		function shareTimeline() { 
+		WeixinJSBridge.invoke('shareTimeline',{ 
+		"img_url": imgUrl, 
+		"img_width": "640", 
+		"img_height": "640", 
+		"link": lineLink, 
+		"desc": shareTitle, 
+		"title": descContent 
+		}, function(res) { 
+		_report('timeline', res.err_msg); 
+		}); 
+		} 
+		function shareWeibo() { 
+		WeixinJSBridge.invoke('shareWeibo',{ 
+		"content": descContent, 
+		"url": lineLink, 
+		}, function(res) { 
+		_report('weibo', res.err_msg); 
+		}); 
+		} 
+		// 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。 
+		document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() { 
+		 
+		// 发送给好友 
+		WeixinJSBridge.on('menu:share:appmessage', function(argv){ 
+		shareFriend(); 
+		}); 
+		 
+		// 分享到朋友圈 
+		WeixinJSBridge.on('menu:share:timeline', function(argv){ 
+		shareTimeline(); 
+		}); 
+		 
+		// 分享到微博 
+		WeixinJSBridge.on('menu:share:weibo', function(argv){ 
+		shareWeibo(); 
+		}); 
+		}, false); 
+}
+	
+</script>
+<script type="text/javascript">
+var id = util.GetQueryString('id')
+	,size = 10
+	,apage = 1
+	,xny = new XNY()
+	// ,detail = {"status":200,"msg":"OK","data":{"articleid":199,"cornerid":213,"userid":116,"title":"万古长空","imageurl":"http://120.26.47.238/www/image/2017/09/28/1506557566378467.png","status":2,"favor":1,"boring":0,"comments":4,"readtime":113,"artbegin":"空山无人 水流花开$*$万古长空 一朝风月","created":1506557625000,"updated":1509521777000,"content":"空山无人 水流花开$*$万古长空 一朝风月","likeArticle":false,"ulikeArticle":false,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":true},"corner":{"cornerid":213,"userid":116,"name":"一朝风月","placename":"沿江景观10号桥","placeaddress":"浙江省杭州市江干区","placelatitude":30.269974,"placelongitude":120.357649,"placecity":"杭州市","befavor":0,"pass":0,"dashang":0,"created":1506557625000,"updated":1506557625000,"sort":0,"distance":0.0,"likeCorner":false,"count":0,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}},"comment":[{"commentid":809,"content":"ok","created":1508914587000,"commenttimes":0,"zannumber":1,"userid":116,"articleid":199,"user":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"commentAns":[]},{"commentid":796,"content":"拼","created":1508726479000,"commenttimes":0,"zannumber":0,"userid":116,"articleid":199,"user":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"commentAns":[]},{"commentid":795,"content":"评论条数","created":1508726437000,"commenttimes":0,"zannumber":0,"userid":116,"articleid":199,"user":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"commentAns":[]},{"commentid":794,"content":"评论","created":1508726317000,"commenttimes":5,"zannumber":1,"userid":116,"articleid":199,"user":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"commentAns":[{"ansid":114,"commentid":794,"foruserid":51,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"dsfa","type":1,"created":1508911786000,"toUser":null,"forUser":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":false,"created":1500941900000,"ofSelf":false,"likeAuthor":false}},{"ansid":113,"commentid":794,"foruserid":51,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"he","type":1,"created":1508911513000,"toUser":null,"forUser":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":false,"created":1500941900000,"ofSelf":false,"likeAuthor":false}},{"ansid":110,"commentid":794,"foruserid":116,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"拼","type":1,"created":1508726490000,"toUser":null,"forUser":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}},{"ansid":109,"commentid":794,"foruserid":116,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"回复","type":1,"created":1508726461000,"toUser":null,"forUser":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}},{"ansid":108,"commentid":794,"foruserid":116,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"还ok","type":1,"created":1508726369000,"toUser":null,"forUser":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}}]}],"taglib":"夜跑"}}
+	// ,ansdetail = {"status":200,"msg":"OK","data":{"ans":[{"ansid":114,"commentid":794,"foruserid":51,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"dsfa","type":1,"created":1508911786000,"toUser":null,"forUser":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":false,"created":1500941900000,"ofSelf":false,"likeAuthor":false}},{"ansid":113,"commentid":794,"foruserid":51,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"he","type":1,"created":1508911513000,"toUser":null,"forUser":{"userid":51,"username":"Eson","userheadimageurl":null,"sex":false,"created":1500941900000,"ofSelf":false,"likeAuthor":false}},{"ansid":110,"commentid":794,"foruserid":116,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"拼","type":1,"created":1508726490000,"toUser":null,"forUser":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}},{"ansid":109,"commentid":794,"foruserid":116,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"回复","type":1,"created":1508726461000,"toUser":null,"forUser":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}},{"ansid":108,"commentid":794,"foruserid":116,"touserid":1,"commenttimes":0,"zannumber":0,"anscomment":"还ok","type":1,"created":1508726369000,"toUser":null,"forUser":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false}}],"commentid":794,"content":"评论","created":1508726317000,"author":{"userid":116,"username":"doctor-yang杨","userheadimageurl":"http://120.26.47.238/www/image/2017/09/15/1505477644589248","sex":false,"created":1502637637000,"ofSelf":false,"likeAuthor":false},"articleid":199,"articletitle":"万古长空"}}
+
+xny.createBall();
+
+$(function () {
+	$('.xny-footer').append(xny.createPublish())
+	load('/article/inter/articleInfo?articleid=' + id,function (data) {
+		// var data = detail;
+		if(data.status == 201){
+			util.href('/page/gotoIndex?state=detail?id='+ id)
+			return;
+		}
+		articleInit(data.data)
+		commentInit(data.data.comment)
+	})
+})
+
+function articleInit(article){
+	share(article); 
+	$(document).attr('title', article.title);
+	var $header = $('.header')
+	$header.find('.xny-user-img img').attr('src', util.userHeadImage(article.author.userheadimageurl))
+	$header.find('.xny-user-img').on('click',function () {
+		util.href('author?authorid=' + article.author.userid)
+	})
+	$header.find('.xny-art-title').text( article.author.username)
+	$header.find('.xny-cor-name').text(article.corner.name)
+	$header.find('.xny-cor-address').text(article.corner.placeaddress)
+	$header.find('.xny-cor-content').on('click', function () {
+		util.href('cornermap?cornerid=' + article.corner.cornerid)
+	})
+	$header.find('.time').text(util.getFullDate(article.created))
+	$('#content').tmpl({imgurl:article.imageurl,pgs:article.content.split('$*$')}).appendTo('.content')
+	/* $('.guanzhu-box').append(xny.createGuanzhu(article)) */
+	$('.hide-box').append(xny.createHide(article))
+	$('.like-box').append(xny.createLike(article))
+	$('.cainum').text(article.corner.pass)
+	/* if(document.referrer.match(/map/i)){
+		$('.favor-box').append(xny.createFavor(article.corner))
+		Loc.getCenter(function(point){
+			$.get('/record/corner/zhan?lat='+point.lat+'&lng='+point.lng+'&cornerid='+article.corner.cornerid,function (data) {
+				if(data.data.iszhan){
+					$header.find('.distance').text(data.data.distance+ 'km')
+				}else{
+					$('.favor-box').append(xny.createFavor(article.corner))
+					if(data.data.canzhan){
+					}else{
+						
+						$('.favor-box').append($('<div class="xny-icon"><img src="../images/zhannot.png"><span>'+ article.corner.befavor +'</span></div>'))
+					}
+				}
+			})
+		}) 
+		if(!article.corner.likeCorner) $('.zhan').append('<div style="padding: 10px 0"><span>这里风景独好，我占了</span><br><img src="../images/liwu.png" style="height: 40px"/></div>').on('click', function(){
+			$('.favor-box .xny-icon').click();
+		})
+	}else {
+		$('.favor-box').append($('<div class="xny-icon"><img src="../images/zhannot.png"><span>'+ article.corner.befavor +'</span></div>'))
+	} */
+	$('.zhan').append('<div style="padding: 10px 0"><span>探索角落的秘密</span><br><img src="../images/evlop.png" style="height: 40px"/></div>').on('click', function(){
+		Loc.getCenter(function(point){
+			$.get('/action/conner/pass?cornerid='+ article.corner.cornerid +'&lat=' + point.lat + '&lng=' + point.lng, function(data){
+				// var data = {status: 201, msg:'', data: null}
+				if (!data.data) data.data = {}
+				xny.createCai(data, {
+					id: article.corner.cornerid,
+					name: article.corner.name
+				})
+			})
+		})
+		/* $('.favor-box .xny-icon').click(); */
+	})
+	$('.comnum').text(article.comments)
+}
+
+function commentInit(comments) {
+	var more = xny.createMore('.more-box',{
+		url: '/record/article/comment'
+		,page: 1
+		,size: 10
+		,where: {articleid: id}
+		,text1: '加载更多'
+		,text2: '没有更多评论了'
+		,list: 'data'
+		,done: function (data) {
+			console.log(data)
+			var comments = data.data;
+			$('#comments').tmpl({comments: comments}).appendTo('.comment-list')
+		}
+	})
+	$('.xny-publish .xny-button').eq(0).on('click',function (event) {
+		event.preventDefault()
+		var val = $(this).parents('.xny-publish').eq(0).find('.xny-input').val()
+			,self = this;
+		console.log(val)
+		$.get('/action/article/comment?articleid=' + id + '&commentcontent=' + val, function (data) {
+			$(self).parents('.xny-publish').eq(0).find('.xny-input').val('')
+			more.reflash(function () {
+				$('.comment-list').html('')
+			})
+		})
+	})
+	xny.data.commore = more;
+}
+
+function ansInit(sel) {
+	var id = $(sel).data('id')
+		,num = $(sel).data('num')
+		,$com = $(sel).parents('.comment-item').clone()
+		,page = xny.createPage({
+			type: 1
+			,title: num + '条回复'
+		},function (body) {
+			console.log(num)
+			$com.find('.xny-comment').attr('onclick','');
+			$com.find('.xny-reply').remove();
+			$(body).append($('#anspage').tmpl({com:$com.get(0).outerHTML, id:id}))
+			var more = xny.createMore('.ans-more-box',{
+				url: '/record/comment/ans'
+				,page: 1
+				,size: 10
+				,where: {commentid: id}
+				,text1: '加载更多'
+				,text2: '没有更多评论了'
+				,list: 'data.ans'
+				,done: function (data) {
+					$(body).find('.ans-list').append($('#ans').tmpl({anss:data.data.ans}))
+				}
+			})
+			$(body).find('.xny-footer').append(xny.createPublish())
+			$(body).find('.xny-publish .xny-button').eq(0).on('click',function () {
+				var val = $(this).parents('.xny-publish').eq(0).find('.xny-input').val()
+					,self = this;
+				console.log(val)
+				$.get('/action/comment/ans?commentid=' + id + '&touserid=1&anscontent=' + val + '&type=1',function (data) {
+					$(self).parents('.xny-publish').eq(0).find('.xny-input').val('')
+					more.reflash(function(){
+						$('.ans-list').html('')
+					})
+					xny.data.commore.reflash(function(){
+						$('.comment-list').html('')
+					})
+				})
+			})
+		})
+}
+
+function load(a, b) {
+	if (typeof a === 'string') {
+		getData(a, b)
+	}else{
+		for (var i = 0; i < a.length; i++) {
+			var obj = a[i]
+			getData(obj.url, obj.success)
+		}
+	}
+
+	function getData(url, success) {
+		$.get(url, function (data) {
+			// var data = 0;
+			success(data)
+		})
+	}
+}
+</script>
+</html>
