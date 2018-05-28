@@ -64,8 +64,8 @@
 			position: relative;
 			margin: 10px;
 			height: 140px;
-			background: url(../images/camera.png) center center no-repeat;
-			background-size: 60px 50px;
+			background: url(../images/picture.png) center center no-repeat;
+			background-size: 60px;
 			background-color: #fff;
 			box-sizing: border-box;
 			border: 2px solid #2da297;
@@ -98,9 +98,16 @@
 			float: left;
 			width: 50%;
 			height: 50px;
-			background-position: center center;
-			background-repeat: no-repeat;
-			background-size: 95px 50px;
+		}
+
+		.button-list li button {
+			display: block;
+			height: 30px;
+			margin: 10px auto;
+			padding: 0 10px;
+			border-radius: 15px;
+			color: #fff;
+			background-color: #029688; 
 		}
 
 		.article-box{
@@ -168,8 +175,12 @@
 				</div>
 			</div> -->
 			<ul class="button-list">
-				<li class="save" style="background-image: url(../images/cai_btn1.png);"></li>
-				<li class="send" style="background-image: url(../images/cai_btn2.png);"></li>
+				<li class="save">
+					<button>把信留在角落</button>
+				</li>
+				<li class="send">
+					<button>寄出真实的信</button>
+				</li>
 			</ul>
 		</form>
 	</div>
@@ -181,12 +192,14 @@
 <script type="text/javascript">
 	var xny =new XNY(),
 		form = new Form(),
-		cornerid = util.GetQueryString('cornerid')
+		cornerid = util.GetQueryString('cornerid'),
+		url = util.GetQueryString('url')
 	// $.get('', function (data) {
 	// 	arr.forEach(function (name) {
 	// 		$('.article-box').append($('<span>').text(name[0] + '*'))
 	// 	})
 	// })
+	// xny.lazyLoadInit();
 	$('.imagefile').on('change', function (event) {
 		util.previewJcropImage(xny, this, 1.5, function (data, base64) {
 			console.log("上传成功")
@@ -207,9 +220,11 @@
 
 	form.submit('.send', function (data) {
 		if (data.secretdec && data.secretimg) {
-			$(location).attr("href", "order?cornerid=" + cornerid + "&secretdec=" + data.secretdec + "&secretimg=" + data.secretimg)
+			$(location).attr("href", "order?cornerid=" + cornerid + "&secretdec=" + data.secretdec + "&secretimg=" + data.secretimg + "&url=" + url)
 		}else {
-			xny.alert({content:'图片和地址不能为空'})
+			setTimeout(function () {
+				xny.alert({content:'图片和地址不能为空'})
+			}, 50)
 		}
 	})
 </script>

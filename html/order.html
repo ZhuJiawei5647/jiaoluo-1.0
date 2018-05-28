@@ -83,7 +83,7 @@
 		.goods{
 			position: relative;
 			margin: 10px 0;
-			padding: 48px 0;
+			padding: 48px 0 20px;
 			overflow: hidden;
 			background-color: #fff;
 		}
@@ -137,6 +137,42 @@
 			height: 80px;
 			height: 80px;
 		}
+
+		.goods-item-box {
+			overflow: hidden;
+		}
+		.goods-item {
+			padding: 5px 20px;
+			overflow: hidden;
+		}
+		.goods-item-title {
+			padding-left: 10px;
+			margin-bottom: 5px;
+			border-bottom: 1px solid #ccc;
+			font-size: 16px;
+			font-weight: normal;
+			line-height: 30px;
+		}
+		.goods-pros {
+			float: right;
+			width: 120px;
+		}
+		.goods-pro-item{
+			position: relative;
+			font-size: 14px;
+			line-height: 20px;
+			color: #666;
+		}
+		.goods-pro-item-left {
+			padding-right: 60px;
+		}
+		.goods-pro-item-right {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 60px;
+		}
+
 		.order-item {
 			position: relative;
 			height: 50px;
@@ -249,7 +285,7 @@
 			}
 		}
 
-		.select {
+		/*.select {
 			position: relative;
 			display: block;
 			width: 120px;
@@ -277,9 +313,29 @@
 			background: url(../images/slide_down.png) center center no-repeat;
 			background-size: 15px 10px;
 			background-color: #35dbfe;
-		}
+		}*/
 
 		.order-item-content .switch, .order-item-content .select {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+		}
+
+		.type-checked {
+			display: block;
+			width: 100px;
+			height: 34px;
+			background-color: #fff;
+			border-radius: 5px;
+			overflow: hidden;
+			text-align: center;
+			line-height: 34px;
+			color: #35dbfe;
+			border:1px solid #35dbfe;
+		}
+
+		.order-item-content .switch, .order-item-content .type-checked {
 			position: absolute;
 			top: 50%;
 			right: 0;
@@ -329,12 +385,15 @@
 			border-radius: 22px;
 		}
 		.address-list li {
-			overflow: hidden;
 			margin: 10px 0;
+		}
+
+		.address-item {
+			overflow: hidden;
 			padding: 10px 20px;
 			background-color: #fff;
 		}
-		.address-list li .address-user{
+		.address-item .address-user{
 			float: left;
 			width: 80px;
 			text-align: center;
@@ -343,8 +402,155 @@
 			font-weight: bolder;
 			color: #e03636;
 		}
-		.address-list li p {
+		.address-item p {
 			padding-left: 100px;
+		}
+
+
+		.goods-list li{
+			background-color: #fff;
+			margin-bottom: 5px;
+			overflow: hidden;
+		}
+
+		.goods-list li .goods-img-box {
+			float: left;
+			width: 120px;
+		}
+		.goods-list li .goods-img-box img {
+			width: 100px;
+			margin: 10px;
+		}
+		.goods-list li .goods-list-item-content {
+			margin-left: 120px;
+		}
+		.goods-list-item-content h3 {
+			font-size: 16px;
+			line-height: 30px;
+			font-weight: normal;
+		}
+		.goods-list-item-content p {
+			font-size: 15px;
+			padding: 0 10px 4px;
+			color: orange;
+		}
+		.goods-list-item-content .goods-list-item-pros {
+			padding-bottom: 10px;
+		}
+		.goods-list-item-content .goods-list-item-pros span {
+			display: block;
+			color: #666;
+			padding-left: 5px;
+			font-size: 14px;
+		}
+
+		.cai-page {
+			width: 100%;
+			height: 100%;
+			background: url(../images/bj-gezi.png) top left repeat;
+			background-size: 90%;
+			overflow: hidden;
+		}
+		.box {
+			width: 80%;
+			max-width: 300px;
+			margin: 60px auto 0;
+			padding: 30px 0;
+			background-color: #fff;
+			border-radius: 5px;
+		}
+
+		.textarea-box textarea{
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 100%;
+			height: 100px;
+			padding: 0 30px;
+			font-size: 17px;
+			line-height: 26px;
+			background-color: #fff;
+		}
+
+		.img-box{
+			position: relative;
+			margin: 10px;
+			height: 140px;
+			background: url(../images/picture.png) center center no-repeat;
+			background-size: 60px;
+			background-color: #fff;
+			box-sizing: border-box;
+			border: 2px solid #2da297;
+		}
+
+		.img-box .img-container{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.img-box .img-container img{
+			width: 100%;
+		}
+
+		.img-box .icon {
+			position: absolute; 
+			top:-10px; 
+			left: -2px; 
+			width: 87px; 
+			height: 46px; 
+			background: url(../images/ltsanjiao.png) 0 0 no-repeat; 
+			background-size: 100% 100%;
+		}
+
+		.button-list {
+			overflow: hidden;
+		}
+
+		.button-list li {
+			float: left;
+			width: 50%;
+			height: 50px;
+		}
+
+		.button-list li button {
+			display: block;
+			height: 30px;
+			min-width: 80px;
+			margin: 10px auto;
+			padding: 0 10px;
+			border-radius: 15px;
+			color: #fff;
+			background-color: #029688; 
+		}
+
+		.article-box{
+			margin: 20px 40px;
+			text-align: center;
+		}
+
+		.article-box span{
+			display: inline-block;
+			padding: 0 10px;
+			font-size: 18px;
+			line-height: 20px;
+		}
+
+		.btn-container{
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+		}
+		.btn-container .xny-btn-box{
+			line-height: 40px;
+			width: 100%;
+			height: 40px;
+		}
+		.btn-container .xny-btn-box .xny-button{
+			border-radius: 0;
+			color: #333;
+			background: url(../images/cai2_fabu.png) 0 0 no-repeat;
+			background-size: 100% 100%;
 		}
 	</style>
 </head>
@@ -354,6 +560,13 @@
 			<i></i>
 			<span>新增收货地址</span>
 		</button>
+		<div class="address-box" style="display: none;">
+			<div class="address-item">
+				<div class="address-user"></div>
+				<p class="address-receiveregion"></p>
+				<p class="address-receiveaddress"></p>
+			</div>
+		</div>
 		<!-- <i class="address-left"></i>
 		<p class="address-center address-content">新增收货地址新增收货地址新增收货地址新增收货地址新增收货地址</p>
 		<i class="address-right"></i> -->
@@ -365,17 +578,20 @@
 		<div class="goods-content">
 			<img src="../images/webwxgetmsgimg.png">
 		</div>
-		<div class="order-item" style="margin-bottom: 20px;">
+		<div class="order-item">
 			<label class="order-item-title">类型</label>
 			<div class="order-item-content">
-				<span class="select">
+				<span class="type-checked">选择类型</span>
+				<!-- <span class="select">
 					<span>选择尺寸</span>
 					<i></i>
-				</span>
+				</span> -->
 			</div>
 		</div>
+		<div class="goods-item-box">
+		</div>
 		<footer>
-			<span>合计：<i>28.80</i></span>
+			<!-- <span>合计：<i>28.80</i></span> -->
 		</footer>
 	</div>
 	<div class="order-item" style="background-color: #fff">
@@ -385,7 +601,7 @@
 			</div>
 	</div>
 	<div class="order-item" style="background-color: #fff">
-			<label class="order-item-title">短信通知收件人</label>
+			<label class="order-item-title" style="width: 120px;">短信通知收件人</label>
 			<div class="order-item-content">
 				<span class="switch right">
 					<i class="switch-ball"></i>
@@ -395,7 +611,7 @@
 	<footer style="height: 60px;">
 		<div class="order-bottom">
 			<button class="ordersubmit">提交订单</button>
-			<p>合计：&nbsp;<span>￥&nbsp;<i>28.00</i></span></p>
+			<p>合计：&nbsp;<span>￥&nbsp;<i>0.00</i></span></p>
 		</div>
 	</footer>
 </body>
@@ -403,7 +619,7 @@
 	<div class="address-checked-page">
 		<ul class="address-list">
 			{{each(index, item) data}}
-			<li data-id="{{= item.id }}">
+			<li data-id="{{= item.id }}" class="address-item">
 				<div class="address-user">{{= item.receiveusername }}</div>
 				<p class="address-receiveregion">{{= item.receiveregion }}</p>
 				<p class="address-receiveaddress">{{= item.receiveaddress }}</p>
@@ -413,18 +629,72 @@
 		<button class="address-add">新建地址</button>
 	</div>
 </script>
-<script type="text/x-jquery-tmpl" id="evloplist">
-	<div class="evlop-checked-page">
-		<ul class="evlop-list">
+<script	type="text/x-jquery-tmpl" id="cai">
+	<div class="cai-page">
+		<div class="box">
+			<div class="textarea-box">
+				<textarea id="content" name="secretdec" placeholder="秘密">{{= content }}</textarea>
+			</div>
+			<div class="img-box">
+				<input type="text" id="imageurl" name="secretimg" style="display: none;">
+				<input type="file" class="imagefile" style="display: none;" id="previewImg">
+				<div class="icon"></div>
+				<div class="img-container" onclick="$('#previewImg').click();">
+					<img id="imghead" src="{{= imageurl }}">
+				</div>
+			</div>
+			<ul class="button-list">
+				<li class="confirm">
+					<button>修改</button>
+				</li>
+				<li class="cancel">
+					<button>取消</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+</script>
+<script	type="text/x-jquery-tmpl" id="goodsItem">
+	<div class="goods-item">
+		<h3 class="goods-item-title">{{= title }}</h3>
+		<div class="goods-pros">
+			<p class="goods-pro-item">
+				<span class="goods-pro-item-left">尺寸</span>
+				<span class="goods-pro-item-right">{{= size }}</span>
+			</p>
+			<p class="goods-pro-item">
+				<span class="goods-pro-item-left">金额</span>
+				<span class="goods-pro-item-right">￥{{= (price/100).toFixed(2) }}</span>
+			</p>
+		</div>
+	</div>
+</script>
+<script type="text/x-jquery-tmpl" id="goodsList">
+	<div class="goods-checked-page">
+		<ul class="goods-list">
 			{{each(index, item) data}}
-			<li data-id="{{= item.id }}">
+			<li data-title="{{= item.title}}" data-size="{{= item.vsize}}" data-price="{{= item.price}}" data-id="{{= item.id}}">
+				<div class="goods-img-box">
+					<img src="{{= item.image}}">
+				</div>
+				<div class="goods-list-item-content">
+					<h3>{{= item.title }}</h3>
+					<p>{{= item.sellPoint}}</p>
+					<div class="goods-list-item-pros">
+						<span>库存：{{=  item.num }}</span>
+						<span>尺寸：{{=  item.vsize }}</span>
+						<span>金额：{{=  '￥' + (item.price/100).toFixed(2) }}</span>
+					</div>
+				</div>
 			</li>
 			{{/each}}
 		</ul>
 	</div>
 </script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/exif.js"></script>
 <script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
 <script type="text/javascript" src="../js/xny_form.js"></script>
 <script type="text/javascript" src="../js/util.js"></script>
 <script type="text/javascript" >
@@ -434,55 +704,121 @@
 	var xny = new XNY();
 	$(document).ready(function () {
 		var opt = {
-			"sendaddress":1,
-			"cornerid":util.GetQueryString('cornerid'),
-			"imageurl":decodeURIComponent(util.GetQueryString('secretimg')),
-			"paymoney":2800,
-			"vsize":"A4",
-			"content": util.GetQueryString('secretdec')
+				"sendaddress":1,
+				"cornerid":util.GetQueryString('cornerid'),
+				"imageurl":decodeURIComponent(util.GetQueryString('secretimg')),
+				"paymoney":2800,
+				"vsize":"A4",
+				"content": decodeURI(util.GetQueryString('secretdec'))
+			},
+			url = util.GetQueryString('url'),
+			orderaddresss = sessionStorage.getItems('orderaddresss');
+
+		if (orderaddresss) {
+			var address = JSON.parse(orderaddresss)
+			$('.address-box').find('.address-user').text(address.receiveusername).next('p').text(address.receiveregion).next('p').text(address.receiveaddress)
+			$('.address-button').hide();
+			$('.address-box').show();
+			opt.sendaddress = address.id;
 		}
-		$('.address-button').on('click', function () {
+		
+		$('.address').on('click', function () {
 			xny.createPage({
 				title: '选择地址'
 			}, function (page, self) {
 				$(page).css({
 					'background-color': '#f2f2f2'
 				})
-				$(page).find('.address-add').on('click', function () {
-					$(location).attr('href', 'orderaddress')
-				})
 				$.get('/letteraddress/get/address', function (data) {
 					$(page).append($('#addresslist').tmpl(data))
 					$(page).find('.address-list').on('click', function (e) {
 						var $li = $(e.target).parent('li');
 						if ($li.data('id')) {
+							$('.address-box').find('.address-user').text($li.find('.address-user').text()).next('p').text($li.find('p').eq(0).text()).next('p').text($li.find('p').eq(1).text())
+							$('.address-button').hide();
+							$('.address-box').show();
 							opt.sendaddress = $li.data('id')
 							self.close();
 						}
 					})
 					$(page).find('.address-add').on('click', function () {
-						$(location).attr('href', 'orderaddress')
+						$(location).attr('href', 'orderaddress?url=' + encodeURIComponent(location.href))
 					})
 				})
 			})
-			
 		})
-		$('.select').on('touchend', function () {
-			xny.createSelector({
-				title: '类型',
-				list: [{
-					value: 'A4',
-					text: 'A4'
-				}],
-				checkedValue: opt.vsize
-			}, function (value, text) {
-				console.log(value)
-				if (value) {
-					$('.select span').text(text);
-					opt.vsize = value;
-				}
+		$('.goods-content').on('click', function () {
+			xny.createPage({
+				title: ''
+			}, function (page, self) {
+				var content = opt.content, imageurl = imageurl;
+				$(page).append($('#cai').tmpl(opt))
+				$(page).find('#content').on('input', function (e) {
+					content = $(this).val()
+					console.log($(this).val())
+				})
+				$(page).find('.imagefile').on('change', function (event) {
+					util.previewJcropImage(xny, this, 1.5, function (data, base64) {
+						console.log("上传成功")
+						var obj = JSON.parse(data)
+						console.log(obj)
+						$('#imghead').attr('src', base64)
+						imageurl = obj.url
+					})
+				})
+				$(page).find('.confirm').on('click', function () {
+					opt.content = content;
+					opt.imageurl = imageurl;
+					self.close()
+				})
+				$(page).find('.cancel').on('click', function () {
+					self.close()
+				})
 			})
 		})
+		$('.type-checked').on('click', function () {
+			xny.createPage({
+				title: ''
+			}, function (page, self) {
+				$(page).css({
+					'background-color': '#f2f2f2'
+				})
+				// $.get('', function (data) {
+					var data = {"status":200,"msg":"OK","data":[{
+						"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2800,
+						"num":9999,"barcode":null,
+						"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,
+						"vsize":"A4","created":1526266309000,
+						"updated":1526266312000}]}
+					$(page).append($('#goodsList').tmpl(data))
+					$(page).find('.goods-list').on('click', function (e) {
+						var $li = $(e.target).parents('li');
+						if ($li.data('id')) {
+							$('.goods-item-box').html($('#goodsItem').tmpl($li.data()))
+							$('.order-bottom p span i').text(($li.data('price') / 100).toFixed(2))
+							opt.evlopid = $li.data('id')
+							self.close()
+						}
+					})
+				// })
+			})
+		})
+		// $('.select').on('touchend', function () {
+		// 	xny.createSelector({
+		// 		title: '类型',
+		// 		list: [{
+		// 			value: 'A4',
+		// 			text: 'A4'
+		// 		}],
+		// 		checkedValue: opt.vsize
+		// 	}, function (value, text) {
+		// 		console.log(value)
+		// 		if (value) {
+		// 			$('.select span').text(text);
+		// 			opt.vsize = value;
+		// 		}
+		// 	})
+		// })
 		$('.switch').on('click', function () {
 			if ($(this).hasClass('right')) {
 				$(this).removeClass('right')
@@ -493,8 +829,9 @@
 			}
 		})
 		$('.ordersubmit').on('click', function () {
-			$.get('/letter/add/letter', opt, function (data) {
+			$.post('/letter/add/letter', opt, function (data) {
 				console.log(data)
+				$(location).attr('href', url);
 			})
 		})
 	})

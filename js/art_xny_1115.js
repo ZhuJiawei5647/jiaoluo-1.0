@@ -12,6 +12,33 @@ var XNY = function() {
 	return this;
 }
 XNY.prototype = {
+	lazyLoadInit () {
+		$.fn.extend({
+            "lazyLoadInit": function () {
+            	$this = $(this)
+            	$this.css('position', 'relative');
+                var LazyLoad = function () {
+                	this.arr = [];
+                	$this.scroll(function(event) {
+                		this.arr.forEach(function ($el) {
+                			if($el.position().top() + $el.height() < 0) return;
+                			if($el.position().top() > $this.height()) return;
+                			$el.find('.lazy-img').each(function(index, el) {
+                				var src = $(el).data('src')
+                				if (src) {
+                					$(el).attr('src', src);
+                				}
+                			});
+                		})
+                	});
+				}
+				LazyLoad.prototype.append = function($el) {
+					this.arr.push($el)
+				};
+                return new LazyLoad()
+            }
+        });
+	},
 	createToindex: function() {
 		return $('<div class="xny-toindex" onclick="util.href(\'index\')"></div>')
 	},
@@ -156,7 +183,7 @@ XNY.prototype = {
 											'&url='+ url)
 						})
 					}else if (event === 'share') {
-						$(location).attr('href', 'cai2?cornerid=' + corner.id)
+						$(location).attr('href', 'cai2?cornerid=' + corner.id + '&url=' + encodeURIComponent(location.href))
 					}else if (event === 'close') {
 						$parent.hide();
 						$parent.remove();
@@ -165,7 +192,7 @@ XNY.prototype = {
 			})
 		})
 	},
-	alert: function(option) {
+	alert: function(option, fun) {
 		var option = $.extend({
 				content: '',
 				btntext: '确定',
@@ -186,6 +213,7 @@ XNY.prototype = {
 			});
 			$page.find('.xny-alert-box .xny-button').on('click', function() {
 				wd.close()
+				if(typeof fun == 'function') fun()
 			})
 		})
 	},
@@ -235,7 +263,7 @@ XNY.tmpls = {
 	zanHtml: '<div>{{if zan}}<div class="xny-icon" data-id="{{= id}}" data-value="{{= value}}" onclick="XNY.unzan(this)"><span>{{= value}}</span><img src="../images/dianzanhou.png"></div>{{else}}<div class="xny-icon" data-id="{{= id}}" data-value="{{= value}}" onclick="XNY.zan(this)"><span>{{= value}}</span><img src="../images/dianzan.png"></div>{{/if}}</div>',
 	publishHtml: '<div class="xny-publish"><div class="xny-input-box"><pre class="xny-input-wei"><span></span></pre><textarea class="xny-input" placeholder="评论" oninput="XNY.input(this)"></textarea></div><div class="xny-btn-box"><button class="xny-button">发布</button></div></div>',
 	imagepageHtml: '<template><div class="xny-page imgcut"><header class="xny-header"><div class="xny-button cancel">取消</div><div class="xny-button confirm">确定</div><h1>截图</h1></header><div class="xny-body"><div class="img"><img src=""></div></div></div></template>',
-	caiHtml: '<template><section style="width: 100%; box-sizing: border-box; padding: 0 20px; height: 100%; background-color: #ccc; background: url(../images/bj-gezi.png) left top repeat; background-size: 90%; overflow: hidden;"><button style="position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: url(../images/cancel.png) center center no-repeat; background-size: 30px 30px;" data-event="close"></button><div style="margin: 100px auto; max-width: 260px; padding: 30px 15px; background-color: #fff; border-radius: 5px;"><div style="overflow: hidden;"><h4 style="font-size: 18px; font-family: \'Segoe Print\'; font-style: italic;">Dire friend</h4><p style="padding: 10px 30px; font-size: 17px; font-family: \'PingFang SC Medium\';">{{= status == 200? data.secretdec : msg }}</p><span style="float: right; font-size: 18px;">-{{= status == 200? data.author.username : \'鲁迅\' }}</span></div>{{if data.secretimg}}<div style="margin: 15px 0; position: relative; box-sizing: border-box; border: 2px solid #2da297;"><div style="height: 140px; overflow: hidden;"><img src="{{= data.secretimg }}" style="width: 100%;"></div><div style="position: absolute; top:-10px; left: -2px; width: 87px; height: 46px; background: url(../images/ltsanjiao.png) 0 0 no-repeat; background-size: 100% 100%;"></div></div>{{else}}<div style="margin: 15px 0; position: relative; box-sizing: border-box; border: 2px solid #2da297;"><div style="height: 140px; overflow: hidden;"><img src="" style="width: 100%;"></div><div style="position: absolute; top:-10px; left: -2px; width: 87px; height: 46px; background: url(../images/ltsanjiao.png) 0 0 no-repeat; background-size: 100% 100%;"></div></div>{{/if}}<ul style="overflow: hidden; width: 80%; margin: auto;"><li style="float: left; width: 50%;"><button style="display: block; margin: 0 auto; width: 60px; line-height: 30px; font-size: 18px; color: #fff; background-color: #d76e53; border-radius: 4px;" data-event="share">分享</button></li><li style="float: left; width: 50%;"><button style="display: block; margin: 0 auto; width: 60px; line-height: 30px; font-size: 18px; color: #fff; background-color: #d76e53; border-radius: 4px;" data-event="reply">回应</button></li></ul></div></section></template>',
+	caiHtml: '<template><section style="width: 100%; box-sizing: border-box; padding: 0 20px; height: 100%; background-color: #ccc; background: url(../images/bj-gezi.png) left top repeat; background-size: 90%; overflow: hidden;"><button style="position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: url(../images/cancel.png) center center no-repeat; background-size: 30px 30px;" data-event="close"></button><div style="margin: 100px auto; max-width: 260px; padding: 30px 15px; background-color: #fff; border-radius: 5px;"><div style="overflow: hidden;"><h4 style="font-size: 18px; font-family: \'Segoe Print\'; font-style: italic;">Dire friend</h4><p style="padding: 10px 30px; font-size: 17px; font-family: \'PingFang SC Medium\';">{{= status == 200? data.secretdec : msg }}</p><span style="float: right; font-size: 18px;">-{{= status == 200? data.author.username : \'鲁迅\' }}</span></div><div style="margin: 15px 0; position: relative; box-sizing: border-box; border: 2px solid #2da297;"><div style="height: 140px; overflow: hidden;">{{if data.secretimg}}<img src="{{= data.secretimg }}" style="width: 100%;">{{else}}<div style="margin-top: 70px; position: relative;">{{if status === 198}}<img style="position: absolute; top: 0px; left: 0px; width: 60px; transform: translateY(-50%);" src="../images/sad.png"><p style="position: absolute; top: 0px; left: 60px; right: 0px; transform: translateY(-50%);">来晚了，秘密被人拿走了</p>{{else if status === 199}}<img style="position: absolute; top: 0px; left: 0px; width: 60px; transform: translateY(-50%);" src="../images/sad.png"><p style="position: absolute; top: 0px; left: 60px; right: 0px; transform: translateY(-50%);">太远了，够不着</p>{{else}}<img style="position: absolute; top: 0px; left: 0px; width: 60px; transform: translateY(-50%);" src="../images/happy.png"><p style="position: absolute; top: 0px; left: 60px; right: 0px; transform: translateY(-50%);">厉害了，发现一个秘密</p>{{/if}}</div>{{/if}}</div><div style="position: absolute; top:-10px; left: -2px; width: 87px; height: 46px; background: url(../images/ltsanjiao.png) 0 0 no-repeat; background-size: 100% 100%;"></div></div> <ul style="overflow: hidden; width: 80%; margin: auto;"><li style="float: left; width: 50%;"><button style="display: block; margin: 0 auto; width: 60px; line-height: 30px; font-size: 18px; color: #fff; background-color: #d76e53; border-radius: 4px;" data-event="share">分享</button></li><li style="float: left; width: 50%;"><button style="display: block; margin: 0 auto; width: 60px; line-height: 30px; font-size: 18px; color: #fff; background-color: #d76e53; border-radius: 4px;" data-event="reply">回应</button></li></ul></div></section></template>',
 	selectorHtml: '<template><div class="selector"><h4 class="selector-title">{{= title }}</h4><ul class="selector-list">{{each(index, item) list }}<li class="selector-item {{= checkedValue === item.value ?\'checked\': \'\'}}" value="{{= item.value }}">{{= item.text}}</li>{{/each}}</ul></div></template>'
 }
 
