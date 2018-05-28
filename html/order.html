@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 	<title>寄出信</title>
 	<script type="text/javascript">
@@ -410,6 +411,16 @@
 			{{/each}}
 		</ul>
 		<button class="address-add">新建地址</button>
+	</div>
+</script>
+<script type="text/x-jquery-tmpl" id="evloplist">
+	<div class="evlop-checked-page">
+		<ul class="evlop-list">
+			{{each(index, item) data}}
+			<li data-id="{{= item.id }}">
+			</li>
+			{{/each}}
+		</ul>
 	</div>
 </script>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
