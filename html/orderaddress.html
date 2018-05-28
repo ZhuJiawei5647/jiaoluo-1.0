@@ -103,12 +103,14 @@
 </body>
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
 <script type="text/javascript" src="../js/xny_form.js"></script>
 <script type="text/javascript" >
 	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
 </script>
 <script type="text/javascript">
-	var xny = new XNY();
+	var xny = new XNY(),
+		url = decodeURIComponent(util.GetQueryString('url'))
 	$(document).ready(function () {
 		var	provid = 0,
 			cityid = 0,
@@ -218,8 +220,11 @@
     		data.receiveregionid = areaid;
     		data.receiveregion = receiveregion.slice(0, receiveregion.length - 1)
 	    	$.get('/letteraddress/add/newaddress', data, function (data) {
-	    		xny.alert({content: data.msg})
-	    		console.log(data.data)
+	    		var orderaddress = JSON.stringify(data.data)
+	    		sessionStorage.setItem('orderaddress', orderaddress)
+	    		xny.alert({content: data.msg}, function () {
+	    			$(location).attr('href', url);
+	    		})
 	    	})
     	})
 	})
