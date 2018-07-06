@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+	<title>订单详情</title>
+	<script type="text/javascript">
+		document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getTime()+'">')
+	</script>
+	<style>
+		.address{
+			position: relative;
+			height: 80px;
+			background: linear-gradient(135deg, #f2f2f2 0%, #f2f2f2 6.67%, #35dbfe 6.67%, #35dbfe 46.67%, #f2f2f2 46.67%, #f2f2f2 53.33%, #e03636 53.33%, #e03636 93.33%, #f2f2f2 93.33%, #f2f2f2 100%) left bottom repeat-x;
+			background: -webkit-linear-gradient(135deg, #f2f2f2 0%, #f2f2f2 6.67%, #35dbfe 6.67%, #35dbfe 46.67%, #f2f2f2 46.67%, #f2f2f2 53.33%, #e03636 53.33%, #e03636 93.33%, #f2f2f2 93.33%, #f2f2f2 100%) left bottom repeat-x;
+			background: -moz-linear-gradient(135deg, #f2f2f2 0%, #f2f2f2 6.67%, #35dbfe 6.67%, #35dbfe 46.67%, #f2f2f2 46.67%, #f2f2f2 53.33%, #e03636 53.33%, #e03636 93.33%, #f2f2f2 93.33%, #f2f2f2 100%) left bottom repeat-x;
+			background-size: 40px 3px;
+			background-color: #fff;
+		}
+		.address-button{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			width: 208px;
+			height: 36px;
+			border: 1px solid #35dbfe;
+			border-radius: 18px;
+			text-align: center;
+			line-height: 36px;
+		}
+		.address-button i{
+			display: inline-block;
+			width: 18px;
+			height: 18px;
+			margin-bottom: -2px;
+			background: url(../images/address_add.png) center center no-repeat;
+			background-size: 18px 18px;
+		}
+		.address-button span{
+			display: inline-block;
+			color: #35dbfe;
+			font-size: 17px;
+		}
+		.address-left {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			width: 40px;
+			height: 40px;
+			margin: 0 20px;
+			border-radius: 5px;
+			background-color: blue;
+			transform: translateY(-50%);
+		}
+		.address-center {
+			position: absolute;
+			top: 50%;
+			left: 80px;
+			right: 60px;
+			font-size: 14px;
+			line-height: 20px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			border-radius: 5px;
+			transform: translateY(-50%);
+		}
+		.address-right {
+			position: absolute;
+			top: 50%;
+			right: 0px;
+			width: 20px;
+			height: 20px;
+			margin: 0 20px;
+			transform: translateY(-50%);
+			background: url(../images/xiangyou1.png) center center no-repeat;
+			background-size: 20px 20px;
+		}
+
+		.address-body {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			width: 100%;
+			transform: translateY(-60%);
+			padding: 0 40px;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+		}
+		.address-body-name {
+			font-size: 16px;
+			line-height: 30px;
+		}
+		.address-body-address {
+			font-size: 14px;
+		}
+		.address-body i{
+			position: absolute;
+			top: 50%;
+			left: 10px;
+			transform: translateY(-50%);
+			width: 20px;
+			height: 20px;
+			background: url(../images/art_csendclick3.png) center center no-repeat;
+			background-size: 20px 20px;
+		}
+
+		.goods{
+			position: relative;
+			margin: 10px 0;
+			padding: 48px 0 20px;
+			overflow: hidden;
+			background-color: #fff;
+		}
+		.goods header {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+		}
+		.goods header span {
+			margin-left: 10px;
+			font-size: 14px;
+			line-height: 48px;
+		}
+		.goods header span i {
+			display: inline-block;
+			margin-bottom: -2px;
+			margin-right: 8px;
+			width: 14px;
+			height: 14px;
+			background: url(../images/shop.png) center center no-repeat;
+			background-size: 14px 14px;
+		}
+		.goods footer {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			width: 100%;
+		}
+		.goods footer span {
+			float: right;
+			line-height: 48px;
+			font-size: 14px;
+		}
+		.goods footer span i {
+			font-style: normal;
+			color: #e03636;
+			margin-right: 12px;
+		}
+		.goods-content {
+			position: relative;
+			overflow: hidden;
+			background-color: #f2f2f2;
+			text-align: center;
+			padding-bottom: 10px;
+		}
+		.goods-content .goods-content-text {
+			float: left;
+			padding:  10px 0;
+			max-width: 80%;
+			margin-left: 50%;
+			margin-right: -50%;
+			text-align: left;
+			transform: translateX(-50%);
+		}
+		.goods-content .goods-content-text p {
+			text-indent: 28px;
+			font-size: 18px;
+		}
+		.goods-content i {
+			clear:both;
+			display:block;
+			width:0;
+			height:0;
+			visibility:hidden;
+		}
+		.goods-content img {
+			width: 260px;
+		}
+
+		.goods-item-box {
+			overflow: hidden;
+		}
+		.goods-item {
+			padding: 5px 20px;
+			overflow: hidden;
+		}
+		.goods-item-title {
+			padding-left: 10px;
+			margin-bottom: 5px;
+			border-bottom: 1px solid #ccc;
+			font-size: 16px;
+			font-weight: normal;
+			line-height: 30px;
+		}
+		.goods-pro-item{
+			position: relative;
+			font-size: 14px;
+			line-height: 20px;
+			color: #666;
+		}
+		.goods-pro-item-left {
+			padding-right: 60px;
+		}
+		.goods-pro-item-right {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 60px;
+		}
+
+		.order-item {
+			position: relative;
+			height: 50px;
+			background-color: #f2f2f2;
+			margin-bottom: 5px;
+		}
+		.order-item-title {
+			position: absolute;
+			top: 0;
+			left: 14px;
+			bottom: 0;
+			width: 100px;
+			font-size: 14px;
+			line-height: 50px;
+		}
+		.order-item-content {
+			position: absolute;
+			top: 0;
+			left: 120px;
+			bottom: 0;
+			right: 14px;
+			text-align: right;
+			line-height: 50px;
+			font-size: 14px;
+		}
+
+		.discount {
+			color: #666;
+		}
+		.discount i {
+			display: inline-block;
+			margin-left: 4px;
+			margin-bottom: -2px;
+			width: 14px;
+			height: 14px;
+			background: url(../images/xiangyou1.png) center center no-repeat;
+			background-size: 14px 14px;
+		}
+
+		.switch {
+			position: relative;
+			display: block;
+			width: 35px;
+			height: 22px;
+			border-radius: 11px;
+			background-color: #ccc;
+		}
+		.switch-ball {
+			position: absolute;
+			top: 0;
+			left: 0;
+			margin: 2px;
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background-color: #fff;
+		}
+
+		.switch.right {
+			background-color: #35dbfe;
+		}
+
+		.switch.left {
+			background-color: #ccc;
+		}
+
+		.switch.right .switch-ball{
+			animation: switchr .2s;
+			-webkit-animation: switchr .2s;
+			animation-fill-mode: both;
+			-webkit-animation-fill-mode: both;
+		}
+
+		.switch.left .switch-ball{
+			animation: switchl 0.2s;
+			-webkit-animation: switchl 0.2s;
+			animation-fill-mode: forwards;
+			-webkit-animation-fill-mode: forwards;
+		}
+		@keyframes switchr {
+			0% {
+				left: 0;
+			}
+			100% {
+				left: 13px;
+			}
+		}
+		@-webkit-keyframes switchr {
+			0% {
+				left: 0;
+			}
+			100% {
+				left: 13px;
+			}
+		}
+		@keyframes switchl {
+			0% {
+				left: 13px;
+			}
+			100% {
+				left: 0;
+			}
+		}
+		@-webkit-keyframes switchl {
+			0% {
+				left: 13px;
+			}
+			100% {
+				left: 0;
+			}
+		}
+
+		/*.select {
+			position: relative;
+			display: block;
+			width: 120px;
+			height: 34px;
+			background-color: #fff;
+			border-radius: 5px;
+			overflow: hidden;
+		}
+		.select span{
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 40px;
+			line-height: 34px;
+			text-align: center;
+			font-size: 14px;
+			color: #666;
+		}
+		.select i{
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			width: 40px;
+			background: url(../images/slide_down.png) center center no-repeat;
+			background-size: 15px 10px;
+			background-color: #35dbfe;
+		}*/
+
+		.order-item-content .switch, .order-item-content .select {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+		}
+
+		.type-checked {
+			display: block;
+			width: 100px;
+			height: 34px;
+			background-color: #fff;
+			border-radius: 5px;
+			overflow: hidden;
+			text-align: center;
+			line-height: 34px;
+			color: #35dbfe;
+			border:1px solid #35dbfe;
+		}
+
+		.order-item-content .switch, .order-item-content .type-checked {
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+		}
+
+		.order-bottom {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 44px;
+			background-color: #fff;
+		}
+		.order-bottom p {
+			text-align: right;
+			line-height: 44px;
+		}
+		.order-bottom span {
+			color: #e03636;
+		}
+		.order-bottom span i {
+			font-style: normal;
+		}
+		.order-bottom button{
+			float: right;
+			margin-left: 20px;
+			width: 100px;
+			height: 44px;
+			line-height: 44px;
+			text-align: center;
+			background-color: #e03636;
+			color: #fff;
+		}
+
+		.address-checked-page button {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 80%;
+			margin: 10px 10%;
+			height: 44px;
+			font-size: 18px;
+			line-height: 44px;
+			color: #fff;
+			background-color: #e03636;
+			border-radius: 22px;
+		}
+		.address-list li {
+			margin: 10px 0;
+		}
+
+		.address-item {
+			overflow: hidden;
+			padding: 10px 20px;
+			background-color: #fff;
+		}
+		.address-item .address-user{
+			float: left;
+			width: 80px;
+			text-align: center;
+			padding: 0 5px;
+			font-size: 16px;
+			font-weight: bolder;
+			color: #e03636;
+		}
+		.address-item p {
+			padding-left: 100px;
+		}
+
+		.goods-box {
+			overflow: hidden;
+		}
+
+		.goods-box .goods-img-box {
+			float: left;
+			width: 140px;
+		}
+		.goods-box .goods-img-box img {
+			width: 120px;
+			margin: 10px;
+		}
+		.goods-box .goods-list-item-content {
+			margin-top: 8px;
+			margin-left: 120px;
+		}
+		.goods-list-item-content h3 {
+			font-size: 16px;
+			line-height: 30px;
+			font-weight: normal;
+		}
+		.goods-list-item-content p {
+			font-size: 15px;
+			padding: 0 10px 4px;
+			color: #888;
+		}
+		.goods-pros {
+			overflow: hidden;
+			padding-bottom: 10px;
+			padding: 0 10px;
+		}
+		.goods-pros dd {
+			float: left;
+			width: 33.33%;
+		}
+		.goods-pros label {
+			float: left;
+			width: 40%;
+			text-align: center;
+			color: #444;
+			font-size: 14px;
+			line-height: 26px;
+		}
+		.goods-pros .goods-pro-val {
+			display: block;
+			margin-left: 40%;
+			border-radius: 13px;
+			font-size: 14px;
+			line-height: 26px;
+			text-align: center;
+			color: #444;
+			background-color: #ddd;
+		}
+
+		.cai-page {
+			width: 100%;
+			height: 100%;
+			background: url(../images/bj-gezi.png) top left repeat;
+			background-size: 90%;
+			overflow: hidden;
+		}
+		.box {
+			width: 80%;
+			max-width: 300px;
+			margin: 60px auto 0;
+			padding: 30px 0;
+			background-color: #fff;
+			border-radius: 5px;
+		}
+
+		.textarea-box textarea{
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 100%;
+			height: 100px;
+			padding: 0 30px;
+			font-size: 17px;
+			line-height: 26px;
+			background-color: #fff;
+		}
+
+		.img-box{
+			position: relative;
+			margin: 10px;
+			height: 140px;
+			background: url(../images/picture.png) center center no-repeat;
+			background-size: 60px;
+			background-color: #fff;
+			box-sizing: border-box;
+			border: 2px solid #2da297;
+		}
+
+		.img-box .img-container{
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		.img-box .img-container img{
+			width: 100%;
+		}
+
+		.img-box .icon {
+			position: absolute; 
+			top:-10px; 
+			left: -2px; 
+			width: 87px; 
+			height: 46px; 
+			background: url(../images/ltsanjiao.png) 0 0 no-repeat; 
+			background-size: 100% 100%;
+		}
+
+		.button-list {
+			overflow: hidden;
+		}
+
+		.button-list li {
+			float: left;
+			width: 50%;
+			height: 50px;
+		}
+
+		.button-list li button {
+			display: block;
+			height: 30px;
+			min-width: 80px;
+			margin: 10px auto;
+			padding: 0 10px;
+			border-radius: 15px;
+			color: #fff;
+			background-color: #029688; 
+		}
+
+		.article-box{
+			margin: 20px 40px;
+			text-align: center;
+		}
+
+		.article-box span{
+			display: inline-block;
+			padding: 0 10px;
+			font-size: 18px;
+			line-height: 20px;
+		}
+
+		.btn-container{
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+		}
+		.btn-container .xny-btn-box{
+			line-height: 40px;
+			width: 100%;
+			height: 40px;
+		}
+		.btn-container .xny-btn-box .xny-button{
+			border-radius: 0;
+			color: #333;
+			background: url(../images/cai2_fabu.png) 0 0 no-repeat;
+			background-size: 100% 100%;
+		}
+		.button-list {
+			overflow: hidden;
+			padding: 10px 0;
+			background-color: white;
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+		}
+		.button-list button {
+			float: right;
+			height: 30px;
+			padding: 0 20px;
+			margin: 5px 10px;
+			font-size: 15px;
+			line-height: 28px;
+			border: 1px solid #888;
+			border-radius: 15px;
+		}
+	</style>
+</head>
+<body style="height: 100vh; width: 100%; background-color: #f2f2f2;"></body>
+<script type="text/x-jquery-tmpl" id="detail">
+	<div class="address">
+		<div class="address-body">
+			<p class="address-body-name">收货人：{{= letteraddress.receiveusername}}</p>
+			<p class="address-body-address">收货地址：{{= letteraddress.receiveregion}}&nbsp;&nbsp;{{= letteraddress.receiveaddress }}</p>
+			<i></i>
+		</div>
+	</div>
+	<div class="goods" style="margin-bottom: 2px;">
+		<header>
+			<span><i></i>礼物角</span>
+		</header>
+		<div class="goods-content">
+			<div style="margin-top: 20px;">
+				<img src="{{= letter.imageurl }}">
+			</div>
+			<div class="goods-content-text">
+				{{each(i, text) letter.content.split('$*$')}}
+					<p>{{= text }}</p>
+				{{/each}}
+			</div>
+			<i></i>
+		</div>
+		{{if item}}
+		<div class="order-item" style="background-color: #fff;">
+			<label class="order-item-title">信件类型</label>
+		</div>
+		<div class="goods-item-box" style="margin-top: -20px;">
+			<div class="goods-box">
+				<div class="goods-img-box">
+					<img src="{{= item.image}}">
+				</div>
+				<div class="goods-list-item-content">
+					<h3>{{= item.title }}</h3>
+					<p>{{= item.sellpoint }}</p>
+					<p>{{= item.descs}}</p>
+				</div>
+			</div>
+			<dl class="goods-pros">
+				<dd>
+					<label>库存:</label>
+					<div class="goods-pro-val">{{= item.num }}</div>
+				</dd>
+				<dd>
+					<label>尺寸:</label>
+					<div class="goods-pro-val">{{= item.vsize }}</div>
+				</dd>
+				<dd>
+					<label>金额:</label>
+					<div class="goods-pro-val">￥{{= (item.price/100).toFixed(2) }}</div>
+				</dd>
+			</dl>
+		</div>
+		{{/if}}
+		<footer>
+		</footer>
+	</div>
+	<div class="order-item" style="background-color: #fff">
+			<label class="order-item-title">合计</label>
+			<div class="order-item-content">
+				<span class="discount">￥ {{= letter.paymoney ? (letter.paymoney/100).toFixed(2) : 0.00 }}</span>
+			</div>
+	</div>
+
+	<div style="margin-top: 20px; background-color: #fff; padding: 5px 10px; position: relative;">
+		<p style="font-size: 14px; line-height: 30px">订单编号：{{= letter.orderid }}</p>
+		<p style="font-size: 14px; line-height: 30px">创建时间：{{= util.dateFormat(letter.sendtime, 'yyyy-MM-dd hh:mm:ss') }}</p>
+		<button class="copy" style="position: absolute; top: 8px; right: 20px; border: 1px solid #ddd; line-height: 20px; padding: 0 5px; border-radius: 5px;" onclick="" data-clipboard-text="{{= letter.orderid}}">复制</button>
+	</div>
+	<footer style="height: 80px;">
+		<div class="button-list">
+			{{if letter.sendstatus === 1}}
+			<button data-event="pay" style="border-color: red; color: red;">支付</button>
+			{{/if}}
+			<button data-event="del">删除</button>
+		</div>
+	</footer>
+</script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+<script type="text/javascript" src="../js/exif.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/jquery.Jcrop.min.js"></script>
+<script type="text/javascript" src="../js/xny_form.js"></script>
+<script type="text/javascript" src="../js/util.js?1234"></script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getTime()+'"><\/script>')
+</script>
+<script type="text/javascript">
+	var xny = new XNY(),
+		id = util.GetQueryString('id')
+	$(document).ready(function () {
+		
+		$.get('/letter/get/detail?id=' + id, function(data) {
+			// var data = {"status":200,"msg":"OK","data":{"letter":{"id":25,"orderid":"1527746649545152","itemid":1,"sendstatus":1,"userid":51,"username":null,"cornerid":254,"sendaddress":1,"sendtime":1527746650000,"writetime":1527746650000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527746571339452.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"大量发生的离开干撒了副书记的萨芬拉法基$*$放大了可是价格的噶分"},"item":{"id":1,"title":"A4迷你卡片","sellpoint":"情书的忠实选择","price":2800,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"descs":"迷你精致","vsize":"A4","created":1526266309000,"updated":1526266312000},"corner":{"id":254,"name":"龙湖滟澜山-3期","placename":"龙湖滟澜山-3期","placeaddress":"华景街383号","placelatitude":30.317341,"placelongitude":120.333584,"placecity":"杭州市","befavor":0,"pass":35,"created":1525500592000,"updated":1525500592000,"userid":116,"artNum":null,"type":1,"taglib":"#119#","zanshang":null,"taglibid":0},"letteraddress":{"id":1,"userid":51,"receiveusername":"\"eson\"","receiveaddress":"\"龙湖天街\"","receivecontact":"\"0571-86888888\"","receiveregionid":"\"330104\"","receiveregion":"\"浙江-杭州-江干\"","postcode":"\"310000\""}}}
+			$page = $('#detail').tmpl(data.data)
+			$('body').append($page)
+
+			$('.button-list').on('click', 'button', function(event) {
+				var letter = data.data.letter;
+				var $this = $(this);
+				var e = $this.data('event')
+				if (e === 'pay') {
+					$.get('/wechat/startpay?money='+ letter.paymoney +'&orderId='+ letter.orderid, function (data) {
+						if (data.status === 200) {
+							window.go(-1)
+						}
+					})
+				}
+				if (e === 'del') {
+					$.get('/letter/delete/letter?letterid=' + letter.id, function (data) {
+						if (data.status === 200) {
+							window.go(-1)
+						}
+					})
+				}
+				console.log(e)
+			})
+
+			var clipboard = new ClipboardJS($page.find('.copy')[0])
+			clipboard.on('success', function() {
+				console.log('success')
+			});
+			clipboard.on('error', function () {
+				console.log('fail')
+			})
+		});
+	})
+</script>
+</html>

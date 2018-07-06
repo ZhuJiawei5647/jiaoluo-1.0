@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width,initial-scale=1,user-scalable=0">
+<title>订单信息</title>
+<script type="text/javascript">
+	document.write('<link rel="stylesheet" type="text/css" href="../css/art_complete_1110.css?time='+(new Date()).getDate()+'">')
+</script>
+<script src="https://cdn.bootcss.com/clipboard.js/2.0.1/clipboard.min.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
+<script type="text/javascript" src="../js/data.js"></script>
+<style type="text/css">
+body,html{
+	margin: 0px;
+	padding: 0px;
+	width:100%;
+	font-size: 0.9rem;
+	background-color: #f2f2f2;
+}
+ul{
+	margin: 0px;
+	padding: 0px;
+}
+li{
+	list-style: none;
+}
+.flex-row{
+	display: flex;
+}
+.flex-grow{
+	flex-grow:1;
+}
+.xny-header ul{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	display: flex;
+	background-color: #fff;
+	z-index: 1000;
+}
+.xny-header li{
+	flex: 1;
+}
+.xny-header li a{
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	line-height: 40px;
+	text-align: center;
+	color: #808080;
+	overflow: hidden;
+}
+.xny-header li.active a{
+	color: #000;
+	border-bottom: 2px solid #00b0ff;
+}
+.hide{
+	display: none;
+}
+.article-list{
+	padding-bottom: 40px;
+}
+
+.order-item {
+	overflow: hidden;
+	margin-top: 1px;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	background-color: #fff;
+}
+.order-item .img-box {
+	float: left;
+}
+.order-item .img-box img {
+	margin: 10px;
+	width: 100px;
+}
+.order-item .order-item-right {
+	overflow: hidden;
+	padding-top: 10px;
+}
+.order-item .order-item-right h3 {
+	height: 20px;
+	font-size: 14px;
+	line-height: 20px;
+	font-weight: normal;
+	color: #333;
+}
+.order-item .order-item-right p {
+	color: #888;
+}
+.order-item .checked-icon {
+	display: block;
+	width: 16px;
+	height: 16px;
+	border: 1px solid #ddd;
+	border-radius: 50%;
+	margin: 5px 10px;
+	float: left;
+}
+.order-item.checked .checked-icon {
+	width: 18px;
+	height: 18px;
+	border: none;
+	background: url(../images/checked.png) 0 0 no-repeat;
+	background-size: 100% 100%;
+}
+.order-item-title {
+	height: 25px;
+	margin-bottom: -5px;
+	overflow: hidden;
+}
+.order-item-title span {
+	line-height: 28px;
+}
+.order-msg {
+	clear: left;
+	position: relative;
+	padding: 0 10px 5px;
+}
+.order-msg p {
+	line-height: 20px;
+}
+.order-msg button {
+	position: absolute;
+	top: 5px;
+	right: 20px;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 0 5px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+.button-box {
+	overflow: hidden;
+	padding-top: 10px;
+}
+.button-box button {
+	float: right;
+	height: 30px;
+	padding: 0 20px;
+	margin: 5px 10px;
+	font-size: 15px;
+	line-height: 28px;
+	border: 1px solid #888;
+	border-radius: 15px;
+}
+.order-money {
+	float: right;
+	margin-right: 10px;
+	font-size: 14px;
+	color: red;
+}
+.order-more {
+	text-align: center;
+}
+</style>
+</head>
+<body>
+	<div class="toindex">
+        <h1></h1>
+    </div>
+	<header class="xny-header">
+		<ul class="tab">
+			<li><a>待支付</a></li>
+			<li><a>邮寄中</a></li>
+			<li><a>已送达</a></li>
+		</ul>
+	</header>
+	<section class="tab-content" class='hide'>
+		<ul class="order-list"></ul>
+		<div class="order-more"></div>
+	</section>
+	<section class="tab-content" class="hide">
+		<ul class="order-list"></ul>
+		<div class="order-more"></div>
+	</section>
+	<section class="tab-content" class="hide">
+		<ul class="order-list"></ul>
+		<div class="order-more"></div>
+	</section>
+</body>
+<script type="text/x-jquery-tmpl" id="nopayItem">
+	<li class="order-item" data-id="{{= id }}" data-orderid="{{= orderid }}" data-paymoney="{{= paymoney }}">
+		<div class="order-item-title">
+			<i class="checked-icon"></i>
+			<span>收件人：{{= username}}</span>
+			<input type="checkbox" name="goods" style="display: none;">
+		</div>
+		<div class="order-content">
+			<div class="img-box">
+				<img src="{{= imageurl }}">
+			</div>
+			<div class="order-item-right">
+				{{if item}}
+				<h3>{{= item.title}}</h3>
+				<p>简介：{{= item.sellPoint }}</p>
+				{{/if}}
+				<p>内容：{{= content.slice(0, 10) }}</p>
+			</div>
+		</div>
+		<div class="order-msg">
+			<span class="order-money" style="font-size: 13px; margin: 0;line-height: 20px;">合计：￥{{= (paymoney/100).toFixed(2)}}</span>
+			<p>订单时间：{{= util.dateFormat(sendtime, 'yyyy-MM-dd hh:mm:ss') }}</p>
+		</div>
+		<div class="button-box">
+			<button data-event="pay" style="color: red; border-color: red;">支付</button>
+			<button data-event="del">删除</button>
+		</div>
+	</li>
+</script>
+<script	type="text/x-jquery-tmpl" id="orderItem">
+	<li class="order-item" data-id="{{= id }}">
+		<div class="order-item-title">
+			<i class="checked-icon"></i>
+			<span>收件人：{{= username}}</span>
+			<input type="checkbox" name="goods" style="display: none;">
+		</div>
+		<div class="order-content">
+			<div class="img-box">
+				<img src="{{= imageurl }}">
+			</div>
+			<div class="order-item-right">
+				{{if item}}
+				<h3>{{= item.title}}</h3>
+				<p>简介：{{= item.sellPoint }}</p>
+				{{/if}}
+				<p>内容：{{= content.slice(0, 10) }}</p>
+			</div>
+		</div>
+		<div class="order-msg">
+			<span class="order-money" style="font-size: 13px; margin: 0;line-height: 20px;">合计：￥{{= (paymoney/100).toFixed(2)}}</span>
+			<p>订单时间：{{= util.dateFormat(sendtime, 'yyyy-MM-dd hh:mm:ss') }}</p>
+		</div>
+		<div class="button-box">
+			<button data-event="detail" style="color: red; border-color: red;">详情</button>
+			<button data-event="del">删除</button>
+		</div>
+	</li>
+</script>
+<script type="text/javascript" >
+	document.write('<script type="text/javascript" src="../js/art_xny_1115.js?time='+(new Date()).getDate()+'"><\/script>')
+</script>
+<script type="text/javascript">
+!(function($) {
+	var active, showpage;
+	var tab = util.GetQueryString('tab');
+	var xny = new XNY();
+	var list = [new Set(), new Set(), new Set()]
+
+	function cliboard(el) {
+		var clipboard = new ClipboardJS(el)
+		clipboard.on('success', function () {
+			console.log('success')
+		})
+		clipboard.on('error', function () {
+			console.log('fail')
+		})
+	}
+
+
+	$('.order-list').on('click', 'li', function(event) {
+		var elt = event.target.localName
+		var $this = $(this)
+		var orderinfo = $this.data()
+		if (elt === 'button' || elt === 'input') {
+			var e = $(event.target).data('event')
+			if (e === 'pay') {
+				$.get('/wechat/startpay?money='+ orderinfo.paymoney +'&orderId='+ orderinfo.orderid, function (data) {
+					if (data.status === 200) {
+						$this.remove()
+						list[tab].delete(orderinfo)
+					}
+				})
+			}
+			if (e === 'del') {
+				$.get('/letter/delete/letter?letterid=' + orderinfo.id, function (data) {
+					if (data.status === 200) {
+						$this.remove()
+						list[tab].delete(orderinfo)
+					}
+				})
+			}
+			if (e === 'detail') {
+				$(location).attr('href', 'orderdetail?id='+ $this.data('id'));
+			}
+			console.log(e)
+		} else if ($(event.target).parents('.order-content').length === 1) {
+			$(location).attr('href', 'orderdetail?id='+ $this.data('id'));
+		} else {
+			var $checkbox = $this.find('input[type="checkbox"]')
+			$checkbox.click();
+			if ($checkbox.is(':checked')) {
+				list[tab].add(orderinfo)
+				$this.addClass('checked')
+			} else {
+				list[tab].delete(orderinfo)
+				$this.removeClass('checked')
+			}
+			console.log(list[tab])
+		}
+	});
+
+	$('.tab>li').each(function(index, el) {
+		$(el).on('click', function(event) {
+			event.preventDefault();
+			if (active) active.removeClass('active');
+			$(this).addClass('active')
+			active = $(this)
+			if (showpage) showpage.addClass('hide')
+			showpage = $('.tab-content').eq(index);
+			showpage.removeClass('hide')
+			tab = index;
+		});
+		switch (index) {
+			case 0:
+				$(el).one('click', function(event) {
+					var $content = $('.tab-content').eq(0)
+					var more = xny.createMore($content.find('.order-more') ,{
+						url: '/letter/get/unpayletter'
+						,page: 1
+						,size: 5
+						,list: 'data'
+						,done: function (data) {
+						// var data = {"status":200,"msg":"OK","data":[{"id":25,"orderid":"1527746649545152","itemid":1,"item":{"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"vsize":"A4","created":1526266309000,"updated":1526266312000},"sendstatus":1,"userid":51,"username":"\"eson\"","cornerid":254,"sendaddress":1,"sendtime":1527746650000,"writetime":1527746650000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527746571339452.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"dsagsa"},{"id":22,"orderid":"1527736257631600","itemid":1,"item":{"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"vsize":"A4","created":1526266309000,"updated":1526266312000},"sendstatus":1,"userid":51,"username":"zhujiawei","cornerid":62,"sendaddress":14,"sendtime":1527736258000,"writetime":1527736258000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527736238073847.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"藏一个远处的秘密"},{"id":21,"orderid":"1527734947719561","itemid":1,"item":{"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"vsize":"A4","created":1526266309000,"updated":1526266312000},"sendstatus":1,"userid":51,"username":"zhujiawei","cornerid":226,"sendaddress":12,"sendtime":1527734948000,"writetime":1527734948000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527734937366181.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"我们的秘密"}]}
+							data.data.forEach( function(data, index) {
+								var $el = $('#nopayItem').tmpl(data)
+								$content.find('.order-list').append($el)
+							});
+						}
+					})
+				});
+				break;
+			case 1:
+				$(el).one('click', function(event) {
+					var $content = $('.tab-content').eq(1)
+					var more = xny.createMore($content.find('.order-more') ,{
+						url: '/letter/get/sendletter'
+						,page: 1
+						,size: 5
+						,list: 'data'
+						,done: function (data) {
+							// var data = {"status":200,"msg":"OK","data":[{"id":25,"orderid":"1527746649545152","itemid":1,"item":{"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"vsize":"A4","created":1526266309000,"updated":1526266312000},"sendstatus":1,"userid":51,"username":"\"eson\"","cornerid":254,"sendaddress":1,"sendtime":1527746650000,"writetime":1527746650000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527746571339452.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"dsagsa"},{"id":22,"orderid":"1527736257631600","itemid":1,"item":{"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"vsize":"A4","created":1526266309000,"updated":1526266312000},"sendstatus":1,"userid":51,"username":"zhujiawei","cornerid":62,"sendaddress":14,"sendtime":1527736258000,"writetime":1527736258000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527736238073847.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"藏一个远处的秘密"},{"id":21,"orderid":"1527734947719561","itemid":1,"item":{"id":1,"title":"A4迷你卡片","sellPoint":"情书的忠实选择","price":2,"num":9999,"barcode":null,"image":"http://image.bgtree.cn/www/image/2017/11/23/1511395691843083.png","cid":null,"status":1,"vsize":"A4","created":1526266309000,"updated":1526266312000},"sendstatus":1,"userid":51,"username":"zhujiawei","cornerid":226,"sendaddress":12,"sendtime":1527734948000,"writetime":1527734948000,"title":null,"imageurl":"http://image.bgtree.cn/www/image/2018/05/31/1527734937366181.png","vsize":"A4","paymoney":2800,"wepayid":null,"content":"我们的秘密"}]}
+							data.data.forEach( function(data, index) {
+								var $el = $('#orderItem').tmpl(data)
+								$content.find('.order-list').append($el)
+							});
+						}
+					})
+				});
+				break;
+			case 2:
+				$(el).one('click', function(event) {
+					var $content = $('.tab-content').eq(2)
+					var more = xny.createMore($content.find('.order-more'),{
+						url: '/letter/get/finishletter'
+						,page: 1
+						,size: 5
+						,list: 'data'
+						,done: function (data) {
+							data.data.forEach( function(data, index) {
+								var $el = $('#orderItem').tmpl(data)
+								$content.find('.order-list').append($el)
+							});
+						}
+					})
+				});
+				break;
+			default: break;
+		}
+	});
+
+	$(document).ready(function() {
+		$('.tab>li').eq( tab != 2 && tab != 3 ? 0 : tab - 1 ).click()
+	});
+})(jQuery)
+</script>
+</html>
